@@ -107,7 +107,6 @@ func (c *config) GetCVECronExpression() string {
 	cveCronExpression := c.viper.GetString("CRON_EXPRESSION")
 	if len(cveCronExpression) == 0 {
 		cveCronExpression = c.viper.GetString("cron_expression")
-
 	}
 
 	if len(cveCronExpression) == 0 {
