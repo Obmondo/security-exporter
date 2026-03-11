@@ -1,4 +1,6 @@
-NAME=obmondo-security-exporter
+NAME = obmondo-security-exporter
+
+.PHONY: build test vet lint clean docker-build docker-up docker-down docker-logs
 
 build:
 	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -ldflags="-extldflags=-static -s -w" -o dist/$(NAME) ./cmd/
@@ -6,5 +8,23 @@ build:
 test:
 	go test ./...
 
+vet:
+	go vet ./...
+
+lint:
+	golangci-lint run ./...
+
 clean:
 	rm -rf dist/
+
+docker-build:
+	docker compose build
+
+docker-up:
+	docker compose up --build -d
+
+docker-down:
+	docker compose down
+
+docker-logs:
+	docker compose logs -f

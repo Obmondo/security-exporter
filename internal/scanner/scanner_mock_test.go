@@ -2,16 +2,26 @@ package scanner
 
 import (
 	"context"
+	"crypto/ecdsa"
+	"crypto/elliptic"
+	"crypto/rand"
+	"crypto/x509"
+	"crypto/x509/pkix"
 	"encoding/json"
+	"encoding/pem"
+	"math/big"
 	"net/http"
 	"net/http/httptest"
+	"os"
+	"path/filepath"
 	"testing"
+	"time"
 
 	"security-exporter/config"
 )
 
 func TestScan_ServerError(t *testing.T) {
-	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
 	}))
 	defer server.Close()
@@ -29,7 +39,7 @@ func TestScan_ServerError(t *testing.T) {
 }
 
 func TestScan_InvalidJSON(t *testing.T) {
-	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		w.Write([]byte("not json"))
 	}))
@@ -56,7 +66,7 @@ func TestScan_EmptyCves(t *testing.T) {
 		Packages:    map[string]PackageInfo{},
 	}
 
-	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(mockResult)
 	}))
@@ -109,7 +119,7 @@ func TestScan_MultiplePackagesAndCves(t *testing.T) {
 		},
 	}
 
-	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(mockResult)
 	}))
@@ -157,8 +167,7 @@ func TestScan_MultiplePackagesAndCves(t *testing.T) {
 }
 
 func TestScan_ContextCancellation(t *testing.T) {
-	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		// Simulate slow server — but context should cancel before response
+	server := httptest.NewServer(http.HandlerFunc(func(_ http.ResponseWriter, r *http.Request) {
 		<-r.Context().Done()
 	}))
 	defer server.Close()
@@ -169,7 +178,7 @@ func TestScan_ContextCancellation(t *testing.T) {
 	}
 
 	ctx, cancel := context.WithCancel(context.Background())
-	cancel() // cancel immediately
+	cancel()
 
 	coll := &mockCollector{family: "debian", release: "12", pkgs: "test\t1.0\n"}
 	_, err = sc.Scan(ctx, coll)
@@ -178,12 +187,55 @@ func TestScan_ContextCancellation(t *testing.T) {
 	}
 }
 
-func TestNew_NoTLS(t *testing.T) {
-	sc, err := New(config.VulsServer{URL: "http://localhost:5515"})
+func TestScan_UnreachableServer(t *testing.T) {
+	sc, err := New(config.VulsServer{URL: "http://127.0.0.1:1"})
 	if err != nil {
 		t.Fatal(err)
 	}
-	if sc.serverURL != "http://localhost:5515" {
-		t.Errorf("expected URL http://localhost:5515, got %s", sc.serverURL)
+
+	coll := &mockCollector{family: "debian", release: "12", pkgs: "test\t1.0\n"}
+	_, err = sc.Scan(context.Background(), coll)
+	if err == nil {
+		t.Fatal("expected error for unreachable server")
 	}
+}
+
+func generateTestCert(t *testing.T) (certPEM string, keyPEM string) {
+	t.Helper()
+
+	key, err := ecdsa.GenerateKey(elliptic.P256(), rand.Reader)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	tmpl := &x509.Certificate{
+		SerialNumber: big.NewInt(1),
+		Subject:      pkix.Name{CommonName: "test"},
+		NotBefore:    time.Now(),
+		NotAfter:     time.Now().Add(time.Hour),
+	}
+
+	certDER, err := x509.CreateCertificate(rand.Reader, tmpl, tmpl, &key.PublicKey, key)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	certPEMBytes := pem.EncodeToMemory(&pem.Block{Type: "CERTIFICATE", Bytes: certDER})
+
+	keyDER, err := x509.MarshalECPrivateKey(key)
+	if err != nil {
+		t.Fatal(err)
+	}
+	keyPEMBytes := pem.EncodeToMemory(&pem.Block{Type: "EC PRIVATE KEY", Bytes: keyDER})
+
+	return string(certPEMBytes), string(keyPEMBytes)
+}
+
+func writeTempFile(t *testing.T, content string) string {
+	t.Helper()
+	path := filepath.Join(t.TempDir(), "file.pem")
+	if err := os.WriteFile(path, []byte(content), 0600); err != nil {
+		t.Fatal(err)
+	}
+	return path
 }

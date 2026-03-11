@@ -10,7 +10,7 @@ type dpkgCollector struct {
 	release string
 }
 
-func (d *dpkgCollector) Packages(ctx context.Context) (string, error) {
+func (*dpkgCollector) Packages(ctx context.Context) (string, error) {
 	cmd := exec.CommandContext(ctx, "dpkg-query", "-W", "-f", "${Package}\t${Version}\n")
 	out, err := cmd.Output()
 	if err != nil {

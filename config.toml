@@ -1,0 +1,7 @@
+[cveDict]
+type = "http"
+url = "http://vuls-db:1323"
+
+[ovalDict]
+type = "http"
+url = "http://vuls-oval-db:1324"

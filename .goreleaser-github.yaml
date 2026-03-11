@@ -1,0 +1,48 @@
+version: 2
+
+changelog:
+  use: github
+  sort: asc
+  abbrev: 7
+  filters:
+    exclude:
+      - init
+      - Merge pull request
+      - Merge remote-tracking branch
+      - Merge branch
+  groups:
+    - title: "\U0001F4AB Features"
+      regexp: '^.*?feat(\([[:word:]]+\))??!?:.+'
+      order: 0
+    - title: "\U0001F41B Bug fixes"
+      regexp: '^.*?fix(\([[:word:]]+\))??!?:.+'
+      order: 1
+    - title: "\U0001F974 Others"
+      order: 999
+
+archives:
+  - formats: [tar.gz]
+    name_template: >-
+      {{- .ProjectName }}_
+      {{- .Tag }}_
+      {{- .Os }}_
+      {{- .Arch }}
+
+builds:
+  - id: obmondo-security-exporter
+    main: ./cmd/
+    binary: obmondo-security-exporter
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+    goarch:
+      - amd64
+      - arm64
+    ldflags:
+      - -X main.Version={{ .Tag }}
+      - -s -w
+
+release:
+  ids:
+    - default

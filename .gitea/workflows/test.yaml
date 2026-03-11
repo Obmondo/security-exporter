@@ -1,0 +1,26 @@
+name: Test
+
+on:
+  push:
+    branches: [main, arch]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-22.04-htzhel1-ax42-a
+    steps:
+      - name: Checkout
+        uses: https://gitea.obmondo.com/Obmondo/checkout@v4.3.0
+        with:
+          fetch-depth: 0
+
+      - name: Set up Go
+        uses: https://gitea.obmondo.com/Obmondo/setup-go@v6.0.0
+        with:
+          go-version-file: go.mod
+          cache-dependency-path: go.sum
+
+      - run: go test ./...
+
+      - run: go vet ./...

@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
+	"time"
 
 	"security-exporter/config"
 )
@@ -15,11 +16,17 @@ type mockCollector struct {
 	family  string
 	release string
 	pkgs    string
+	err     error
 }
 
-func (m *mockCollector) Packages(_ context.Context) (string, error) { return m.pkgs, nil }
-func (m *mockCollector) OSFamily() string                           { return m.family }
-func (m *mockCollector) Release() string                            { return m.release }
+func (m *mockCollector) Packages(_ context.Context) (string, error) {
+	if m.err != nil {
+		return "", m.err
+	}
+	return m.pkgs, nil
+}
+func (m *mockCollector) OSFamily() string { return m.family }
+func (m *mockCollector) Release() string  { return m.release }
 
 func TestScan(t *testing.T) {
 	mockResult := ScanResult{
@@ -82,5 +89,218 @@ func TestScan(t *testing.T) {
 	}
 	if _, ok := result.ScannedCves["CVE-2024-1234"]; !ok {
 		t.Error("expected CVE-2024-1234 in results")
+	}
+}
+
+func TestScan_ContentTypeHeader(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		ct := r.Header.Get("Content-Type")
+		if ct != "application/json" {
+			t.Errorf("expected Content-Type application/json, got %s", ct)
+		}
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(ScanResult{})
+	}))
+	defer server.Close()
+
+	sc, err := New(config.VulsServer{URL: server.URL})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	coll := &mockCollector{family: "debian", release: "12", pkgs: "test\t1.0\n"}
+	_, err = sc.Scan(context.Background(), coll)
+	if err != nil {
+		t.Fatal(err)
+	}
+}
+
+func TestScan_RequestBody(t *testing.T) {
+	var received ScanRequest
+
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		body, _ := io.ReadAll(r.Body)
+		json.Unmarshal(body, &received)
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(ScanResult{})
+	}))
+	defer server.Close()
+
+	sc, err := New(config.VulsServer{URL: server.URL})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	coll := &mockCollector{family: "redhat", release: "9", pkgs: "bash\t5.2\n"}
+	_, err = sc.Scan(context.Background(), coll)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if received.Family != "redhat" {
+		t.Errorf("expected family redhat, got %s", received.Family)
+	}
+	if received.Release != "9" {
+		t.Errorf("expected release 9, got %s", received.Release)
+	}
+	if received.Packages != "bash\t5.2\n" {
+		t.Errorf("expected packages 'bash\\t5.2\\n', got %q", received.Packages)
+	}
+	if received.ServerName == "" {
+		t.Error("expected non-empty ServerName (hostname)")
+	}
+}
+
+func TestScan_CollectorError(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+		t.Fatal("server should not be called when collector fails")
+	}))
+	defer server.Close()
+
+	sc, err := New(config.VulsServer{URL: server.URL})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	coll := &mockCollector{
+		family: "debian",
+		err:    io.ErrUnexpectedEOF,
+	}
+	_, err = sc.Scan(context.Background(), coll)
+	if err == nil {
+		t.Fatal("expected error when collector fails")
+	}
+}
+
+func TestNew_NoTLS(t *testing.T) {
+	sc, err := New(config.VulsServer{URL: "http://localhost:5515"})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if sc.serverURL != "http://localhost:5515" {
+		t.Errorf("expected URL http://localhost:5515, got %s", sc.serverURL)
+	}
+}
+
+func TestNew_CustomTimeout(t *testing.T) {
+	sc, err := New(config.VulsServer{
+		URL:     "http://localhost:5515",
+		Timeout: config.Duration{Duration: 2 * time.Minute},
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if sc.client.Timeout != 2*time.Minute {
+		t.Errorf("expected timeout 2m, got %s", sc.client.Timeout)
+	}
+}
+
+func TestNew_DefaultTimeout(t *testing.T) {
+	sc, err := New(config.VulsServer{URL: "http://localhost:5515"})
+	if err != nil {
+		t.Fatal(err)
+	}
+	const defaultTimeout = 30 * time.Second
+	if sc.client.Timeout != defaultTimeout {
+		t.Errorf("expected default timeout %s, got %s", defaultTimeout, sc.client.Timeout)
+	}
+}
+
+func TestNew_InvalidCertFile(t *testing.T) {
+	_, err := New(config.VulsServer{
+		URL:      "https://localhost:5515",
+		CertFile: "/nonexistent/cert.pem",
+		KeyFile:  "/nonexistent/key.pem",
+	})
+	if err == nil {
+		t.Fatal("expected error for invalid cert file")
+	}
+}
+
+func TestBuildTLSConfig_InvalidCertFile(t *testing.T) {
+	_, err := buildTLSConfig(config.VulsServer{
+		CertFile: "/nonexistent/cert.pem",
+		KeyFile:  "/nonexistent/key.pem",
+	})
+	if err == nil {
+		t.Fatal("expected error for invalid cert file")
+	}
+}
+
+func TestBuildTLSConfig_InvalidCAFile(t *testing.T) {
+	// Create a minimal self-signed cert+key for the test
+	certPEM, keyPEM := generateTestCert(t)
+
+	certFile := writeTempFile(t, certPEM)
+	keyFile := writeTempFile(t, keyPEM)
+
+	_, err := buildTLSConfig(config.VulsServer{
+		CertFile: certFile,
+		KeyFile:  keyFile,
+		CAFile:   "/nonexistent/ca.pem",
+	})
+	if err == nil {
+		t.Fatal("expected error for invalid CA file")
+	}
+}
+
+func TestBuildTLSConfig_InvalidCAPEM(t *testing.T) {
+	certPEM, keyPEM := generateTestCert(t)
+
+	certFile := writeTempFile(t, certPEM)
+	keyFile := writeTempFile(t, keyPEM)
+	caFile := writeTempFile(t, "not a PEM certificate")
+
+	_, err := buildTLSConfig(config.VulsServer{
+		CertFile: certFile,
+		KeyFile:  keyFile,
+		CAFile:   caFile,
+	})
+	if err == nil {
+		t.Fatal("expected error for invalid CA PEM content")
+	}
+}
+
+func TestBuildTLSConfig_ValidCertNoCA(t *testing.T) {
+	certPEM, keyPEM := generateTestCert(t)
+
+	certFile := writeTempFile(t, certPEM)
+	keyFile := writeTempFile(t, keyPEM)
+
+	tlsCfg, err := buildTLSConfig(config.VulsServer{
+		CertFile: certFile,
+		KeyFile:  keyFile,
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(tlsCfg.Certificates) != 1 {
+		t.Errorf("expected 1 certificate, got %d", len(tlsCfg.Certificates))
+	}
+	if tlsCfg.RootCAs != nil {
+		t.Error("expected nil RootCAs when no CA file specified")
+	}
+}
+
+func TestBuildTLSConfig_ValidCertWithCA(t *testing.T) {
+	certPEM, keyPEM := generateTestCert(t)
+
+	certFile := writeTempFile(t, certPEM)
+	keyFile := writeTempFile(t, keyPEM)
+	caFile := writeTempFile(t, certPEM) // reuse cert as CA for test
+
+	tlsCfg, err := buildTLSConfig(config.VulsServer{
+		CertFile: certFile,
+		KeyFile:  keyFile,
+		CAFile:   caFile,
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(tlsCfg.Certificates) != 1 {
+		t.Errorf("expected 1 certificate, got %d", len(tlsCfg.Certificates))
+	}
+	if tlsCfg.RootCAs == nil {
+		t.Error("expected non-nil RootCAs when CA file specified")
 	}
 }

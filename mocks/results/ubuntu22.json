@@ -1,0 +1,4011 @@
+{
+    "jsonVersion": 0,
+    "lang": "",
+    "serverUUID": "",
+    "serverName": "vuls-ubuntu22",
+    "family": "ubuntu",
+    "release": "22.04",
+    "container": {
+        "containerID": "",
+        "name": "",
+        "image": "",
+        "type": "",
+        "uuid": ""
+    },
+    "platform": {
+        "name": "",
+        "instanceID": ""
+    },
+    "scannedAt": "2026-03-09T12:00:00Z",
+    "scanMode": "",
+    "scannedVersion": "",
+    "scannedRevision": "",
+    "scannedBy": "",
+    "scannedVia": "",
+    "reportedAt": "2026-03-09T12:32:43.360964301Z",
+    "reportedVersion": "",
+    "reportedRevision": "",
+    "reportedBy": "",
+    "errors": null,
+    "warnings": null,
+    "scannedCves": {
+        "CVE-2017-11164": {
+            "cveID": "CVE-2017-11164",
+            "confidences": [
+                {
+                    "score": 100,
+                    "detectionMethod": "UbuntuAPIMatch"
+                }
+            ],
+            "affectedPackages": [
+                {
+                    "name": "libpcre3:amd64",
+                    "notFixedYet": true,
+                    "fixState": "needed"
+                }
+            ],
+            "cveContents": {
+                "nvd": [
+                    {
+                        "type": "nvd",
+                        "cveID": "CVE-2017-11164",
+                        "title": "",
+                        "summary": "In PCRE 8.41, the OP_KETRMAX feature in the match function in pcre_exec.c allows stack exhaustion (uncontrolled recursion) when processing a crafted regular expression.\nEn PCRE versión 8.41, la función OP_KETRMAX en la función de coincidencia en el archivo pcre_exec.c permite el agotamiento de la pila (recursión no controlada) cuando se procesa una expresión regular creada.",
+                        "cvss2Score": 7.8,
+                        "cvss2Vector": "AV:N/AC:L/Au:N/C:N/I:N/A:C",
+                        "cvss2Severity": "HIGH",
+                        "cvss3Score": 7.5,
+                        "cvss3Vector": "CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+                        "cvss3Severity": "HIGH",
+                        "cvss40Score": 0,
+                        "cvss40Vector": "",
+                        "cvss40Severity": "",
+                        "sourceLink": "https://nvd.nist.gov/vuln/detail/CVE-2017-11164",
+                        "references": [
+                            {
+                                "link": "http://openwall.com/lists/oss-security/2017/07/11/3",
+                                "source": "cve@mitre.org",
+                                "tags": [
+                                    "Mailing List",
+                                    "Third Party Advisory"
+                                ]
+                            },
+                            {
+                                "link": "http://openwall.com/lists/oss-security/2017/07/11/3",
+                                "source": "af854a3a-2127-422b-91ae-364da2661108",
+                                "tags": [
+                                    "Mailing List",
+                                    "Third Party Advisory"
+                                ]
+                            },
+                            {
+                                "link": "http://www.openwall.com/lists/oss-security/2023/04/11/1",
+                                "source": "cve@mitre.org"
+                            },
+                            {
+                                "link": "http://www.openwall.com/lists/oss-security/2023/04/11/1",
+                                "source": "af854a3a-2127-422b-91ae-364da2661108"
+                            },
+                            {
+                                "link": "http://www.openwall.com/lists/oss-security/2023/04/12/1",
+                                "source": "cve@mitre.org"
+                            },
+                            {
+                                "link": "http://www.openwall.com/lists/oss-security/2023/04/12/1",
+                                "source": "af854a3a-2127-422b-91ae-364da2661108"
+                            },
+                            {
+                                "link": "http://www.securityfocus.com/bid/99575",
+                                "source": "cve@mitre.org"
+                            },
+                            {
+                                "link": "http://www.securityfocus.com/bid/99575",
+                                "source": "af854a3a-2127-422b-91ae-364da2661108"
+                            },
+                            {
+                                "link": "https://lists.apache.org/thread.html/rf9fa47ab66495c78bb4120b0754dd9531ca2ff0430f6685ac9b07772%40%3Cdev.mina.apache.org%3E",
+                                "source": "cve@mitre.org"
+                            },
+                            {
+                                "link": "https://lists.apache.org/thread.html/rf9fa47ab66495c78bb4120b0754dd9531ca2ff0430f6685ac9b07772%40%3Cdev.mina.apache.org%3E",
+                                "source": "af854a3a-2127-422b-91ae-364da2661108"
+                            }
+                        ],
+                        "cweIDs": [
+                            "CWE-674"
+                        ],
+                        "published": "2017-07-11T03:29:00.277Z",
+                        "lastModified": "2025-04-20T01:37:25.86Z",
+                        "optional": {
+                            "source": "nvd@nist.gov"
+                        }
+                    }
+                ],
+                "ubuntu_api": [
+                    {
+                        "type": "ubuntu_api",
+                        "cveID": "CVE-2017-11164",
+                        "title": "",
+                        "summary": "In PCRE 8.41, the OP_KETRMAX feature in the match function in pcre_exec.c allows stack exhaustion (uncontrolled recursion) when processing a crafted regular expression.",
+                        "cvss2Score": 0,
+                        "cvss2Vector": "",
+                        "cvss2Severity": "negligible",
+                        "cvss3Score": 0,
+                        "cvss3Vector": "",
+                        "cvss3Severity": "negligible",
+                        "cvss40Score": 0,
+                        "cvss40Vector": "",
+                        "cvss40Severity": "",
+                        "sourceLink": "https://ubuntu.com/security/CVE-2017-11164",
+                        "references": [
+                            {
+                                "link": "http://openwall.com/lists/oss-security/2017/07/11/3",
+                                "source": "MISC"
+                            },
+                            {
+                                "link": "https://www.cve.org/CVERecord?id=CVE-2017-11164",
+                                "source": "CVE",
+                                "refID": "CVE-2017-11164"
+                            }
+                        ],
+                        "published": "2017-07-11T03:29:00Z",
+                        "lastModified": "1000-01-01T00:00:00Z",
+                        "optional": {
+                            "vuls2-sources": "[{\"root_id\":\"CVE-2017-11164\",\"source_id\":\"ubuntu-cve-tracker\",\"segment\":{\"ecosystem\":\"ubuntu:22.04\",\"tag\":\"jammy_negligible\"}}]"
+                        }
+                    }
+                ]
+            }
+        },
+        "CVE-2022-27943": {
+            "cveID": "CVE-2022-27943",
+            "confidences": [
+                {
+                    "score": 100,
+                    "detectionMethod": "UbuntuAPIMatch"
+                }
+            ],
+            "affectedPackages": [
+                {
+                    "name": "gcc-12-base:amd64",
+                    "notFixedYet": true,
+                    "fixState": "needed"
+                },
+                {
+                    "name": "libgcc-s1:amd64",
+                    "notFixedYet": true,
+                    "fixState": "needed"
+                },
+                {
+                    "name": "libstdc++6:amd64",
+                    "notFixedYet": true,
+                    "fixState": "needed"
+                }
+            ],
+            "cveContents": {
+                "nvd": [
+                    {
+                        "type": "nvd",
+                        "cveID": "CVE-2022-27943",
+                        "title": "",
+                        "summary": "libiberty/rust-demangle.c in GNU GCC 11.2 allows stack consumption in demangle_const, as demonstrated by nm-new.\nEl archivo libiberty/rust-demangle.c en GNU GCC versión 11.2, permite un consumo de pila en demangle_const, como lo demuestra nm-new",
+                        "cvss2Score": 4.3,
+                        "cvss2Vector": "AV:N/AC:M/Au:N/C:N/I:N/A:P",
+                        "cvss2Severity": "MEDIUM",
+                        "cvss3Score": 5.5,
+                        "cvss3Vector": "CVSS:3.1/AV:L/AC:L/PR:N/UI:R/S:U/C:N/I:N/A:H",
+                        "cvss3Severity": "MEDIUM",
+                        "cvss40Score": 0,
+                        "cvss40Vector": "",
+                        "cvss40Severity": "",
+                        "sourceLink": "https://nvd.nist.gov/vuln/detail/CVE-2022-27943",
+                        "references": [
+                            {
+                                "link": "https://gcc.gnu.org/bugzilla/show_bug.cgi?id=105039",
+                                "source": "cve@mitre.org",
+                                "tags": [
+                                    "Exploit",
+                                    "Issue Tracking",
+                                    "Vendor Advisory"
+                                ]
+                            },
+                            {
+                                "link": "https://gcc.gnu.org/bugzilla/show_bug.cgi?id=105039",
+                                "source": "af854a3a-2127-422b-91ae-364da2661108",
+                                "tags": [
+                                    "Exploit",
+                                    "Issue Tracking",
+                                    "Vendor Advisory"
+                                ]
+                            },
+                            {
+                                "link": "https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/H424YXGW7OKXS2NCAP35OP6Y4P4AW6VG/",
+                                "source": "cve@mitre.org"
+                            },
+                            {
+                                "link": "https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/H424YXGW7OKXS2NCAP35OP6Y4P4AW6VG/",
+                                "source": "af854a3a-2127-422b-91ae-364da2661108"
+                            },
+                            {
+                                "link": "https://sourceware.org/bugzilla/show_bug.cgi?id=28995",
+                                "source": "cve@mitre.org",
+                                "tags": [
+                                    "Exploit",
+                                    "Issue Tracking",
+                                    "Third Party Advisory"
+                                ]
+                            },
+                            {
+                                "link": "https://sourceware.org/bugzilla/show_bug.cgi?id=28995",
+                                "source": "af854a3a-2127-422b-91ae-364da2661108",
+                                "tags": [
+                                    "Exploit",
+                                    "Issue Tracking",
+                                    "Third Party Advisory"
+                                ]
+                            }
+                        ],
+                        "cweIDs": [
+                            "CWE-674"
+                        ],
+                        "published": "2022-03-26T13:15:07.9Z",
+                        "lastModified": "2024-11-21T06:56:31.04Z",
+                        "optional": {
+                            "source": "nvd@nist.gov"
+                        }
+                    }
+                ],
+                "ubuntu_api": [
+                    {
+                        "type": "ubuntu_api",
+                        "cveID": "CVE-2022-27943",
+                        "title": "",
+                        "summary": "libiberty/rust-demangle.c in GNU GCC 11.2 allows stack consumption in demangle_const, as demonstrated by nm-new.",
+                        "cvss2Score": 0,
+                        "cvss2Vector": "",
+                        "cvss2Severity": "low",
+                        "cvss3Score": 0,
+                        "cvss3Vector": "",
+                        "cvss3Severity": "low",
+                        "cvss40Score": 0,
+                        "cvss40Vector": "",
+                        "cvss40Severity": "",
+                        "sourceLink": "https://ubuntu.com/security/CVE-2022-27943",
+                        "references": [
+                            {
+                                "link": "https://gcc.gnu.org/git/gitweb.cgi?p=gcc.git;h=1a770b01ef415e114164b6151d1e55acdee09371",
+                                "source": "MISC"
+                            },
+                            {
+                                "link": "https://gcc.gnu.org/git/gitweb.cgi?p=gcc.git;h=9234cdca6ee88badfc00297e72f13dac4e540c79",
+                                "source": "MISC"
+                            },
+                            {
+                                "link": "https://gcc.gnu.org/git/gitweb.cgi?p=gcc.git;h=fc968115a742d9e4674d9725ce9c2106b91b6ead",
+                                "source": "MISC"
+                            },
+                            {
+                                "link": "https://gcc.gnu.org/pipermail/gcc-patches/2022-March/592244.html",
+                                "source": "MISC"
+                            },
+                            {
+                                "link": "https://www.cve.org/CVERecord?id=CVE-2022-27943",
+                                "source": "CVE",
+                                "refID": "CVE-2022-27943"
+                            }
+                        ],
+                        "published": "2022-03-26T13:15:00Z",
+                        "lastModified": "1000-01-01T00:00:00Z",
+                        "optional": {
+                            "vuls2-sources": "[{\"root_id\":\"CVE-2022-27943\",\"source_id\":\"ubuntu-cve-tracker\",\"segment\":{\"ecosystem\":\"ubuntu:22.04\",\"tag\":\"jammy_low\"}}]"
+                        }
+                    }
+                ]
+            },
+            "exploits": [
+                {
+                    "exploitType": "nvd",
+                    "id": "",
+                    "url": "https://gcc.gnu.org/bugzilla/show_bug.cgi?id=105039",
+                    "description": ""
+                },
+                {
+                    "exploitType": "nvd",
+                    "id": "",
+                    "url": "https://gcc.gnu.org/bugzilla/show_bug.cgi?id=105039",
+                    "description": ""
+                },
+                {
+                    "exploitType": "nvd",
+                    "id": "",
+                    "url": "https://sourceware.org/bugzilla/show_bug.cgi?id=28995",
+                    "description": ""
+                },
+                {
+                    "exploitType": "nvd",
+                    "id": "",
+                    "url": "https://sourceware.org/bugzilla/show_bug.cgi?id=28995",
+                    "description": ""
+                }
+            ]
+        },
+        "CVE-2022-3219": {
+            "cveID": "CVE-2022-3219",
+            "confidences": [
+                {
+                    "score": 100,
+                    "detectionMethod": "UbuntuAPIMatch"
+                }
+            ],
+            "affectedPackages": [
+                {
+                    "name": "gpgv",
+                    "notFixedYet": true,
+                    "fixState": "deferred"
+                }
+            ],
+            "cveContents": {
+                "nvd": [
+                    {
+                        "type": "nvd",
+                        "cveID": "CVE-2022-3219",
+                        "title": "",
+                        "summary": "GnuPG can be made to spin on a relatively small input by (for example) crafting a public key with thousands of signatures attached, compressed down to just a few KB.",
+                        "cvss2Score": 0,
+                        "cvss2Vector": "",
+                        "cvss2Severity": "",
+                        "cvss3Score": 3.3,
+                        "cvss3Vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:L",
+                        "cvss3Severity": "LOW",
+                        "cvss40Score": 0,
+                        "cvss40Vector": "",
+                        "cvss40Severity": "",
+                        "sourceLink": "https://nvd.nist.gov/vuln/detail/CVE-2022-3219",
+                        "references": [
+                            {
+                                "link": "https://access.redhat.com/security/cve/CVE-2022-3219",
+                                "source": "secalert@redhat.com",
+                                "tags": [
+                                    "Third Party Advisory"
+                                ]
+                            },
+                            {
+                                "link": "https://access.redhat.com/security/cve/CVE-2022-3219",
+                                "source": "af854a3a-2127-422b-91ae-364da2661108",
+                                "tags": [
+                                    "Third Party Advisory"
+                                ]
+                            },
+                            {
+                                "link": "https://bugzilla.redhat.com/show_bug.cgi?id=2127010",
+                                "source": "secalert@redhat.com",
+                                "tags": [
+                                    "Issue Tracking",
+                                    "Third Party Advisory"
+                                ]
+                            },
+                            {
+                                "link": "https://bugzilla.redhat.com/show_bug.cgi?id=2127010",
+                                "source": "af854a3a-2127-422b-91ae-364da2661108",
+                                "tags": [
+                                    "Issue Tracking",
+                                    "Third Party Advisory"
+                                ]
+                            },
+                            {
+                                "link": "https://dev.gnupg.org/D556",
+                                "source": "secalert@redhat.com",
+                                "tags": [
+                                    "Patch"
+                                ]
+                            },
+                            {
+                                "link": "https://dev.gnupg.org/D556",
+                                "source": "af854a3a-2127-422b-91ae-364da2661108",
+                                "tags": [
+                                    "Patch"
+                                ]
+                            },
+                            {
+                                "link": "https://dev.gnupg.org/T5993",
+                                "source": "secalert@redhat.com",
+                                "tags": [
+                                    "Patch"
+                                ]
+                            },
+                            {
+                                "link": "https://dev.gnupg.org/T5993",
+                                "source": "af854a3a-2127-422b-91ae-364da2661108",
+                                "tags": [
+                                    "Patch"
+                                ]
+                            },
+                            {
+                                "link": "https://marc.info/?l=oss-security\u0026m=165696590211434\u0026w=4",
+                                "source": "secalert@redhat.com",
+                                "tags": [
+                                    "Mailing List",
+                                    "Patch"
+                                ]
+                            },
+                            {
+                                "link": "https://marc.info/?l=oss-security\u0026m=165696590211434\u0026w=4",
+                                "source": "af854a3a-2127-422b-91ae-364da2661108",
+                                "tags": [
+                                    "Mailing List",
+                                    "Patch"
+                                ]
+                            },
+                            {
+                                "link": "https://security.netapp.com/advisory/ntap-20230324-0001/",
+                                "source": "secalert@redhat.com",
+                                "tags": [
+                                    "Third Party Advisory"
+                                ]
+                            },
+                            {
+                                "link": "https://security.netapp.com/advisory/ntap-20230324-0001/",
+                                "source": "af854a3a-2127-422b-91ae-364da2661108",
+                                "tags": [
+                                    "Third Party Advisory"
+                                ]
+                            }
+                        ],
+                        "cweIDs": [
+                            "CWE-787"
+                        ],
+                        "published": "2023-02-23T20:15:12.393Z",
+                        "lastModified": "2025-03-12T21:15:38.207Z",
+                        "optional": {
+                            "source": "134c704f-9b21-4f2e-91b3-4a467353bcc0"
+                        }
+                    },
+                    {
+                        "type": "nvd",
+                        "cveID": "CVE-2022-3219",
+                        "title": "",
+                        "summary": "GnuPG can be made to spin on a relatively small input by (for example) crafting a public key with thousands of signatures attached, compressed down to just a few KB.",
+                        "cvss2Score": 0,
+                        "cvss2Vector": "",
+                        "cvss2Severity": "",
+                        "cvss3Score": 3.3,
+                        "cvss3Vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:L",
+                        "cvss3Severity": "LOW",
+                        "cvss40Score": 0,
+                        "cvss40Vector": "",
+                        "cvss40Severity": "",
+                        "sourceLink": "https://nvd.nist.gov/vuln/detail/CVE-2022-3219",
+                        "references": [
+                            {
+                                "link": "https://access.redhat.com/security/cve/CVE-2022-3219",
+                                "source": "secalert@redhat.com",
+                                "tags": [
+                                    "Third Party Advisory"
+                                ]
+                            },
+                            {
+                                "link": "https://access.redhat.com/security/cve/CVE-2022-3219",
+                                "source": "af854a3a-2127-422b-91ae-364da2661108",
+                                "tags": [
+                                    "Third Party Advisory"
+                                ]
+                            },
+                            {
+                                "link": "https://bugzilla.redhat.com/show_bug.cgi?id=2127010",
+                                "source": "secalert@redhat.com",
+                                "tags": [
+                                    "Issue Tracking",
+                                    "Third Party Advisory"
+                                ]
+                            },
+                            {
+                                "link": "https://bugzilla.redhat.com/show_bug.cgi?id=2127010",
+                                "source": "af854a3a-2127-422b-91ae-364da2661108",
+                                "tags": [
+                                    "Issue Tracking",
+                                    "Third Party Advisory"
+                                ]
+                            },
+                            {
+                                "link": "https://dev.gnupg.org/D556",
+                                "source": "secalert@redhat.com",
+                                "tags": [
+                                    "Patch"
+                                ]
+                            },
+                            {
+                                "link": "https://dev.gnupg.org/D556",
+                                "source": "af854a3a-2127-422b-91ae-364da2661108",
+                                "tags": [
+                                    "Patch"
+                                ]
+                            },
+                            {
+                                "link": "https://dev.gnupg.org/T5993",
+                                "source": "secalert@redhat.com",
+                                "tags": [
+                                    "Patch"
+                                ]
+                            },
+                            {
+                                "link": "https://dev.gnupg.org/T5993",
+                                "source": "af854a3a-2127-422b-91ae-364da2661108",
+                                "tags": [
+                                    "Patch"
+                                ]
+                            },
+                            {
+                                "link": "https://marc.info/?l=oss-security\u0026m=165696590211434\u0026w=4",
+                                "source": "secalert@redhat.com",
+                                "tags": [
+                                    "Mailing List",
+                                    "Patch"
+                                ]
+                            },
+                            {
+                                "link": "https://marc.info/?l=oss-security\u0026m=165696590211434\u0026w=4",
+                                "source": "af854a3a-2127-422b-91ae-364da2661108",
+                                "tags": [
+                                    "Mailing List",
+                                    "Patch"
+                                ]
+                            },
+                            {
+                                "link": "https://security.netapp.com/advisory/ntap-20230324-0001/",
+                                "source": "secalert@redhat.com",
+                                "tags": [
+                                    "Third Party Advisory"
+                                ]
+                            },
+                            {
+                                "link": "https://security.netapp.com/advisory/ntap-20230324-0001/",
+                                "source": "af854a3a-2127-422b-91ae-364da2661108",
+                                "tags": [
+                                    "Third Party Advisory"
+                                ]
+                            }
+                        ],
+                        "cweIDs": [
+                            "CWE-787"
+                        ],
+                        "published": "2023-02-23T20:15:12.393Z",
+                        "lastModified": "2025-03-12T21:15:38.207Z",
+                        "optional": {
+                            "source": "nvd@nist.gov"
+                        }
+                    }
+                ],
+                "ubuntu_api": [
+                    {
+                        "type": "ubuntu_api",
+                        "cveID": "CVE-2022-3219",
+                        "title": "",
+                        "summary": "GnuPG can be made to spin on a relatively small input by (for example) crafting a public key with thousands of signatures attached, compressed down to just a few KB.",
+                        "cvss2Score": 0,
+                        "cvss2Vector": "",
+                        "cvss2Severity": "low",
+                        "cvss3Score": 0,
+                        "cvss3Vector": "",
+                        "cvss3Severity": "low",
+                        "cvss40Score": 0,
+                        "cvss40Vector": "",
+                        "cvss40Severity": "",
+                        "sourceLink": "https://ubuntu.com/security/CVE-2022-3219",
+                        "references": [
+                            {
+                                "link": "https://access.redhat.com/security/cve/CVE-2022-3219",
+                                "source": "REDHAT",
+                                "refID": "CVE-2022-3219"
+                            },
+                            {
+                                "link": "https://marc.info/?l=oss-security\u0026m=165696590211434\u0026w=4",
+                                "source": "MISC"
+                            },
+                            {
+                                "link": "https://www.cve.org/CVERecord?id=CVE-2022-3219",
+                                "source": "CVE",
+                                "refID": "CVE-2022-3219"
+                            }
+                        ],
+                        "published": "2023-02-23T20:15:00Z",
+                        "lastModified": "1000-01-01T00:00:00Z",
+                        "optional": {
+                            "vuls2-sources": "[{\"root_id\":\"CVE-2022-3219\",\"source_id\":\"ubuntu-cve-tracker\",\"segment\":{\"ecosystem\":\"ubuntu:22.04\",\"tag\":\"jammy_low\"}}]"
+                        }
+                    }
+                ]
+            }
+        },
+        "CVE-2022-41409": {
+            "cveID": "CVE-2022-41409",
+            "confidences": [
+                {
+                    "score": 100,
+                    "detectionMethod": "UbuntuAPIMatch"
+                }
+            ],
+            "affectedPackages": [
+                {
+                    "name": "libpcre2-8-0:amd64",
+                    "notFixedYet": true,
+                    "fixState": "needed"
+                }
+            ],
+            "cveContents": {
+                "nvd": [
+                    {
+                        "type": "nvd",
+                        "cveID": "CVE-2022-41409",
+                        "title": "",
+                        "summary": "Integer overflow vulnerability in pcre2test before 10.41 allows attackers to cause a denial of service or other unspecified impacts via negative input.",
+                        "cvss2Score": 0,
+                        "cvss2Vector": "",
+                        "cvss2Severity": "",
+                        "cvss3Score": 7.5,
+                        "cvss3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+                        "cvss3Severity": "HIGH",
+                        "cvss40Score": 0,
+                        "cvss40Vector": "",
+                        "cvss40Severity": "",
+                        "sourceLink": "https://nvd.nist.gov/vuln/detail/CVE-2022-41409",
+                        "references": [
+                            {
+                                "link": "https://github.com/PCRE2Project/pcre2/commit/94e1c001761373b7d9450768aa15d04c25547a35",
+                                "source": "cve@mitre.org",
+                                "tags": [
+                                    "Patch"
+                                ]
+                            },
+                            {
+                                "link": "https://github.com/PCRE2Project/pcre2/commit/94e1c001761373b7d9450768aa15d04c25547a35",
+                                "source": "af854a3a-2127-422b-91ae-364da2661108",
+                                "tags": [
+                                    "Patch"
+                                ]
+                            },
+                            {
+                                "link": "https://github.com/PCRE2Project/pcre2/issues/141",
+                                "source": "cve@mitre.org",
+                                "tags": [
+                                    "Exploit",
+                                    "Third Party Advisory"
+                                ]
+                            },
+                            {
+                                "link": "https://github.com/PCRE2Project/pcre2/issues/141",
+                                "source": "af854a3a-2127-422b-91ae-364da2661108",
+                                "tags": [
+                                    "Exploit",
+                                    "Third Party Advisory"
+                                ]
+                            }
+                        ],
+                        "cweIDs": [
+                            "CWE-190"
+                        ],
+                        "published": "2023-07-18T14:15:12.197Z",
+                        "lastModified": "2024-11-21T07:23:10.577Z",
+                        "optional": {
+                            "source": "nvd@nist.gov"
+                        }
+                    }
+                ],
+                "ubuntu_api": [
+                    {
+                        "type": "ubuntu_api",
+                        "cveID": "CVE-2022-41409",
+                        "title": "",
+                        "summary": "Integer overflow vulnerability in pcre2test before 10.41 allows attackers to cause a denial of service or other unspecified impacts via negative input.",
+                        "cvss2Score": 0,
+                        "cvss2Vector": "",
+                        "cvss2Severity": "low",
+                        "cvss3Score": 0,
+                        "cvss3Vector": "",
+                        "cvss3Severity": "low",
+                        "cvss40Score": 0,
+                        "cvss40Vector": "",
+                        "cvss40Severity": "",
+                        "sourceLink": "https://ubuntu.com/security/CVE-2022-41409",
+                        "references": [
+                            {
+                                "link": "https://github.com/PCRE2Project/pcre2/commit/94e1c001761373b7d9450768aa15d04c25547a35",
+                                "source": "MISC"
+                            },
+                            {
+                                "link": "https://github.com/PCRE2Project/pcre2/issues/141",
+                                "source": "MISC"
+                            },
+                            {
+                                "link": "https://www.cve.org/CVERecord?id=CVE-2022-41409",
+                                "source": "CVE",
+                                "refID": "CVE-2022-41409"
+                            }
+                        ],
+                        "published": "2023-07-18T14:15:00Z",
+                        "lastModified": "1000-01-01T00:00:00Z",
+                        "optional": {
+                            "vuls2-sources": "[{\"root_id\":\"CVE-2022-41409\",\"source_id\":\"ubuntu-cve-tracker\",\"segment\":{\"ecosystem\":\"ubuntu:22.04\",\"tag\":\"jammy_low\"}}]"
+                        }
+                    }
+                ]
+            },
+            "exploits": [
+                {
+                    "exploitType": "nvd",
+                    "id": "",
+                    "url": "https://github.com/PCRE2Project/pcre2/issues/141",
+                    "description": ""
+                },
+                {
+                    "exploitType": "nvd",
+                    "id": "",
+                    "url": "https://github.com/PCRE2Project/pcre2/issues/141",
+                    "description": ""
+                }
+            ]
+        },
+        "CVE-2022-4899": {
+            "cveID": "CVE-2022-4899",
+            "confidences": [
+                {
+                    "score": 100,
+                    "detectionMethod": "UbuntuAPIMatch"
+                }
+            ],
+            "affectedPackages": [
+                {
+                    "name": "libzstd1:amd64",
+                    "notFixedYet": true,
+                    "fixState": "needed"
+                }
+            ],
+            "cveContents": {
+                "nvd": [
+                    {
+                        "type": "nvd",
+                        "cveID": "CVE-2022-4899",
+                        "title": "",
+                        "summary": "A vulnerability was found in zstd v1.4.10, where an attacker can supply empty string as an argument to the command line tool to cause buffer overrun.\nSe encontró una vulnerabilidad en zstd v1.4.10, donde un atacante puede proporcionar una cadena vacía como argumento a la herramienta de línea de comando para provocar una saturación del búfer.",
+                        "cvss2Score": 0,
+                        "cvss2Vector": "",
+                        "cvss2Severity": "",
+                        "cvss3Score": 7.5,
+                        "cvss3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+                        "cvss3Severity": "HIGH",
+                        "cvss40Score": 0,
+                        "cvss40Vector": "",
+                        "cvss40Severity": "",
+                        "sourceLink": "https://nvd.nist.gov/vuln/detail/CVE-2022-4899",
+                        "references": [
+                            {
+                                "link": "https://github.com/facebook/zstd/issues/3200",
+                                "source": "secalert@redhat.com",
+                                "tags": [
+                                    "Issue Tracking",
+                                    "Patch"
+                                ]
+                            },
+                            {
+                                "link": "https://github.com/facebook/zstd/issues/3200",
+                                "source": "af854a3a-2127-422b-91ae-364da2661108",
+                                "tags": [
+                                    "Issue Tracking",
+                                    "Patch"
+                                ]
+                            },
+                            {
+                                "link": "https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/C63HAGVLQA6FJNDCHR7CNZZL6VSLILB2/",
+                                "source": "secalert@redhat.com"
+                            },
+                            {
+                                "link": "https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/C63HAGVLQA6FJNDCHR7CNZZL6VSLILB2/",
+                                "source": "af854a3a-2127-422b-91ae-364da2661108"
+                            },
+                            {
+                                "link": "https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/JEHRBBYYTPA4DETOM5XAKGCP37NUTLOA/",
+                                "source": "secalert@redhat.com"
+                            },
+                            {
+                                "link": "https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/JEHRBBYYTPA4DETOM5XAKGCP37NUTLOA/",
+                                "source": "af854a3a-2127-422b-91ae-364da2661108"
+                            },
+                            {
+                                "link": "https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/QYLDK6ODVC4LJSDULLX6Q2YHTFOWABCN/",
+                                "source": "secalert@redhat.com"
+                            },
+                            {
+                                "link": "https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/QYLDK6ODVC4LJSDULLX6Q2YHTFOWABCN/",
+                                "source": "af854a3a-2127-422b-91ae-364da2661108"
+                            },
+                            {
+                                "link": "https://security.netapp.com/advisory/ntap-20230725-0005/",
+                                "source": "secalert@redhat.com"
+                            },
+                            {
+                                "link": "https://security.netapp.com/advisory/ntap-20230725-0005/",
+                                "source": "af854a3a-2127-422b-91ae-364da2661108"
+                            }
+                        ],
+                        "cweIDs": [
+                            "CWE-400"
+                        ],
+                        "published": "2023-03-31T20:15:07.213Z",
+                        "lastModified": "2025-02-18T18:15:14.023Z",
+                        "optional": {
+                            "source": "134c704f-9b21-4f2e-91b3-4a467353bcc0"
+                        }
+                    },
+                    {
+                        "type": "nvd",
+                        "cveID": "CVE-2022-4899",
+                        "title": "",
+                        "summary": "A vulnerability was found in zstd v1.4.10, where an attacker can supply empty string as an argument to the command line tool to cause buffer overrun.\nSe encontró una vulnerabilidad en zstd v1.4.10, donde un atacante puede proporcionar una cadena vacía como argumento a la herramienta de línea de comando para provocar una saturación del búfer.",
+                        "cvss2Score": 0,
+                        "cvss2Vector": "",
+                        "cvss2Severity": "",
+                        "cvss3Score": 7.5,
+                        "cvss3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+                        "cvss3Severity": "HIGH",
+                        "cvss40Score": 0,
+                        "cvss40Vector": "",
+                        "cvss40Severity": "",
+                        "sourceLink": "https://nvd.nist.gov/vuln/detail/CVE-2022-4899",
+                        "references": [
+                            {
+                                "link": "https://github.com/facebook/zstd/issues/3200",
+                                "source": "secalert@redhat.com",
+                                "tags": [
+                                    "Issue Tracking",
+                                    "Patch"
+                                ]
+                            },
+                            {
+                                "link": "https://github.com/facebook/zstd/issues/3200",
+                                "source": "af854a3a-2127-422b-91ae-364da2661108",
+                                "tags": [
+                                    "Issue Tracking",
+                                    "Patch"
+                                ]
+                            },
+                            {
+                                "link": "https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/C63HAGVLQA6FJNDCHR7CNZZL6VSLILB2/",
+                                "source": "secalert@redhat.com"
+                            },
+                            {
+                                "link": "https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/C63HAGVLQA6FJNDCHR7CNZZL6VSLILB2/",
+                                "source": "af854a3a-2127-422b-91ae-364da2661108"
+                            },
+                            {
+                                "link": "https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/JEHRBBYYTPA4DETOM5XAKGCP37NUTLOA/",
+                                "source": "secalert@redhat.com"
+                            },
+                            {
+                                "link": "https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/JEHRBBYYTPA4DETOM5XAKGCP37NUTLOA/",
+                                "source": "af854a3a-2127-422b-91ae-364da2661108"
+                            },
+                            {
+                                "link": "https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/QYLDK6ODVC4LJSDULLX6Q2YHTFOWABCN/",
+                                "source": "secalert@redhat.com"
+                            },
+                            {
+                                "link": "https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/QYLDK6ODVC4LJSDULLX6Q2YHTFOWABCN/",
+                                "source": "af854a3a-2127-422b-91ae-364da2661108"
+                            },
+                            {
+                                "link": "https://security.netapp.com/advisory/ntap-20230725-0005/",
+                                "source": "secalert@redhat.com"
+                            },
+                            {
+                                "link": "https://security.netapp.com/advisory/ntap-20230725-0005/",
+                                "source": "af854a3a-2127-422b-91ae-364da2661108"
+                            }
+                        ],
+                        "cweIDs": [
+                            "CWE-400"
+                        ],
+                        "published": "2023-03-31T20:15:07.213Z",
+                        "lastModified": "2025-02-18T18:15:14.023Z",
+                        "optional": {
+                            "source": "nvd@nist.gov"
+                        }
+                    },
+                    {
+                        "type": "nvd",
+                        "cveID": "CVE-2022-4899",
+                        "title": "",
+                        "summary": "A vulnerability was found in zstd v1.4.10, where an attacker can supply empty string as an argument to the command line tool to cause buffer overrun.\nSe encontró una vulnerabilidad en zstd v1.4.10, donde un atacante puede proporcionar una cadena vacía como argumento a la herramienta de línea de comando para provocar una saturación del búfer.",
+                        "cvss2Score": 0,
+                        "cvss2Vector": "",
+                        "cvss2Severity": "",
+                        "cvss3Score": 0,
+                        "cvss3Vector": "",
+                        "cvss3Severity": "",
+                        "cvss40Score": 0,
+                        "cvss40Vector": "",
+                        "cvss40Severity": "",
+                        "sourceLink": "https://nvd.nist.gov/vuln/detail/CVE-2022-4899",
+                        "references": [
+                            {
+                                "link": "https://github.com/facebook/zstd/issues/3200",
+                                "source": "secalert@redhat.com",
+                                "tags": [
+                                    "Issue Tracking",
+                                    "Patch"
+                                ]
+                            },
+                            {
+                                "link": "https://github.com/facebook/zstd/issues/3200",
+                                "source": "af854a3a-2127-422b-91ae-364da2661108",
+                                "tags": [
+                                    "Issue Tracking",
+                                    "Patch"
+                                ]
+                            },
+                            {
+                                "link": "https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/C63HAGVLQA6FJNDCHR7CNZZL6VSLILB2/",
+                                "source": "secalert@redhat.com"
+                            },
+                            {
+                                "link": "https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/C63HAGVLQA6FJNDCHR7CNZZL6VSLILB2/",
+                                "source": "af854a3a-2127-422b-91ae-364da2661108"
+                            },
+                            {
+                                "link": "https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/JEHRBBYYTPA4DETOM5XAKGCP37NUTLOA/",
+                                "source": "secalert@redhat.com"
+                            },
+                            {
+                                "link": "https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/JEHRBBYYTPA4DETOM5XAKGCP37NUTLOA/",
+                                "source": "af854a3a-2127-422b-91ae-364da2661108"
+                            },
+                            {
+                                "link": "https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/QYLDK6ODVC4LJSDULLX6Q2YHTFOWABCN/",
+                                "source": "secalert@redhat.com"
+                            },
+                            {
+                                "link": "https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/QYLDK6ODVC4LJSDULLX6Q2YHTFOWABCN/",
+                                "source": "af854a3a-2127-422b-91ae-364da2661108"
+                            },
+                            {
+                                "link": "https://security.netapp.com/advisory/ntap-20230725-0005/",
+                                "source": "secalert@redhat.com"
+                            },
+                            {
+                                "link": "https://security.netapp.com/advisory/ntap-20230725-0005/",
+                                "source": "af854a3a-2127-422b-91ae-364da2661108"
+                            }
+                        ],
+                        "cweIDs": [
+                            "CWE-400"
+                        ],
+                        "published": "2023-03-31T20:15:07.213Z",
+                        "lastModified": "2025-02-18T18:15:14.023Z",
+                        "optional": {
+                            "source": "secalert@redhat.com"
+                        }
+                    }
+                ],
+                "ubuntu_api": [
+                    {
+                        "type": "ubuntu_api",
+                        "cveID": "CVE-2022-4899",
+                        "title": "",
+                        "summary": "A vulnerability was found in zstd v1.4.10, where an attacker can supply empty string as an argument to the command line tool to cause buffer overrun.",
+                        "cvss2Score": 0,
+                        "cvss2Vector": "",
+                        "cvss2Severity": "low",
+                        "cvss3Score": 0,
+                        "cvss3Vector": "",
+                        "cvss3Severity": "low",
+                        "cvss40Score": 0,
+                        "cvss40Vector": "",
+                        "cvss40Severity": "",
+                        "sourceLink": "https://ubuntu.com/security/CVE-2022-4899",
+                        "references": [
+                            {
+                                "link": "https://access.redhat.com/security/cve/CVE-2022-4899",
+                                "source": "REDHAT",
+                                "refID": "CVE-2022-4899"
+                            },
+                            {
+                                "link": "https://www.cve.org/CVERecord?id=CVE-2022-4899",
+                                "source": "CVE",
+                                "refID": "CVE-2022-4899"
+                            }
+                        ],
+                        "published": "2023-03-31T20:15:00Z",
+                        "lastModified": "1000-01-01T00:00:00Z",
+                        "optional": {
+                            "vuls2-sources": "[{\"root_id\":\"CVE-2022-4899\",\"source_id\":\"ubuntu-cve-tracker\",\"segment\":{\"ecosystem\":\"ubuntu:22.04\",\"tag\":\"jammy_low\"}}]"
+                        }
+                    }
+                ]
+            }
+        },
+        "CVE-2023-29383": {
+            "cveID": "CVE-2023-29383",
+            "confidences": [
+                {
+                    "score": 100,
+                    "detectionMethod": "UbuntuAPIMatch"
+                }
+            ],
+            "affectedPackages": [
+                {
+                    "name": "login",
+                    "notFixedYet": true,
+                    "fixState": "needed"
+                },
+                {
+                    "name": "passwd",
+                    "notFixedYet": true,
+                    "fixState": "needed"
+                }
+            ],
+            "cveContents": {
+                "nvd": [
+                    {
+                        "type": "nvd",
+                        "cveID": "CVE-2023-29383",
+                        "title": "",
+                        "summary": "In Shadow 4.13, it is possible to inject control characters into fields provided to the SUID program chfn (change finger). Although it is not possible to exploit this directly (e.g., adding a new user fails because \\n is in the block list), it is possible to misrepresent the /etc/passwd file when viewed. Use of \\r manipulations and Unicode characters to work around blocking of the : character make it possible to give the impression that a new user has been added. In other words, an adversary may be able to convince a system administrator to take the system offline (an indirect, social-engineered denial of service) by demonstrating that \"cat /etc/passwd\" shows a rogue user account.",
+                        "cvss2Score": 0,
+                        "cvss2Vector": "",
+                        "cvss2Severity": "",
+                        "cvss3Score": 3.3,
+                        "cvss3Vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:N/I:L/A:N",
+                        "cvss3Severity": "LOW",
+                        "cvss40Score": 0,
+                        "cvss40Vector": "",
+                        "cvss40Severity": "",
+                        "sourceLink": "https://nvd.nist.gov/vuln/detail/CVE-2023-29383",
+                        "references": [
+                            {
+                                "link": "https://github.com/shadow-maint/shadow/commit/e5905c4b84d4fb90aefcd96ee618411ebfac663d",
+                                "source": "cve@mitre.org",
+                                "tags": [
+                                    "Patch"
+                                ]
+                            },
+                            {
+                                "link": "https://github.com/shadow-maint/shadow/commit/e5905c4b84d4fb90aefcd96ee618411ebfac663d",
+                                "source": "af854a3a-2127-422b-91ae-364da2661108",
+                                "tags": [
+                                    "Patch"
+                                ]
+                            },
+                            {
+                                "link": "https://github.com/shadow-maint/shadow/pull/687",
+                                "source": "cve@mitre.org",
+                                "tags": [
+                                    "Issue Tracking"
+                                ]
+                            },
+                            {
+                                "link": "https://github.com/shadow-maint/shadow/pull/687",
+                                "source": "af854a3a-2127-422b-91ae-364da2661108",
+                                "tags": [
+                                    "Issue Tracking"
+                                ]
+                            },
+                            {
+                                "link": "https://lists.debian.org/debian-lts-announce/2025/04/msg00026.html",
+                                "source": "af854a3a-2127-422b-91ae-364da2661108"
+                            },
+                            {
+                                "link": "https://www.trustwave.com/en-us/resources/blogs/spiderlabs-blog/cve-2023-29383-abusing-linux-chfn-to-misrepresent-etc-passwd/",
+                                "source": "cve@mitre.org",
+                                "tags": [
+                                    "Exploit",
+                                    "Third Party Advisory"
+                                ]
+                            },
+                            {
+                                "link": "https://www.trustwave.com/en-us/resources/blogs/spiderlabs-blog/cve-2023-29383-abusing-linux-chfn-to-misrepresent-etc-passwd/",
+                                "source": "af854a3a-2127-422b-91ae-364da2661108",
+                                "tags": [
+                                    "Exploit",
+                                    "Third Party Advisory"
+                                ]
+                            },
+                            {
+                                "link": "https://www.trustwave.com/en-us/resources/security-resources/security-advisories/?fid=31797",
+                                "source": "cve@mitre.org",
+                                "tags": [
+                                    "Exploit",
+                                    "Third Party Advisory"
+                                ]
+                            },
+                            {
+                                "link": "https://www.trustwave.com/en-us/resources/security-resources/security-advisories/?fid=31797",
+                                "source": "af854a3a-2127-422b-91ae-364da2661108",
+                                "tags": [
+                                    "Exploit",
+                                    "Third Party Advisory"
+                                ]
+                            }
+                        ],
+                        "cweIDs": [
+                            "CWE-74"
+                        ],
+                        "published": "2023-04-14T22:15:07.68Z",
+                        "lastModified": "2025-11-03T20:16:01.283Z",
+                        "optional": {
+                            "source": "nvd@nist.gov"
+                        }
+                    },
+                    {
+                        "type": "nvd",
+                        "cveID": "CVE-2023-29383",
+                        "title": "",
+                        "summary": "In Shadow 4.13, it is possible to inject control characters into fields provided to the SUID program chfn (change finger). Although it is not possible to exploit this directly (e.g., adding a new user fails because \\n is in the block list), it is possible to misrepresent the /etc/passwd file when viewed. Use of \\r manipulations and Unicode characters to work around blocking of the : character make it possible to give the impression that a new user has been added. In other words, an adversary may be able to convince a system administrator to take the system offline (an indirect, social-engineered denial of service) by demonstrating that \"cat /etc/passwd\" shows a rogue user account.",
+                        "cvss2Score": 0,
+                        "cvss2Vector": "",
+                        "cvss2Severity": "",
+                        "cvss3Score": 0,
+                        "cvss3Vector": "",
+                        "cvss3Severity": "",
+                        "cvss40Score": 0,
+                        "cvss40Vector": "",
+                        "cvss40Severity": "",
+                        "sourceLink": "https://nvd.nist.gov/vuln/detail/CVE-2023-29383",
+                        "references": [
+                            {
+                                "link": "https://github.com/shadow-maint/shadow/commit/e5905c4b84d4fb90aefcd96ee618411ebfac663d",
+                                "source": "cve@mitre.org",
+                                "tags": [
+                                    "Patch"
+                                ]
+                            },
+                            {
+                                "link": "https://github.com/shadow-maint/shadow/commit/e5905c4b84d4fb90aefcd96ee618411ebfac663d",
+                                "source": "af854a3a-2127-422b-91ae-364da2661108",
+                                "tags": [
+                                    "Patch"
+                                ]
+                            },
+                            {
+                                "link": "https://github.com/shadow-maint/shadow/pull/687",
+                                "source": "cve@mitre.org",
+                                "tags": [
+                                    "Issue Tracking"
+                                ]
+                            },
+                            {
+                                "link": "https://github.com/shadow-maint/shadow/pull/687",
+                                "source": "af854a3a-2127-422b-91ae-364da2661108",
+                                "tags": [
+                                    "Issue Tracking"
+                                ]
+                            },
+                            {
+                                "link": "https://lists.debian.org/debian-lts-announce/2025/04/msg00026.html",
+                                "source": "af854a3a-2127-422b-91ae-364da2661108"
+                            },
+                            {
+                                "link": "https://www.trustwave.com/en-us/resources/blogs/spiderlabs-blog/cve-2023-29383-abusing-linux-chfn-to-misrepresent-etc-passwd/",
+                                "source": "cve@mitre.org",
+                                "tags": [
+                                    "Exploit",
+                                    "Third Party Advisory"
+                                ]
+                            },
+                            {
+                                "link": "https://www.trustwave.com/en-us/resources/blogs/spiderlabs-blog/cve-2023-29383-abusing-linux-chfn-to-misrepresent-etc-passwd/",
+                                "source": "af854a3a-2127-422b-91ae-364da2661108",
+                                "tags": [
+                                    "Exploit",
+                                    "Third Party Advisory"
+                                ]
+                            },
+                            {
+                                "link": "https://www.trustwave.com/en-us/resources/security-resources/security-advisories/?fid=31797",
+                                "source": "cve@mitre.org",
+                                "tags": [
+                                    "Exploit",
+                                    "Third Party Advisory"
+                                ]
+                            },
+                            {
+                                "link": "https://www.trustwave.com/en-us/resources/security-resources/security-advisories/?fid=31797",
+                                "source": "af854a3a-2127-422b-91ae-364da2661108",
+                                "tags": [
+                                    "Exploit",
+                                    "Third Party Advisory"
+                                ]
+                            }
+                        ],
+                        "cweIDs": [
+                            "CWE-125"
+                        ],
+                        "published": "2023-04-14T22:15:07.68Z",
+                        "lastModified": "2025-11-03T20:16:01.283Z",
+                        "optional": {
+                            "source": "134c704f-9b21-4f2e-91b3-4a467353bcc0"
+                        }
+                    }
+                ],
+                "ubuntu_api": [
+                    {
+                        "type": "ubuntu_api",
+                        "cveID": "CVE-2023-29383",
+                        "title": "",
+                        "summary": "In Shadow 4.13, it is possible to inject control characters into fields provided to the SUID program chfn (change finger). Although it is not possible to exploit this directly (e.g., adding a new user fails because \\n is in the block list), it is possible to misrepresent the /etc/passwd file when viewed. Use of \\r manipulations and Unicode characters to work around blocking of the : character make it possible to give the impression that a new user has been added. In other words, an adversary may be able to convince a system administrator to take the system offline (an indirect, social-engineered denial of service) by demonstrating that \"cat /etc/passwd\" shows a rogue user account.",
+                        "cvss2Score": 0,
+                        "cvss2Vector": "",
+                        "cvss2Severity": "low",
+                        "cvss3Score": 0,
+                        "cvss3Vector": "",
+                        "cvss3Severity": "low",
+                        "cvss40Score": 0,
+                        "cvss40Vector": "",
+                        "cvss40Severity": "",
+                        "sourceLink": "https://ubuntu.com/security/CVE-2023-29383",
+                        "references": [
+                            {
+                                "link": "https://github.com/shadow-maint/shadow/pull/687",
+                                "source": "MISC"
+                            },
+                            {
+                                "link": "https://www.cve.org/CVERecord?id=CVE-2023-29383",
+                                "source": "CVE",
+                                "refID": "CVE-2023-29383"
+                            },
+                            {
+                                "link": "https://www.trustwave.com/en-us/resources/blogs/spiderlabs-blog/cve-2023-29383-abusing-linux-chfn-to-misrepresent-etc-passwd/",
+                                "source": "MISC"
+                            },
+                            {
+                                "link": "https://www.trustwave.com/en-us/resources/security-resources/security-advisories/?fid=31797",
+                                "source": "MISC"
+                            }
+                        ],
+                        "published": "2023-04-14T22:15:00Z",
+                        "lastModified": "1000-01-01T00:00:00Z",
+                        "optional": {
+                            "vuls2-sources": "[{\"root_id\":\"CVE-2023-29383\",\"source_id\":\"ubuntu-cve-tracker\",\"segment\":{\"ecosystem\":\"ubuntu:22.04\",\"tag\":\"jammy_low\"}}]"
+                        }
+                    }
+                ]
+            },
+            "exploits": [
+                {
+                    "exploitType": "nvd",
+                    "id": "",
+                    "url": "https://www.trustwave.com/en-us/resources/blogs/spiderlabs-blog/cve-2023-29383-abusing-linux-chfn-to-misrepresent-etc-passwd/",
+                    "description": ""
+                },
+                {
+                    "exploitType": "nvd",
+                    "id": "",
+                    "url": "https://www.trustwave.com/en-us/resources/blogs/spiderlabs-blog/cve-2023-29383-abusing-linux-chfn-to-misrepresent-etc-passwd/",
+                    "description": ""
+                },
+                {
+                    "exploitType": "nvd",
+                    "id": "",
+                    "url": "https://www.trustwave.com/en-us/resources/security-resources/security-advisories/?fid=31797",
+                    "description": ""
+                },
+                {
+                    "exploitType": "nvd",
+                    "id": "",
+                    "url": "https://www.trustwave.com/en-us/resources/security-resources/security-advisories/?fid=31797",
+                    "description": ""
+                }
+            ]
+        },
+        "CVE-2023-50495": {
+            "cveID": "CVE-2023-50495",
+            "confidences": [
+                {
+                    "score": 100,
+                    "detectionMethod": "UbuntuAPIMatch"
+                }
+            ],
+            "affectedPackages": [
+                {
+                    "name": "libncurses6:amd64",
+                    "notFixedYet": true,
+                    "fixState": "needed"
+                },
+                {
+                    "name": "libncursesw6:amd64",
+                    "notFixedYet": true,
+                    "fixState": "needed"
+                },
+                {
+                    "name": "libtinfo6:amd64",
+                    "notFixedYet": true,
+                    "fixState": "needed"
+                },
+                {
+                    "name": "ncurses-base",
+                    "notFixedYet": true,
+                    "fixState": "needed"
+                },
+                {
+                    "name": "ncurses-bin",
+                    "notFixedYet": true,
+                    "fixState": "needed"
+                }
+            ],
+            "cveContents": {
+                "nvd": [
+                    {
+                        "type": "nvd",
+                        "cveID": "CVE-2023-50495",
+                        "title": "",
+                        "summary": "NCurse v6.4-20230418 was discovered to contain a segmentation fault via the component _nc_wrap_entry().\nSe descubrió que NCurse v6.4-20230418 contenía un error de segmentación a través del componente _nc_wrap_entry().",
+                        "cvss2Score": 0,
+                        "cvss2Vector": "",
+                        "cvss2Severity": "",
+                        "cvss3Score": 6.5,
+                        "cvss3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:N/I:N/A:H",
+                        "cvss3Severity": "MEDIUM",
+                        "cvss40Score": 0,
+                        "cvss40Vector": "",
+                        "cvss40Severity": "",
+                        "sourceLink": "https://nvd.nist.gov/vuln/detail/CVE-2023-50495",
+                        "references": [
+                            {
+                                "link": "https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/LU4MYMKFEZQ5VSCVLRIZGDQOUW3T44GT/",
+                                "source": "cve@mitre.org"
+                            },
+                            {
+                                "link": "https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/LU4MYMKFEZQ5VSCVLRIZGDQOUW3T44GT/",
+                                "source": "af854a3a-2127-422b-91ae-364da2661108"
+                            },
+                            {
+                                "link": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/LU4MYMKFEZQ5VSCVLRIZGDQOUW3T44GT/",
+                                "source": "af854a3a-2127-422b-91ae-364da2661108"
+                            },
+                            {
+                                "link": "https://lists.gnu.org/archive/html/bug-ncurses/2023-04/msg00020.html",
+                                "source": "cve@mitre.org",
+                                "tags": [
+                                    "Mailing List",
+                                    "Patch"
+                                ]
+                            },
+                            {
+                                "link": "https://lists.gnu.org/archive/html/bug-ncurses/2023-04/msg00020.html",
+                                "source": "af854a3a-2127-422b-91ae-364da2661108",
+                                "tags": [
+                                    "Mailing List",
+                                    "Patch"
+                                ]
+                            },
+                            {
+                                "link": "https://lists.gnu.org/archive/html/bug-ncurses/2023-04/msg00029.html",
+                                "source": "cve@mitre.org",
+                                "tags": [
+                                    "Mailing List",
+                                    "Patch"
+                                ]
+                            },
+                            {
+                                "link": "https://lists.gnu.org/archive/html/bug-ncurses/2023-04/msg00029.html",
+                                "source": "af854a3a-2127-422b-91ae-364da2661108",
+                                "tags": [
+                                    "Mailing List",
+                                    "Patch"
+                                ]
+                            },
+                            {
+                                "link": "https://security.netapp.com/advisory/ntap-20240119-0008/",
+                                "source": "cve@mitre.org"
+                            },
+                            {
+                                "link": "https://security.netapp.com/advisory/ntap-20240119-0008/",
+                                "source": "af854a3a-2127-422b-91ae-364da2661108"
+                            }
+                        ],
+                        "cweIDs": [
+                            "NVD-CWE-noinfo"
+                        ],
+                        "published": "2023-12-12T15:15:07.867Z",
+                        "lastModified": "2025-11-04T19:16:14.45Z",
+                        "optional": {
+                            "source": "nvd@nist.gov"
+                        }
+                    }
+                ],
+                "ubuntu_api": [
+                    {
+                        "type": "ubuntu_api",
+                        "cveID": "CVE-2023-50495",
+                        "title": "",
+                        "summary": "NCurse v6.4-20230418 was discovered to contain a segmentation fault via the component _nc_wrap_entry().",
+                        "cvss2Score": 0,
+                        "cvss2Vector": "",
+                        "cvss2Severity": "low",
+                        "cvss3Score": 0,
+                        "cvss3Vector": "",
+                        "cvss3Severity": "low",
+                        "cvss40Score": 0,
+                        "cvss40Vector": "",
+                        "cvss40Severity": "",
+                        "sourceLink": "https://ubuntu.com/security/CVE-2023-50495",
+                        "references": [
+                            {
+                                "link": "https://lists.gnu.org/archive/html/bug-ncurses/2023-04/msg00020.html",
+                                "source": "MISC"
+                            },
+                            {
+                                "link": "https://lists.gnu.org/archive/html/bug-ncurses/2023-04/msg00029.html",
+                                "source": "MISC"
+                            },
+                            {
+                                "link": "https://ubuntu.com/security/notices/USN-6684-1",
+                                "source": "UBUNTU",
+                                "refID": "USN-6684-1"
+                            },
+                            {
+                                "link": "https://www.cve.org/CVERecord?id=CVE-2023-50495",
+                                "source": "CVE",
+                                "refID": "CVE-2023-50495"
+                            }
+                        ],
+                        "published": "2023-12-12T15:15:00Z",
+                        "lastModified": "1000-01-01T00:00:00Z",
+                        "optional": {
+                            "vuls2-sources": "[{\"root_id\":\"CVE-2023-50495\",\"source_id\":\"ubuntu-cve-tracker\",\"segment\":{\"ecosystem\":\"ubuntu:22.04\",\"tag\":\"jammy_low\"}}]"
+                        }
+                    }
+                ]
+            }
+        },
+        "CVE-2023-7008": {
+            "cveID": "CVE-2023-7008",
+            "confidences": [
+                {
+                    "score": 100,
+                    "detectionMethod": "UbuntuAPIMatch"
+                }
+            ],
+            "affectedPackages": [
+                {
+                    "name": "libsystemd0:amd64",
+                    "notFixedYet": true,
+                    "fixState": "needed"
+                },
+                {
+                    "name": "libudev1:amd64",
+                    "notFixedYet": true,
+                    "fixState": "needed"
+                }
+            ],
+            "cveContents": {
+                "nvd": [
+                    {
+                        "type": "nvd",
+                        "cveID": "CVE-2023-7008",
+                        "title": "",
+                        "summary": "A vulnerability was found in systemd-resolved. This issue may allow systemd-resolved to accept records of DNSSEC-signed domains even when they have no signature, allowing man-in-the-middles (or the upstream DNS resolver) to manipulate records.\nSe encontró una vulnerabilidad en systemd-resolved. Este problema puede permitir que systemd-resolved acepte registros de dominios firmados por DNSSEC incluso cuando no tienen firma, lo que permite que los intermediarios (o el solucionador de DNS ascendente) manipulen los registros.",
+                        "cvss2Score": 0,
+                        "cvss2Vector": "",
+                        "cvss2Severity": "",
+                        "cvss3Score": 5.9,
+                        "cvss3Vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:N/I:H/A:N",
+                        "cvss3Severity": "MEDIUM",
+                        "cvss40Score": 0,
+                        "cvss40Vector": "",
+                        "cvss40Severity": "",
+                        "sourceLink": "https://nvd.nist.gov/vuln/detail/CVE-2023-7008",
+                        "references": [
+                            {
+                                "link": "https://access.redhat.com/errata/RHSA-2024:2463",
+                                "source": "secalert@redhat.com"
+                            },
+                            {
+                                "link": "https://access.redhat.com/errata/RHSA-2024:2463",
+                                "source": "af854a3a-2127-422b-91ae-364da2661108"
+                            },
+                            {
+                                "link": "https://access.redhat.com/errata/RHSA-2024:3203",
+                                "source": "secalert@redhat.com"
+                            },
+                            {
+                                "link": "https://access.redhat.com/errata/RHSA-2024:3203",
+                                "source": "af854a3a-2127-422b-91ae-364da2661108"
+                            },
+                            {
+                                "link": "https://access.redhat.com/security/cve/CVE-2023-7008",
+                                "source": "af854a3a-2127-422b-91ae-364da2661108",
+                                "tags": [
+                                    "Vendor Advisory"
+                                ]
+                            },
+                            {
+                                "link": "https://access.redhat.com/security/cve/CVE-2023-7008",
+                                "source": "secalert@redhat.com",
+                                "tags": [
+                                    "Vendor Advisory"
+                                ]
+                            },
+                            {
+                                "link": "https://bugzilla.redhat.com/show_bug.cgi?id=2222261",
+                                "source": "secalert@redhat.com",
+                                "tags": [
+                                    "Issue Tracking"
+                                ]
+                            },
+                            {
+                                "link": "https://bugzilla.redhat.com/show_bug.cgi?id=2222261",
+                                "source": "af854a3a-2127-422b-91ae-364da2661108",
+                                "tags": [
+                                    "Issue Tracking"
+                                ]
+                            },
+                            {
+                                "link": "https://bugzilla.redhat.com/show_bug.cgi?id=2222672",
+                                "source": "secalert@redhat.com",
+                                "tags": [
+                                    "Issue Tracking"
+                                ]
+                            },
+                            {
+                                "link": "https://bugzilla.redhat.com/show_bug.cgi?id=2222672",
+                                "source": "af854a3a-2127-422b-91ae-364da2661108",
+                                "tags": [
+                                    "Issue Tracking"
+                                ]
+                            },
+                            {
+                                "link": "https://github.com/systemd/systemd/issues/25676",
+                                "source": "secalert@redhat.com",
+                                "tags": [
+                                    "Issue Tracking"
+                                ]
+                            },
+                            {
+                                "link": "https://github.com/systemd/systemd/issues/25676",
+                                "source": "af854a3a-2127-422b-91ae-364da2661108",
+                                "tags": [
+                                    "Issue Tracking"
+                                ]
+                            },
+                            {
+                                "link": "https://lists.debian.org/debian-lts-announce/2024/09/msg00001.html",
+                                "source": "af854a3a-2127-422b-91ae-364da2661108"
+                            },
+                            {
+                                "link": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/4GMDEG5PKONWNHOEYSUDRT6JEOISRMN2/",
+                                "source": "af854a3a-2127-422b-91ae-364da2661108"
+                            },
+                            {
+                                "link": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/QHNBXGKJWISJETTTDTZKTBFIBJUOSLKL/",
+                                "source": "af854a3a-2127-422b-91ae-364da2661108"
+                            },
+                            {
+                                "link": "https://security.netapp.com/advisory/ntap-20241122-0004/",
+                                "source": "af854a3a-2127-422b-91ae-364da2661108"
+                            }
+                        ],
+                        "cweIDs": [
+                            "NVD-CWE-Other"
+                        ],
+                        "published": "2023-12-23T13:15:07.573Z",
+                        "lastModified": "2025-11-04T17:15:43.4Z",
+                        "optional": {
+                            "source": "nvd@nist.gov"
+                        }
+                    },
+                    {
+                        "type": "nvd",
+                        "cveID": "CVE-2023-7008",
+                        "title": "",
+                        "summary": "A vulnerability was found in systemd-resolved. This issue may allow systemd-resolved to accept records of DNSSEC-signed domains even when they have no signature, allowing man-in-the-middles (or the upstream DNS resolver) to manipulate records.\nSe encontró una vulnerabilidad en systemd-resolved. Este problema puede permitir que systemd-resolved acepte registros de dominios firmados por DNSSEC incluso cuando no tienen firma, lo que permite que los intermediarios (o el solucionador de DNS ascendente) manipulen los registros.",
+                        "cvss2Score": 0,
+                        "cvss2Vector": "",
+                        "cvss2Severity": "",
+                        "cvss3Score": 5.9,
+                        "cvss3Vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:N/I:H/A:N",
+                        "cvss3Severity": "MEDIUM",
+                        "cvss40Score": 0,
+                        "cvss40Vector": "",
+                        "cvss40Severity": "",
+                        "sourceLink": "https://nvd.nist.gov/vuln/detail/CVE-2023-7008",
+                        "references": [
+                            {
+                                "link": "https://access.redhat.com/errata/RHSA-2024:2463",
+                                "source": "secalert@redhat.com"
+                            },
+                            {
+                                "link": "https://access.redhat.com/errata/RHSA-2024:2463",
+                                "source": "af854a3a-2127-422b-91ae-364da2661108"
+                            },
+                            {
+                                "link": "https://access.redhat.com/errata/RHSA-2024:3203",
+                                "source": "secalert@redhat.com"
+                            },
+                            {
+                                "link": "https://access.redhat.com/errata/RHSA-2024:3203",
+                                "source": "af854a3a-2127-422b-91ae-364da2661108"
+                            },
+                            {
+                                "link": "https://access.redhat.com/security/cve/CVE-2023-7008",
+                                "source": "af854a3a-2127-422b-91ae-364da2661108",
+                                "tags": [
+                                    "Vendor Advisory"
+                                ]
+                            },
+                            {
+                                "link": "https://access.redhat.com/security/cve/CVE-2023-7008",
+                                "source": "secalert@redhat.com",
+                                "tags": [
+                                    "Vendor Advisory"
+                                ]
+                            },
+                            {
+                                "link": "https://bugzilla.redhat.com/show_bug.cgi?id=2222261",
+                                "source": "secalert@redhat.com",
+                                "tags": [
+                                    "Issue Tracking"
+                                ]
+                            },
+                            {
+                                "link": "https://bugzilla.redhat.com/show_bug.cgi?id=2222261",
+                                "source": "af854a3a-2127-422b-91ae-364da2661108",
+                                "tags": [
+                                    "Issue Tracking"
+                                ]
+                            },
+                            {
+                                "link": "https://bugzilla.redhat.com/show_bug.cgi?id=2222672",
+                                "source": "secalert@redhat.com",
+                                "tags": [
+                                    "Issue Tracking"
+                                ]
+                            },
+                            {
+                                "link": "https://bugzilla.redhat.com/show_bug.cgi?id=2222672",
+                                "source": "af854a3a-2127-422b-91ae-364da2661108",
+                                "tags": [
+                                    "Issue Tracking"
+                                ]
+                            },
+                            {
+                                "link": "https://github.com/systemd/systemd/issues/25676",
+                                "source": "secalert@redhat.com",
+                                "tags": [
+                                    "Issue Tracking"
+                                ]
+                            },
+                            {
+                                "link": "https://github.com/systemd/systemd/issues/25676",
+                                "source": "af854a3a-2127-422b-91ae-364da2661108",
+                                "tags": [
+                                    "Issue Tracking"
+                                ]
+                            },
+                            {
+                                "link": "https://lists.debian.org/debian-lts-announce/2024/09/msg00001.html",
+                                "source": "af854a3a-2127-422b-91ae-364da2661108"
+                            },
+                            {
+                                "link": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/4GMDEG5PKONWNHOEYSUDRT6JEOISRMN2/",
+                                "source": "af854a3a-2127-422b-91ae-364da2661108"
+                            },
+                            {
+                                "link": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/QHNBXGKJWISJETTTDTZKTBFIBJUOSLKL/",
+                                "source": "af854a3a-2127-422b-91ae-364da2661108"
+                            },
+                            {
+                                "link": "https://security.netapp.com/advisory/ntap-20241122-0004/",
+                                "source": "af854a3a-2127-422b-91ae-364da2661108"
+                            }
+                        ],
+                        "cweIDs": [
+                            "CWE-300"
+                        ],
+                        "published": "2023-12-23T13:15:07.573Z",
+                        "lastModified": "2025-11-04T17:15:43.4Z",
+                        "optional": {
+                            "source": "secalert@redhat.com"
+                        }
+                    }
+                ],
+                "ubuntu_api": [
+                    {
+                        "type": "ubuntu_api",
+                        "cveID": "CVE-2023-7008",
+                        "title": "",
+                        "summary": "A vulnerability was found in systemd-resolved. This issue may allow systemd-resolved to accept records of DNSSEC-signed domains even when they have no signature, allowing man-in-the-middles (or the upstream DNS resolver) to manipulate records.",
+                        "cvss2Score": 0,
+                        "cvss2Vector": "",
+                        "cvss2Severity": "low",
+                        "cvss3Score": 0,
+                        "cvss3Vector": "",
+                        "cvss3Severity": "low",
+                        "cvss40Score": 0,
+                        "cvss40Vector": "",
+                        "cvss40Severity": "",
+                        "sourceLink": "https://ubuntu.com/security/CVE-2023-7008",
+                        "references": [
+                            {
+                                "link": "https://www.cve.org/CVERecord?id=CVE-2023-7008",
+                                "source": "CVE",
+                                "refID": "CVE-2023-7008"
+                            }
+                        ],
+                        "published": "2023-12-23T13:15:00Z",
+                        "lastModified": "1000-01-01T00:00:00Z",
+                        "optional": {
+                            "vuls2-sources": "[{\"root_id\":\"CVE-2023-7008\",\"source_id\":\"ubuntu-cve-tracker\",\"segment\":{\"ecosystem\":\"ubuntu:22.04\",\"tag\":\"jammy_low\"}}]"
+                        }
+                    }
+                ]
+            }
+        },
+        "CVE-2024-56433": {
+            "cveID": "CVE-2024-56433",
+            "confidences": [
+                {
+                    "score": 100,
+                    "detectionMethod": "UbuntuAPIMatch"
+                }
+            ],
+            "affectedPackages": [
+                {
+                    "name": "login",
+                    "notFixedYet": true,
+                    "fixState": "deferred"
+                },
+                {
+                    "name": "passwd",
+                    "notFixedYet": true,
+                    "fixState": "deferred"
+                }
+            ],
+            "cveContents": {
+                "nvd": [
+                    {
+                        "type": "nvd",
+                        "cveID": "CVE-2024-56433",
+                        "title": "",
+                        "summary": "shadow-utils (aka shadow) 4.4 through 4.17.0 establishes a default /etc/subuid behavior (e.g., uid 100000 through 165535 for the first user account) that can realistically conflict with the uids of users defined on locally administered networks, potentially leading to account takeover, e.g., by leveraging newuidmap for access to an NFS home directory (or same-host resources in the case of remote logins by these local network users). NOTE: it may also be argued that system administrators should not have assigned uids, within local networks, that are within the range that can occur in /etc/subuid.\nshadow-utils (también conocido como shadow) 4.4 a 4.17.0 establece un comportamiento predeterminado para /etc/subuid (por ejemplo, uid 100000 a 165535 para la primera cuenta de usuario) que puede entrar en conflicto de manera realista con los uid de los usuarios definidos en redes administradas localmente, lo que puede llevar a la apropiación de cuentas, por ejemplo, al aprovechar newuidmap para acceder a un directorio de inicio de NFS (o recursos del mismo host en el caso de inicios de sesión remotos por parte de estos usuarios de la red local). NOTA: también se puede argumentar que los administradores del sistema no deberían haber asignado uid, dentro de las redes locales, que estén dentro del rango que puede aparecer en /etc/subuid.",
+                        "cvss2Score": 0,
+                        "cvss2Vector": "",
+                        "cvss2Severity": "",
+                        "cvss3Score": 3.6,
+                        "cvss3Vector": "CVSS:3.1/AV:L/AC:H/PR:L/UI:N/S:U/C:L/I:L/A:N",
+                        "cvss3Severity": "LOW",
+                        "cvss40Score": 0,
+                        "cvss40Vector": "",
+                        "cvss40Severity": "",
+                        "sourceLink": "https://nvd.nist.gov/vuln/detail/CVE-2024-56433",
+                        "references": [
+                            {
+                                "link": "https://github.com/shadow-maint/shadow/blob/e2512d5741d4a44bdd81a8c2d0029b6222728cf0/etc/login.defs#L238-L241",
+                                "source": "cve@mitre.org"
+                            },
+                            {
+                                "link": "https://github.com/shadow-maint/shadow/issues/1157",
+                                "source": "cve@mitre.org"
+                            },
+                            {
+                                "link": "https://github.com/shadow-maint/shadow/releases/tag/4.4",
+                                "source": "cve@mitre.org"
+                            }
+                        ],
+                        "cweIDs": [
+                            "CWE-1188"
+                        ],
+                        "published": "2024-12-26T09:15:07.267Z",
+                        "lastModified": "2024-12-26T09:15:07.267Z",
+                        "optional": {
+                            "source": "cve@mitre.org"
+                        }
+                    }
+                ],
+                "ubuntu_api": [
+                    {
+                        "type": "ubuntu_api",
+                        "cveID": "CVE-2024-56433",
+                        "title": "",
+                        "summary": "shadow-utils (aka shadow) 4.4 through 4.17.0 establishes a default /etc/subuid behavior (e.g., uid 100000 through 165535 for the first user account) that can realistically conflict with the uids of users defined on locally administered networks, potentially leading to account takeover, e.g., by leveraging newuidmap for access to an NFS home directory (or same-host resources in the case of remote logins by these local network users). NOTE: it may also be argued that system administrators should not have assigned uids, within local networks, that are within the range that can occur in /etc/subuid.",
+                        "cvss2Score": 0,
+                        "cvss2Vector": "",
+                        "cvss2Severity": "low",
+                        "cvss3Score": 0,
+                        "cvss3Vector": "",
+                        "cvss3Severity": "low",
+                        "cvss40Score": 0,
+                        "cvss40Vector": "",
+                        "cvss40Severity": "",
+                        "sourceLink": "https://ubuntu.com/security/CVE-2024-56433",
+                        "references": [
+                            {
+                                "link": "https://github.com/shadow-maint/shadow/blob/e2512d5741d4a44bdd81a8c2d0029b6222728cf0/etc/login.defs#L238-L241",
+                                "source": "MISC"
+                            },
+                            {
+                                "link": "https://github.com/shadow-maint/shadow/releases/tag/4.4",
+                                "source": "MISC"
+                            },
+                            {
+                                "link": "https://www.cve.org/CVERecord?id=CVE-2024-56433",
+                                "source": "CVE",
+                                "refID": "CVE-2024-56433"
+                            }
+                        ],
+                        "published": "2024-12-26T09:15:00Z",
+                        "lastModified": "1000-01-01T00:00:00Z",
+                        "optional": {
+                            "vuls2-sources": "[{\"root_id\":\"CVE-2024-56433\",\"source_id\":\"ubuntu-cve-tracker\",\"segment\":{\"ecosystem\":\"ubuntu:22.04\",\"tag\":\"jammy_low\"}}]"
+                        }
+                    }
+                ]
+            }
+        },
+        "CVE-2025-14831": {
+            "cveID": "CVE-2025-14831",
+            "confidences": [
+                {
+                    "score": 100,
+                    "detectionMethod": "UbuntuAPIMatch"
+                }
+            ],
+            "affectedPackages": [
+                {
+                    "name": "libgnutls30:amd64",
+                    "fixedIn": "3.7.3-4ubuntu1.8"
+                }
+            ],
+            "cveContents": {
+                "nvd": [
+                    {
+                        "type": "nvd",
+                        "cveID": "CVE-2025-14831",
+                        "title": "",
+                        "summary": "A flaw was found in GnuTLS. This vulnerability allows a denial of service (DoS) by excessive CPU (Central Processing Unit) and memory consumption via specially crafted malicious certificates containing a large number of name constraints and subject alternative names (SANs).\nSe encontró un fallo en GnuTLS. Esta vulnerabilidad permite una denegación de servicio (DoS) mediante un consumo excesivo de CPU (Unidad Central de Procesamiento) y memoria a través de certificados maliciosos especialmente diseñados que contienen un gran número de restricciones de nombre y nombres alternativos del sujeto (SANs).",
+                        "cvss2Score": 0,
+                        "cvss2Vector": "",
+                        "cvss2Severity": "",
+                        "cvss3Score": 5.3,
+                        "cvss3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:L",
+                        "cvss3Severity": "MEDIUM",
+                        "cvss40Score": 0,
+                        "cvss40Vector": "",
+                        "cvss40Severity": "",
+                        "sourceLink": "https://nvd.nist.gov/vuln/detail/CVE-2025-14831",
+                        "references": [
+                            {
+                                "link": "https://access.redhat.com/errata/RHSA-2026:3477",
+                                "source": "secalert@redhat.com"
+                            },
+                            {
+                                "link": "https://access.redhat.com/security/cve/CVE-2025-14831",
+                                "source": "secalert@redhat.com"
+                            },
+                            {
+                                "link": "https://bugzilla.redhat.com/show_bug.cgi?id=2423177",
+                                "source": "secalert@redhat.com"
+                            }
+                        ],
+                        "cweIDs": [
+                            "CWE-407"
+                        ],
+                        "published": "2026-02-09T15:16:09.937Z",
+                        "lastModified": "2026-03-02T17:16:23.137Z",
+                        "optional": {
+                            "source": "secalert@redhat.com"
+                        }
+                    }
+                ],
+                "ubuntu_api": [
+                    {
+                        "type": "ubuntu_api",
+                        "cveID": "CVE-2025-14831",
+                        "title": "",
+                        "summary": "A flaw was found in GnuTLS. This vulnerability allows a denial of service (DoS) by excessive CPU (Central Processing Unit) and memory consumption via specially crafted malicious certificates containing a large number of name constraints and subject alternative names (SANs).",
+                        "cvss2Score": 0,
+                        "cvss2Vector": "",
+                        "cvss2Severity": "medium",
+                        "cvss3Score": 0,
+                        "cvss3Vector": "",
+                        "cvss3Severity": "medium",
+                        "cvss40Score": 0,
+                        "cvss40Vector": "",
+                        "cvss40Severity": "",
+                        "sourceLink": "https://ubuntu.com/security/CVE-2025-14831",
+                        "references": [
+                            {
+                                "link": "https://access.redhat.com/security/cve/CVE-2025-14831",
+                                "source": "REDHAT",
+                                "refID": "CVE-2025-14831"
+                            },
+                            {
+                                "link": "https://ubuntu.com/security/notices/USN-8043-1",
+                                "source": "UBUNTU",
+                                "refID": "USN-8043-1"
+                            },
+                            {
+                                "link": "https://www.cve.org/CVERecord?id=CVE-2025-14831",
+                                "source": "CVE",
+                                "refID": "CVE-2025-14831"
+                            }
+                        ],
+                        "published": "2026-02-09T15:16:00Z",
+                        "lastModified": "1000-01-01T00:00:00Z",
+                        "optional": {
+                            "vuls2-sources": "[{\"root_id\":\"CVE-2025-14831\",\"source_id\":\"ubuntu-cve-tracker\",\"segment\":{\"ecosystem\":\"ubuntu:22.04\",\"tag\":\"jammy_medium\"}}]"
+                        }
+                    }
+                ]
+            }
+        },
+        "CVE-2025-68972": {
+            "cveID": "CVE-2025-68972",
+            "confidences": [
+                {
+                    "score": 100,
+                    "detectionMethod": "UbuntuAPIMatch"
+                }
+            ],
+            "affectedPackages": [
+                {
+                    "name": "gpgv",
+                    "notFixedYet": true,
+                    "fixState": "deferred"
+                }
+            ],
+            "cveContents": {
+                "nvd": [
+                    {
+                        "type": "nvd",
+                        "cveID": "CVE-2025-68972",
+                        "title": "",
+                        "summary": "In GnuPG through 2.4.8, if a signed message has \\f at the end of a plaintext line, an adversary can construct a modified message that places additional text after the signed material, such that signature verification of the modified message succeeds (although an \"invalid armor\" message is printed during verification). This is related to use of \\f as a marker to denote truncation of a long plaintext line.",
+                        "cvss2Score": 0,
+                        "cvss2Vector": "",
+                        "cvss2Severity": "",
+                        "cvss3Score": 5.9,
+                        "cvss3Vector": "CVSS:3.1/AV:L/AC:H/PR:N/UI:N/S:C/C:N/I:H/A:N",
+                        "cvss3Severity": "MEDIUM",
+                        "cvss40Score": 0,
+                        "cvss40Vector": "",
+                        "cvss40Severity": "",
+                        "sourceLink": "https://nvd.nist.gov/vuln/detail/CVE-2025-68972",
+                        "references": [
+                            {
+                                "link": "https://gpg.fail/formfeed",
+                                "source": "cve@mitre.org",
+                                "tags": [
+                                    "Product"
+                                ]
+                            },
+                            {
+                                "link": "https://gpg.fail/formfeed",
+                                "source": "134c704f-9b21-4f2e-91b3-4a467353bcc0",
+                                "tags": [
+                                    "Product"
+                                ]
+                            },
+                            {
+                                "link": "https://media.ccc.de/v/39c3-to-sign-or-not-to-sign-practical-vulnerabilities-i",
+                                "source": "cve@mitre.org",
+                                "tags": [
+                                    "Product"
+                                ]
+                            },
+                            {
+                                "link": "https://news.ycombinator.com/item?id=46404339",
+                                "source": "cve@mitre.org",
+                                "tags": [
+                                    "Issue Tracking"
+                                ]
+                            }
+                        ],
+                        "cweIDs": [
+                            "CWE-347"
+                        ],
+                        "published": "2025-12-27T23:15:40.9Z",
+                        "lastModified": "2026-01-09T20:08:47.323Z",
+                        "optional": {
+                            "source": "cve@mitre.org"
+                        }
+                    },
+                    {
+                        "type": "nvd",
+                        "cveID": "CVE-2025-68972",
+                        "title": "",
+                        "summary": "In GnuPG through 2.4.8, if a signed message has \\f at the end of a plaintext line, an adversary can construct a modified message that places additional text after the signed material, such that signature verification of the modified message succeeds (although an \"invalid armor\" message is printed during verification). This is related to use of \\f as a marker to denote truncation of a long plaintext line.",
+                        "cvss2Score": 0,
+                        "cvss2Vector": "",
+                        "cvss2Severity": "",
+                        "cvss3Score": 4.7,
+                        "cvss3Vector": "CVSS:3.1/AV:L/AC:H/PR:L/UI:N/S:U/C:N/I:H/A:N",
+                        "cvss3Severity": "MEDIUM",
+                        "cvss40Score": 0,
+                        "cvss40Vector": "",
+                        "cvss40Severity": "",
+                        "sourceLink": "https://nvd.nist.gov/vuln/detail/CVE-2025-68972",
+                        "references": [
+                            {
+                                "link": "https://gpg.fail/formfeed",
+                                "source": "cve@mitre.org",
+                                "tags": [
+                                    "Product"
+                                ]
+                            },
+                            {
+                                "link": "https://gpg.fail/formfeed",
+                                "source": "134c704f-9b21-4f2e-91b3-4a467353bcc0",
+                                "tags": [
+                                    "Product"
+                                ]
+                            },
+                            {
+                                "link": "https://media.ccc.de/v/39c3-to-sign-or-not-to-sign-practical-vulnerabilities-i",
+                                "source": "cve@mitre.org",
+                                "tags": [
+                                    "Product"
+                                ]
+                            },
+                            {
+                                "link": "https://news.ycombinator.com/item?id=46404339",
+                                "source": "cve@mitre.org",
+                                "tags": [
+                                    "Issue Tracking"
+                                ]
+                            }
+                        ],
+                        "published": "2025-12-27T23:15:40.9Z",
+                        "lastModified": "2026-01-09T20:08:47.323Z",
+                        "optional": {
+                            "source": "nvd@nist.gov"
+                        }
+                    }
+                ],
+                "ubuntu_api": [
+                    {
+                        "type": "ubuntu_api",
+                        "cveID": "CVE-2025-68972",
+                        "title": "",
+                        "summary": "In GnuPG through 2.4.8, if a signed message has \\f at the end of a plaintext line, an adversary can construct a modified message that places additional text after the signed material, such that signature verification of the modified message succeeds (although an \"invalid armor\" message is printed during verification). This is related to use of \\f as a marker to denote truncation of a long plaintext line.",
+                        "cvss2Score": 0,
+                        "cvss2Vector": "",
+                        "cvss2Severity": "medium",
+                        "cvss3Score": 0,
+                        "cvss3Vector": "",
+                        "cvss3Severity": "medium",
+                        "cvss40Score": 0,
+                        "cvss40Vector": "",
+                        "cvss40Severity": "",
+                        "sourceLink": "https://ubuntu.com/security/CVE-2025-68972",
+                        "references": [
+                            {
+                                "link": "https://gpg.fail/formfeed",
+                                "source": "MISC"
+                            },
+                            {
+                                "link": "https://news.ycombinator.com/item?id=46404339",
+                                "source": "MISC"
+                            },
+                            {
+                                "link": "https://www.cve.org/CVERecord?id=CVE-2025-68972",
+                                "source": "CVE",
+                                "refID": "CVE-2025-68972"
+                            }
+                        ],
+                        "published": "2025-12-27T23:15:00Z",
+                        "lastModified": "1000-01-01T00:00:00Z",
+                        "optional": {
+                            "vuls2-sources": "[{\"root_id\":\"CVE-2025-68972\",\"source_id\":\"ubuntu-cve-tracker\",\"segment\":{\"ecosystem\":\"ubuntu:22.04\",\"tag\":\"jammy_medium\"}}]"
+                        }
+                    }
+                ]
+            }
+        },
+        "CVE-2025-8941": {
+            "cveID": "CVE-2025-8941",
+            "confidences": [
+                {
+                    "score": 100,
+                    "detectionMethod": "UbuntuAPIMatch"
+                }
+            ],
+            "affectedPackages": [
+                {
+                    "name": "libpam-modules-bin",
+                    "notFixedYet": true,
+                    "fixState": "deferred"
+                },
+                {
+                    "name": "libpam-modules:amd64",
+                    "notFixedYet": true,
+                    "fixState": "deferred"
+                },
+                {
+                    "name": "libpam-runtime",
+                    "notFixedYet": true,
+                    "fixState": "deferred"
+                },
+                {
+                    "name": "libpam0g:amd64",
+                    "notFixedYet": true,
+                    "fixState": "deferred"
+                }
+            ],
+            "cveContents": {
+                "nvd": [
+                    {
+                        "type": "nvd",
+                        "cveID": "CVE-2025-8941",
+                        "title": "",
+                        "summary": "A flaw was found in linux-pam. The pam_namespace module may improperly handle user-controlled paths, allowing local users to exploit symlink attacks and race conditions to elevate their privileges to root. This CVE provides a \"complete\" fix for CVE-2025-6020.\nSe encontró una falla en linux-pam. El módulo pam_namespace podría gestionar incorrectamente las rutas controladas por el usuario, lo que permite a los usuarios locales explotar ataques de enlaces simbólicos y condiciones de ejecución para elevar sus privilegios a root. Esta CVE proporciona una solución completa para CVE-2025-6020.",
+                        "cvss2Score": 0,
+                        "cvss2Vector": "",
+                        "cvss2Severity": "",
+                        "cvss3Score": 7.8,
+                        "cvss3Vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+                        "cvss3Severity": "HIGH",
+                        "cvss40Score": 0,
+                        "cvss40Vector": "",
+                        "cvss40Severity": "",
+                        "sourceLink": "https://nvd.nist.gov/vuln/detail/CVE-2025-8941",
+                        "references": [
+                            {
+                                "link": "https://access.redhat.com/errata/RHSA-2025:14557",
+                                "source": "secalert@redhat.com"
+                            },
+                            {
+                                "link": "https://access.redhat.com/errata/RHSA-2025:15099",
+                                "source": "secalert@redhat.com"
+                            },
+                            {
+                                "link": "https://access.redhat.com/errata/RHSA-2025:15100",
+                                "source": "secalert@redhat.com"
+                            },
+                            {
+                                "link": "https://access.redhat.com/errata/RHSA-2025:15101",
+                                "source": "secalert@redhat.com"
+                            },
+                            {
+                                "link": "https://access.redhat.com/errata/RHSA-2025:15102",
+                                "source": "secalert@redhat.com"
+                            },
+                            {
+                                "link": "https://access.redhat.com/errata/RHSA-2025:15103",
+                                "source": "secalert@redhat.com"
+                            },
+                            {
+                                "link": "https://access.redhat.com/errata/RHSA-2025:15104",
+                                "source": "secalert@redhat.com"
+                            },
+                            {
+                                "link": "https://access.redhat.com/errata/RHSA-2025:15105",
+                                "source": "secalert@redhat.com"
+                            },
+                            {
+                                "link": "https://access.redhat.com/errata/RHSA-2025:15106",
+                                "source": "secalert@redhat.com"
+                            },
+                            {
+                                "link": "https://access.redhat.com/errata/RHSA-2025:15107",
+                                "source": "secalert@redhat.com"
+                            },
+                            {
+                                "link": "https://access.redhat.com/errata/RHSA-2025:15709",
+                                "source": "secalert@redhat.com"
+                            },
+                            {
+                                "link": "https://access.redhat.com/errata/RHSA-2025:15827",
+                                "source": "secalert@redhat.com"
+                            },
+                            {
+                                "link": "https://access.redhat.com/errata/RHSA-2025:15828",
+                                "source": "secalert@redhat.com"
+                            },
+                            {
+                                "link": "https://access.redhat.com/errata/RHSA-2025:16524",
+                                "source": "secalert@redhat.com"
+                            },
+                            {
+                                "link": "https://access.redhat.com/errata/RHSA-2025:17181",
+                                "source": "secalert@redhat.com"
+                            },
+                            {
+                                "link": "https://access.redhat.com/errata/RHSA-2025:18219",
+                                "source": "secalert@redhat.com"
+                            },
+                            {
+                                "link": "https://access.redhat.com/errata/RHSA-2025:21885",
+                                "source": "secalert@redhat.com"
+                            },
+                            {
+                                "link": "https://access.redhat.com/security/cve/CVE-2025-8941",
+                                "source": "secalert@redhat.com"
+                            },
+                            {
+                                "link": "https://bugzilla.redhat.com/show_bug.cgi?id=2388220",
+                                "source": "secalert@redhat.com"
+                            }
+                        ],
+                        "cweIDs": [
+                            "CWE-22"
+                        ],
+                        "published": "2025-08-13T15:15:41.873Z",
+                        "lastModified": "2025-11-20T21:16:08.11Z",
+                        "optional": {
+                            "source": "secalert@redhat.com"
+                        }
+                    }
+                ],
+                "ubuntu_api": [
+                    {
+                        "type": "ubuntu_api",
+                        "cveID": "CVE-2025-8941",
+                        "title": "",
+                        "summary": "A flaw was found in linux-pam. The pam_namespace module may improperly handle user-controlled paths, allowing local users to exploit symlink attacks and race conditions to elevate their privileges to root. This CVE provides a \"complete\" fix for CVE-2025-6020.",
+                        "cvss2Score": 0,
+                        "cvss2Vector": "",
+                        "cvss2Severity": "medium",
+                        "cvss3Score": 0,
+                        "cvss3Vector": "",
+                        "cvss3Severity": "medium",
+                        "cvss40Score": 0,
+                        "cvss40Vector": "",
+                        "cvss40Severity": "",
+                        "sourceLink": "https://ubuntu.com/security/CVE-2025-8941",
+                        "references": [
+                            {
+                                "link": "https://access.redhat.com/security/cve/CVE-2025-8941",
+                                "source": "REDHAT",
+                                "refID": "CVE-2025-8941"
+                            },
+                            {
+                                "link": "https://www.cve.org/CVERecord?id=CVE-2025-8941",
+                                "source": "CVE",
+                                "refID": "CVE-2025-8941"
+                            }
+                        ],
+                        "published": "2025-08-13T15:15:00Z",
+                        "lastModified": "1000-01-01T00:00:00Z",
+                        "optional": {
+                            "vuls2-sources": "[{\"root_id\":\"CVE-2025-8941\",\"source_id\":\"ubuntu-cve-tracker\",\"segment\":{\"ecosystem\":\"ubuntu:22.04\",\"tag\":\"jammy_medium\"}}]"
+                        }
+                    }
+                ]
+            }
+        },
+        "CVE-2025-9820": {
+            "cveID": "CVE-2025-9820",
+            "confidences": [
+                {
+                    "score": 100,
+                    "detectionMethod": "UbuntuAPIMatch"
+                }
+            ],
+            "affectedPackages": [
+                {
+                    "name": "libgnutls30:amd64",
+                    "fixedIn": "3.7.3-4ubuntu1.8"
+                }
+            ],
+            "cveContents": {
+                "nvd": [
+                    {
+                        "type": "nvd",
+                        "cveID": "CVE-2025-9820",
+                        "title": "",
+                        "summary": "A flaw was found in the GnuTLS library, specifically in the gnutls_pkcs11_token_init() function that handles PKCS#11 token initialization. When a token label longer than expected is processed, the function writes past the end of a fixed-size stack buffer. This programming error can cause the application using GnuTLS to crash or, in certain conditions, be exploited for code execution. As a result, systems or applications relying on GnuTLS may be vulnerable to a denial of service or local privilege escalation attacks.\nSe encontró una falla en la librería GnuTLS, específicamente en la función gnutls_pkcs11_token_init() que maneja la inicialización de tokens PKCS#11. Cuando se procesa una etiqueta de token más larga de lo esperado, la función escribe más allá del final de un búfer de pila de tamaño fijo. Este error de programación puede causar que la aplicación que usa GnuTLS se bloquee o, en ciertas condiciones, ser explotado para la ejecución de código. Como resultado, los sistemas o aplicaciones que dependen de GnuTLS pueden ser vulnerables a ataques de denegación de servicio o escalada de privilegios local.",
+                        "cvss2Score": 0,
+                        "cvss2Vector": "",
+                        "cvss2Severity": "",
+                        "cvss3Score": 4,
+                        "cvss3Vector": "CVSS:3.1/AV:L/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:L",
+                        "cvss3Severity": "MEDIUM",
+                        "cvss40Score": 0,
+                        "cvss40Vector": "",
+                        "cvss40Severity": "",
+                        "sourceLink": "https://nvd.nist.gov/vuln/detail/CVE-2025-9820",
+                        "references": [
+                            {
+                                "link": "http://www.openwall.com/lists/oss-security/2025/11/20/2",
+                                "source": "af854a3a-2127-422b-91ae-364da2661108"
+                            },
+                            {
+                                "link": "https://access.redhat.com/errata/RHSA-2026:3477",
+                                "source": "secalert@redhat.com"
+                            },
+                            {
+                                "link": "https://access.redhat.com/security/cve/CVE-2025-9820",
+                                "source": "secalert@redhat.com"
+                            },
+                            {
+                                "link": "https://bugzilla.redhat.com/show_bug.cgi?id=2392528",
+                                "source": "secalert@redhat.com"
+                            },
+                            {
+                                "link": "https://gitlab.com/gnutls/gnutls/-/commit/1d56f96f6ab5034d677136b9d50b5a75dff0faf5",
+                                "source": "secalert@redhat.com"
+                            },
+                            {
+                                "link": "https://gitlab.com/gnutls/gnutls/-/issues/1732",
+                                "source": "secalert@redhat.com"
+                            },
+                            {
+                                "link": "https://www.gnutls.org/security-new.html#GNUTLS-SA-2025-11-18",
+                                "source": "secalert@redhat.com"
+                            }
+                        ],
+                        "cweIDs": [
+                            "CWE-121"
+                        ],
+                        "published": "2026-01-26T20:16:09.37Z",
+                        "lastModified": "2026-03-02T18:16:25.787Z",
+                        "optional": {
+                            "source": "secalert@redhat.com"
+                        }
+                    }
+                ],
+                "ubuntu_api": [
+                    {
+                        "type": "ubuntu_api",
+                        "cveID": "CVE-2025-9820",
+                        "title": "",
+                        "summary": "A flaw was found in the GnuTLS library, specifically in the gnutls_pkcs11_token_init() function that handles PKCS#11 token initialization. When a token label longer than expected is processed, the function writes past the end of a fixed-size stack buffer. This programming error can cause the application using GnuTLS to crash or, in certain conditions, be exploited for code execution. As a result, systems or applications relying on GnuTLS may be vulnerable to a denial of service or local privilege escalation attacks.",
+                        "cvss2Score": 0,
+                        "cvss2Vector": "",
+                        "cvss2Severity": "low",
+                        "cvss3Score": 0,
+                        "cvss3Vector": "",
+                        "cvss3Severity": "low",
+                        "cvss40Score": 0,
+                        "cvss40Vector": "",
+                        "cvss40Severity": "",
+                        "sourceLink": "https://ubuntu.com/security/CVE-2025-9820",
+                        "references": [
+                            {
+                                "link": "https://ubuntu.com/security/notices/USN-8043-1",
+                                "source": "UBUNTU",
+                                "refID": "USN-8043-1"
+                            },
+                            {
+                                "link": "https://www.cve.org/CVERecord?id=CVE-2025-9820",
+                                "source": "CVE",
+                                "refID": "CVE-2025-9820"
+                            },
+                            {
+                                "link": "https://www.gnutls.org/security-new.html#GNUTLS-SA-2025-11-18",
+                                "source": "MISC"
+                            }
+                        ],
+                        "published": "2026-01-26T20:16:00Z",
+                        "lastModified": "1000-01-01T00:00:00Z",
+                        "optional": {
+                            "vuls2-sources": "[{\"root_id\":\"CVE-2025-9820\",\"source_id\":\"ubuntu-cve-tracker\",\"segment\":{\"ecosystem\":\"ubuntu:22.04\",\"tag\":\"jammy_low\"}}]"
+                        }
+                    }
+                ]
+            }
+        }
+    },
+    "runningKernel": {
+        "release": "6.8.0-94-generic",
+        "version": "",
+        "rebootRequired": false
+    },
+    "packages": {
+        "adduser": {
+            "name": "adduser",
+            "version": "3.118ubuntu5",
+            "release": "",
+            "newVersion": "",
+            "newRelease": "",
+            "arch": "",
+            "repository": "",
+            "modularitylabel": ""
+        },
+        "apt": {
+            "name": "apt",
+            "version": "2.4.14",
+            "release": "",
+            "newVersion": "",
+            "newRelease": "",
+            "arch": "",
+            "repository": "",
+            "modularitylabel": ""
+        },
+        "base-files": {
+            "name": "base-files",
+            "version": "12ubuntu4.7",
+            "release": "",
+            "newVersion": "",
+            "newRelease": "",
+            "arch": "",
+            "repository": "",
+            "modularitylabel": ""
+        },
+        "base-passwd": {
+            "name": "base-passwd",
+            "version": "3.5.52build1",
+            "release": "",
+            "newVersion": "",
+            "newRelease": "",
+            "arch": "",
+            "repository": "",
+            "modularitylabel": ""
+        },
+        "bash": {
+            "name": "bash",
+            "version": "5.1-6ubuntu1.1",
+            "release": "",
+            "newVersion": "",
+            "newRelease": "",
+            "arch": "",
+            "repository": "",
+            "modularitylabel": ""
+        },
+        "bsdutils": {
+            "name": "bsdutils",
+            "version": "1:2.37.2-4ubuntu3.4",
+            "release": "",
+            "newVersion": "",
+            "newRelease": "",
+            "arch": "",
+            "repository": "",
+            "modularitylabel": ""
+        },
+        "coreutils": {
+            "name": "coreutils",
+            "version": "8.32-4.1ubuntu1.2",
+            "release": "",
+            "newVersion": "",
+            "newRelease": "",
+            "arch": "",
+            "repository": "",
+            "modularitylabel": ""
+        },
+        "dash": {
+            "name": "dash",
+            "version": "0.5.11+git20210903+057cd650a4ed-3build1",
+            "release": "",
+            "newVersion": "",
+            "newRelease": "",
+            "arch": "",
+            "repository": "",
+            "modularitylabel": ""
+        },
+        "debconf": {
+            "name": "debconf",
+            "version": "1.5.79ubuntu1",
+            "release": "",
+            "newVersion": "",
+            "newRelease": "",
+            "arch": "",
+            "repository": "",
+            "modularitylabel": ""
+        },
+        "debianutils": {
+            "name": "debianutils",
+            "version": "5.5-1ubuntu2",
+            "release": "",
+            "newVersion": "",
+            "newRelease": "",
+            "arch": "",
+            "repository": "",
+            "modularitylabel": ""
+        },
+        "diffutils": {
+            "name": "diffutils",
+            "version": "1:3.8-0ubuntu2",
+            "release": "",
+            "newVersion": "",
+            "newRelease": "",
+            "arch": "",
+            "repository": "",
+            "modularitylabel": ""
+        },
+        "dpkg": {
+            "name": "dpkg",
+            "version": "1.21.1ubuntu2.6",
+            "release": "",
+            "newVersion": "",
+            "newRelease": "",
+            "arch": "",
+            "repository": "",
+            "modularitylabel": ""
+        },
+        "e2fsprogs": {
+            "name": "e2fsprogs",
+            "version": "1.46.5-2ubuntu1.2",
+            "release": "",
+            "newVersion": "",
+            "newRelease": "",
+            "arch": "",
+            "repository": "",
+            "modularitylabel": ""
+        },
+        "findutils": {
+            "name": "findutils",
+            "version": "4.8.0-1ubuntu3",
+            "release": "",
+            "newVersion": "",
+            "newRelease": "",
+            "arch": "",
+            "repository": "",
+            "modularitylabel": ""
+        },
+        "gcc-12-base:amd64": {
+            "name": "gcc-12-base:amd64",
+            "version": "12.3.0-1ubuntu1~22.04.2",
+            "release": "",
+            "newVersion": "",
+            "newRelease": "",
+            "arch": "",
+            "repository": "",
+            "modularitylabel": ""
+        },
+        "gpgv": {
+            "name": "gpgv",
+            "version": "2.2.27-3ubuntu2.5",
+            "release": "",
+            "newVersion": "",
+            "newRelease": "",
+            "arch": "",
+            "repository": "",
+            "modularitylabel": ""
+        },
+        "grep": {
+            "name": "grep",
+            "version": "3.7-1build1",
+            "release": "",
+            "newVersion": "",
+            "newRelease": "",
+            "arch": "",
+            "repository": "",
+            "modularitylabel": ""
+        },
+        "gzip": {
+            "name": "gzip",
+            "version": "1.10-4ubuntu4.1",
+            "release": "",
+            "newVersion": "",
+            "newRelease": "",
+            "arch": "",
+            "repository": "",
+            "modularitylabel": ""
+        },
+        "hostname": {
+            "name": "hostname",
+            "version": "3.23ubuntu2",
+            "release": "",
+            "newVersion": "",
+            "newRelease": "",
+            "arch": "",
+            "repository": "",
+            "modularitylabel": ""
+        },
+        "init-system-helpers": {
+            "name": "init-system-helpers",
+            "version": "1.62",
+            "release": "",
+            "newVersion": "",
+            "newRelease": "",
+            "arch": "",
+            "repository": "",
+            "modularitylabel": ""
+        },
+        "libacl1:amd64": {
+            "name": "libacl1:amd64",
+            "version": "2.3.1-1",
+            "release": "",
+            "newVersion": "",
+            "newRelease": "",
+            "arch": "",
+            "repository": "",
+            "modularitylabel": ""
+        },
+        "libapt-pkg6.0:amd64": {
+            "name": "libapt-pkg6.0:amd64",
+            "version": "2.4.14",
+            "release": "",
+            "newVersion": "",
+            "newRelease": "",
+            "arch": "",
+            "repository": "",
+            "modularitylabel": ""
+        },
+        "libattr1:amd64": {
+            "name": "libattr1:amd64",
+            "version": "1:2.5.1-1build1",
+            "release": "",
+            "newVersion": "",
+            "newRelease": "",
+            "arch": "",
+            "repository": "",
+            "modularitylabel": ""
+        },
+        "libaudit-common": {
+            "name": "libaudit-common",
+            "version": "1:3.0.7-1build1",
+            "release": "",
+            "newVersion": "",
+            "newRelease": "",
+            "arch": "",
+            "repository": "",
+            "modularitylabel": ""
+        },
+        "libaudit1:amd64": {
+            "name": "libaudit1:amd64",
+            "version": "1:3.0.7-1build1",
+            "release": "",
+            "newVersion": "",
+            "newRelease": "",
+            "arch": "",
+            "repository": "",
+            "modularitylabel": ""
+        },
+        "libblkid1:amd64": {
+            "name": "libblkid1:amd64",
+            "version": "2.37.2-4ubuntu3.4",
+            "release": "",
+            "newVersion": "",
+            "newRelease": "",
+            "arch": "",
+            "repository": "",
+            "modularitylabel": ""
+        },
+        "libbz2-1.0:amd64": {
+            "name": "libbz2-1.0:amd64",
+            "version": "1.0.8-5build1",
+            "release": "",
+            "newVersion": "",
+            "newRelease": "",
+            "arch": "",
+            "repository": "",
+            "modularitylabel": ""
+        },
+        "libc-bin": {
+            "name": "libc-bin",
+            "version": "2.35-0ubuntu3.13",
+            "release": "",
+            "newVersion": "",
+            "newRelease": "",
+            "arch": "",
+            "repository": "",
+            "modularitylabel": ""
+        },
+        "libc6:amd64": {
+            "name": "libc6:amd64",
+            "version": "2.35-0ubuntu3.13",
+            "release": "",
+            "newVersion": "",
+            "newRelease": "",
+            "arch": "",
+            "repository": "",
+            "modularitylabel": ""
+        },
+        "libcap-ng0:amd64": {
+            "name": "libcap-ng0:amd64",
+            "version": "0.7.9-2.2build3",
+            "release": "",
+            "newVersion": "",
+            "newRelease": "",
+            "arch": "",
+            "repository": "",
+            "modularitylabel": ""
+        },
+        "libcap2:amd64": {
+            "name": "libcap2:amd64",
+            "version": "1:2.44-1ubuntu0.22.04.2",
+            "release": "",
+            "newVersion": "",
+            "newRelease": "",
+            "arch": "",
+            "repository": "",
+            "modularitylabel": ""
+        },
+        "libcom-err2:amd64": {
+            "name": "libcom-err2:amd64",
+            "version": "1.46.5-2ubuntu1.2",
+            "release": "",
+            "newVersion": "",
+            "newRelease": "",
+            "arch": "",
+            "repository": "",
+            "modularitylabel": ""
+        },
+        "libcrypt1:amd64": {
+            "name": "libcrypt1:amd64",
+            "version": "1:4.4.27-1",
+            "release": "",
+            "newVersion": "",
+            "newRelease": "",
+            "arch": "",
+            "repository": "",
+            "modularitylabel": ""
+        },
+        "libdb5.3:amd64": {
+            "name": "libdb5.3:amd64",
+            "version": "5.3.28+dfsg1-0.8ubuntu3",
+            "release": "",
+            "newVersion": "",
+            "newRelease": "",
+            "arch": "",
+            "repository": "",
+            "modularitylabel": ""
+        },
+        "libdebconfclient0:amd64": {
+            "name": "libdebconfclient0:amd64",
+            "version": "0.261ubuntu1",
+            "release": "",
+            "newVersion": "",
+            "newRelease": "",
+            "arch": "",
+            "repository": "",
+            "modularitylabel": ""
+        },
+        "libext2fs2:amd64": {
+            "name": "libext2fs2:amd64",
+            "version": "1.46.5-2ubuntu1.2",
+            "release": "",
+            "newVersion": "",
+            "newRelease": "",
+            "arch": "",
+            "repository": "",
+            "modularitylabel": ""
+        },
+        "libffi8:amd64": {
+            "name": "libffi8:amd64",
+            "version": "3.4.2-4",
+            "release": "",
+            "newVersion": "",
+            "newRelease": "",
+            "arch": "",
+            "repository": "",
+            "modularitylabel": ""
+        },
+        "libgcc-s1:amd64": {
+            "name": "libgcc-s1:amd64",
+            "version": "12.3.0-1ubuntu1~22.04.2",
+            "release": "",
+            "newVersion": "",
+            "newRelease": "",
+            "arch": "",
+            "repository": "",
+            "modularitylabel": ""
+        },
+        "libgcrypt20:amd64": {
+            "name": "libgcrypt20:amd64",
+            "version": "1.9.4-3ubuntu3",
+            "release": "",
+            "newVersion": "",
+            "newRelease": "",
+            "arch": "",
+            "repository": "",
+            "modularitylabel": ""
+        },
+        "libgmp10:amd64": {
+            "name": "libgmp10:amd64",
+            "version": "2:6.2.1+dfsg-3ubuntu1",
+            "release": "",
+            "newVersion": "",
+            "newRelease": "",
+            "arch": "",
+            "repository": "",
+            "modularitylabel": ""
+        },
+        "libgnutls30:amd64": {
+            "name": "libgnutls30:amd64",
+            "version": "3.7.3-4ubuntu1.7",
+            "release": "",
+            "newVersion": "",
+            "newRelease": "",
+            "arch": "",
+            "repository": "",
+            "modularitylabel": ""
+        },
+        "libgpg-error0:amd64": {
+            "name": "libgpg-error0:amd64",
+            "version": "1.43-3",
+            "release": "",
+            "newVersion": "",
+            "newRelease": "",
+            "arch": "",
+            "repository": "",
+            "modularitylabel": ""
+        },
+        "libgssapi-krb5-2:amd64": {
+            "name": "libgssapi-krb5-2:amd64",
+            "version": "1.19.2-2ubuntu0.7",
+            "release": "",
+            "newVersion": "",
+            "newRelease": "",
+            "arch": "",
+            "repository": "",
+            "modularitylabel": ""
+        },
+        "libhogweed6:amd64": {
+            "name": "libhogweed6:amd64",
+            "version": "3.7.3-1build2",
+            "release": "",
+            "newVersion": "",
+            "newRelease": "",
+            "arch": "",
+            "repository": "",
+            "modularitylabel": ""
+        },
+        "libidn2-0:amd64": {
+            "name": "libidn2-0:amd64",
+            "version": "2.3.2-2build1",
+            "release": "",
+            "newVersion": "",
+            "newRelease": "",
+            "arch": "",
+            "repository": "",
+            "modularitylabel": ""
+        },
+        "libk5crypto3:amd64": {
+            "name": "libk5crypto3:amd64",
+            "version": "1.19.2-2ubuntu0.7",
+            "release": "",
+            "newVersion": "",
+            "newRelease": "",
+            "arch": "",
+            "repository": "",
+            "modularitylabel": ""
+        },
+        "libkeyutils1:amd64": {
+            "name": "libkeyutils1:amd64",
+            "version": "1.6.1-2ubuntu3",
+            "release": "",
+            "newVersion": "",
+            "newRelease": "",
+            "arch": "",
+            "repository": "",
+            "modularitylabel": ""
+        },
+        "libkrb5-3:amd64": {
+            "name": "libkrb5-3:amd64",
+            "version": "1.19.2-2ubuntu0.7",
+            "release": "",
+            "newVersion": "",
+            "newRelease": "",
+            "arch": "",
+            "repository": "",
+            "modularitylabel": ""
+        },
+        "libkrb5support0:amd64": {
+            "name": "libkrb5support0:amd64",
+            "version": "1.19.2-2ubuntu0.7",
+            "release": "",
+            "newVersion": "",
+            "newRelease": "",
+            "arch": "",
+            "repository": "",
+            "modularitylabel": ""
+        },
+        "liblz4-1:amd64": {
+            "name": "liblz4-1:amd64",
+            "version": "1.9.3-2build2",
+            "release": "",
+            "newVersion": "",
+            "newRelease": "",
+            "arch": "",
+            "repository": "",
+            "modularitylabel": ""
+        },
+        "liblzma5:amd64": {
+            "name": "liblzma5:amd64",
+            "version": "5.2.5-2ubuntu1",
+            "release": "",
+            "newVersion": "",
+            "newRelease": "",
+            "arch": "",
+            "repository": "",
+            "modularitylabel": ""
+        },
+        "libmount1:amd64": {
+            "name": "libmount1:amd64",
+            "version": "2.37.2-4ubuntu3.4",
+            "release": "",
+            "newVersion": "",
+            "newRelease": "",
+            "arch": "",
+            "repository": "",
+            "modularitylabel": ""
+        },
+        "libncurses6:amd64": {
+            "name": "libncurses6:amd64",
+            "version": "6.3-2ubuntu0.1",
+            "release": "",
+            "newVersion": "",
+            "newRelease": "",
+            "arch": "",
+            "repository": "",
+            "modularitylabel": ""
+        },
+        "libncursesw6:amd64": {
+            "name": "libncursesw6:amd64",
+            "version": "6.3-2ubuntu0.1",
+            "release": "",
+            "newVersion": "",
+            "newRelease": "",
+            "arch": "",
+            "repository": "",
+            "modularitylabel": ""
+        },
+        "libnettle8:amd64": {
+            "name": "libnettle8:amd64",
+            "version": "3.7.3-1build2",
+            "release": "",
+            "newVersion": "",
+            "newRelease": "",
+            "arch": "",
+            "repository": "",
+            "modularitylabel": ""
+        },
+        "libnsl2:amd64": {
+            "name": "libnsl2:amd64",
+            "version": "1.3.0-2build2",
+            "release": "",
+            "newVersion": "",
+            "newRelease": "",
+            "arch": "",
+            "repository": "",
+            "modularitylabel": ""
+        },
+        "libp11-kit0:amd64": {
+            "name": "libp11-kit0:amd64",
+            "version": "0.24.0-6build1",
+            "release": "",
+            "newVersion": "",
+            "newRelease": "",
+            "arch": "",
+            "repository": "",
+            "modularitylabel": ""
+        },
+        "libpam-modules-bin": {
+            "name": "libpam-modules-bin",
+            "version": "1.4.0-11ubuntu2.6",
+            "release": "",
+            "newVersion": "",
+            "newRelease": "",
+            "arch": "",
+            "repository": "",
+            "modularitylabel": ""
+        },
+        "libpam-modules:amd64": {
+            "name": "libpam-modules:amd64",
+            "version": "1.4.0-11ubuntu2.6",
+            "release": "",
+            "newVersion": "",
+            "newRelease": "",
+            "arch": "",
+            "repository": "",
+            "modularitylabel": ""
+        },
+        "libpam-runtime": {
+            "name": "libpam-runtime",
+            "version": "1.4.0-11ubuntu2.6",
+            "release": "",
+            "newVersion": "",
+            "newRelease": "",
+            "arch": "",
+            "repository": "",
+            "modularitylabel": ""
+        },
+        "libpam0g:amd64": {
+            "name": "libpam0g:amd64",
+            "version": "1.4.0-11ubuntu2.6",
+            "release": "",
+            "newVersion": "",
+            "newRelease": "",
+            "arch": "",
+            "repository": "",
+            "modularitylabel": ""
+        },
+        "libpcre2-8-0:amd64": {
+            "name": "libpcre2-8-0:amd64",
+            "version": "10.39-3ubuntu0.1",
+            "release": "",
+            "newVersion": "",
+            "newRelease": "",
+            "arch": "",
+            "repository": "",
+            "modularitylabel": ""
+        },
+        "libpcre3:amd64": {
+            "name": "libpcre3:amd64",
+            "version": "2:8.39-13ubuntu0.22.04.1",
+            "release": "",
+            "newVersion": "",
+            "newRelease": "",
+            "arch": "",
+            "repository": "",
+            "modularitylabel": ""
+        },
+        "libprocps8:amd64": {
+            "name": "libprocps8:amd64",
+            "version": "2:3.3.17-6ubuntu2.1",
+            "release": "",
+            "newVersion": "",
+            "newRelease": "",
+            "arch": "",
+            "repository": "",
+            "modularitylabel": ""
+        },
+        "libseccomp2:amd64": {
+            "name": "libseccomp2:amd64",
+            "version": "2.5.3-2ubuntu3~22.04.1",
+            "release": "",
+            "newVersion": "",
+            "newRelease": "",
+            "arch": "",
+            "repository": "",
+            "modularitylabel": ""
+        },
+        "libselinux1:amd64": {
+            "name": "libselinux1:amd64",
+            "version": "3.3-1build2",
+            "release": "",
+            "newVersion": "",
+            "newRelease": "",
+            "arch": "",
+            "repository": "",
+            "modularitylabel": ""
+        },
+        "libsemanage-common": {
+            "name": "libsemanage-common",
+            "version": "3.3-1build2",
+            "release": "",
+            "newVersion": "",
+            "newRelease": "",
+            "arch": "",
+            "repository": "",
+            "modularitylabel": ""
+        },
+        "libsemanage2:amd64": {
+            "name": "libsemanage2:amd64",
+            "version": "3.3-1build2",
+            "release": "",
+            "newVersion": "",
+            "newRelease": "",
+            "arch": "",
+            "repository": "",
+            "modularitylabel": ""
+        },
+        "libsepol2:amd64": {
+            "name": "libsepol2:amd64",
+            "version": "3.3-1build1",
+            "release": "",
+            "newVersion": "",
+            "newRelease": "",
+            "arch": "",
+            "repository": "",
+            "modularitylabel": ""
+        },
+        "libsmartcols1:amd64": {
+            "name": "libsmartcols1:amd64",
+            "version": "2.37.2-4ubuntu3.4",
+            "release": "",
+            "newVersion": "",
+            "newRelease": "",
+            "arch": "",
+            "repository": "",
+            "modularitylabel": ""
+        },
+        "libss2:amd64": {
+            "name": "libss2:amd64",
+            "version": "1.46.5-2ubuntu1.2",
+            "release": "",
+            "newVersion": "",
+            "newRelease": "",
+            "arch": "",
+            "repository": "",
+            "modularitylabel": ""
+        },
+        "libssl3:amd64": {
+            "name": "libssl3:amd64",
+            "version": "3.0.2-0ubuntu1.21",
+            "release": "",
+            "newVersion": "",
+            "newRelease": "",
+            "arch": "",
+            "repository": "",
+            "modularitylabel": ""
+        },
+        "libstdc++6:amd64": {
+            "name": "libstdc++6:amd64",
+            "version": "12.3.0-1ubuntu1~22.04.2",
+            "release": "",
+            "newVersion": "",
+            "newRelease": "",
+            "arch": "",
+            "repository": "",
+            "modularitylabel": ""
+        },
+        "libsystemd0:amd64": {
+            "name": "libsystemd0:amd64",
+            "version": "249.11-0ubuntu3.17",
+            "release": "",
+            "newVersion": "",
+            "newRelease": "",
+            "arch": "",
+            "repository": "",
+            "modularitylabel": ""
+        },
+        "libtasn1-6:amd64": {
+            "name": "libtasn1-6:amd64",
+            "version": "4.18.0-4ubuntu0.2",
+            "release": "",
+            "newVersion": "",
+            "newRelease": "",
+            "arch": "",
+            "repository": "",
+            "modularitylabel": ""
+        },
+        "libtinfo6:amd64": {
+            "name": "libtinfo6:amd64",
+            "version": "6.3-2ubuntu0.1",
+            "release": "",
+            "newVersion": "",
+            "newRelease": "",
+            "arch": "",
+            "repository": "",
+            "modularitylabel": ""
+        },
+        "libtirpc-common": {
+            "name": "libtirpc-common",
+            "version": "1.3.2-2ubuntu0.1",
+            "release": "",
+            "newVersion": "",
+            "newRelease": "",
+            "arch": "",
+            "repository": "",
+            "modularitylabel": ""
+        },
+        "libtirpc3:amd64": {
+            "name": "libtirpc3:amd64",
+            "version": "1.3.2-2ubuntu0.1",
+            "release": "",
+            "newVersion": "",
+            "newRelease": "",
+            "arch": "",
+            "repository": "",
+            "modularitylabel": ""
+        },
+        "libudev1:amd64": {
+            "name": "libudev1:amd64",
+            "version": "249.11-0ubuntu3.17",
+            "release": "",
+            "newVersion": "",
+            "newRelease": "",
+            "arch": "",
+            "repository": "",
+            "modularitylabel": ""
+        },
+        "libunistring2:amd64": {
+            "name": "libunistring2:amd64",
+            "version": "1.0-1",
+            "release": "",
+            "newVersion": "",
+            "newRelease": "",
+            "arch": "",
+            "repository": "",
+            "modularitylabel": ""
+        },
+        "libuuid1:amd64": {
+            "name": "libuuid1:amd64",
+            "version": "2.37.2-4ubuntu3.4",
+            "release": "",
+            "newVersion": "",
+            "newRelease": "",
+            "arch": "",
+            "repository": "",
+            "modularitylabel": ""
+        },
+        "libxxhash0:amd64": {
+            "name": "libxxhash0:amd64",
+            "version": "0.8.1-1",
+            "release": "",
+            "newVersion": "",
+            "newRelease": "",
+            "arch": "",
+            "repository": "",
+            "modularitylabel": ""
+        },
+        "libzstd1:amd64": {
+            "name": "libzstd1:amd64",
+            "version": "1.4.8+dfsg-3build1",
+            "release": "",
+            "newVersion": "",
+            "newRelease": "",
+            "arch": "",
+            "repository": "",
+            "modularitylabel": ""
+        },
+        "login": {
+            "name": "login",
+            "version": "1:4.8.1-2ubuntu2.2",
+            "release": "",
+            "newVersion": "",
+            "newRelease": "",
+            "arch": "",
+            "repository": "",
+            "modularitylabel": ""
+        },
+        "logsave": {
+            "name": "logsave",
+            "version": "1.46.5-2ubuntu1.2",
+            "release": "",
+            "newVersion": "",
+            "newRelease": "",
+            "arch": "",
+            "repository": "",
+            "modularitylabel": ""
+        },
+        "lsb-base": {
+            "name": "lsb-base",
+            "version": "11.1.0ubuntu4",
+            "release": "",
+            "newVersion": "",
+            "newRelease": "",
+            "arch": "",
+            "repository": "",
+            "modularitylabel": ""
+        },
+        "mawk": {
+            "name": "mawk",
+            "version": "1.3.4.20200120-3",
+            "release": "",
+            "newVersion": "",
+            "newRelease": "",
+            "arch": "",
+            "repository": "",
+            "modularitylabel": ""
+        },
+        "mount": {
+            "name": "mount",
+            "version": "2.37.2-4ubuntu3.4",
+            "release": "",
+            "newVersion": "",
+            "newRelease": "",
+            "arch": "",
+            "repository": "",
+            "modularitylabel": ""
+        },
+        "ncurses-base": {
+            "name": "ncurses-base",
+            "version": "6.3-2ubuntu0.1",
+            "release": "",
+            "newVersion": "",
+            "newRelease": "",
+            "arch": "",
+            "repository": "",
+            "modularitylabel": ""
+        },
+        "ncurses-bin": {
+            "name": "ncurses-bin",
+            "version": "6.3-2ubuntu0.1",
+            "release": "",
+            "newVersion": "",
+            "newRelease": "",
+            "arch": "",
+            "repository": "",
+            "modularitylabel": ""
+        },
+        "passwd": {
+            "name": "passwd",
+            "version": "1:4.8.1-2ubuntu2.2",
+            "release": "",
+            "newVersion": "",
+            "newRelease": "",
+            "arch": "",
+            "repository": "",
+            "modularitylabel": ""
+        },
+        "perl-base": {
+            "name": "perl-base",
+            "version": "5.34.0-3ubuntu1.5",
+            "release": "",
+            "newVersion": "",
+            "newRelease": "",
+            "arch": "",
+            "repository": "",
+            "modularitylabel": ""
+        },
+        "procps": {
+            "name": "procps",
+            "version": "2:3.3.17-6ubuntu2.1",
+            "release": "",
+            "newVersion": "",
+            "newRelease": "",
+            "arch": "",
+            "repository": "",
+            "modularitylabel": ""
+        },
+        "sed": {
+            "name": "sed",
+            "version": "4.8-1ubuntu2",
+            "release": "",
+            "newVersion": "",
+            "newRelease": "",
+            "arch": "",
+            "repository": "",
+            "modularitylabel": ""
+        },
+        "sensible-utils": {
+            "name": "sensible-utils",
+            "version": "0.0.17",
+            "release": "",
+            "newVersion": "",
+            "newRelease": "",
+            "arch": "",
+            "repository": "",
+            "modularitylabel": ""
+        },
+        "sysvinit-utils": {
+            "name": "sysvinit-utils",
+            "version": "3.01-1ubuntu1",
+            "release": "",
+            "newVersion": "",
+            "newRelease": "",
+            "arch": "",
+            "repository": "",
+            "modularitylabel": ""
+        },
+        "tar": {
+            "name": "tar",
+            "version": "1.34+dfsg-1ubuntu0.1.22.04.2",
+            "release": "",
+            "newVersion": "",
+            "newRelease": "",
+            "arch": "",
+            "repository": "",
+            "modularitylabel": ""
+        },
+        "ubuntu-keyring": {
+            "name": "ubuntu-keyring",
+            "version": "2021.03.26",
+            "release": "",
+            "newVersion": "",
+            "newRelease": "",
+            "arch": "",
+            "repository": "",
+            "modularitylabel": ""
+        },
+        "usrmerge": {
+            "name": "usrmerge",
+            "version": "25ubuntu2",
+            "release": "",
+            "newVersion": "",
+            "newRelease": "",
+            "arch": "",
+            "repository": "",
+            "modularitylabel": ""
+        },
+        "util-linux": {
+            "name": "util-linux",
+            "version": "2.37.2-4ubuntu3.4",
+            "release": "",
+            "newVersion": "",
+            "newRelease": "",
+            "arch": "",
+            "repository": "",
+            "modularitylabel": ""
+        },
+        "zlib1g:amd64": {
+            "name": "zlib1g:amd64",
+            "version": "1:1.2.11.dfsg-2ubuntu9.2",
+            "release": "",
+            "newVersion": "",
+            "newRelease": "",
+            "arch": "",
+            "repository": "",
+            "modularitylabel": ""
+        }
+    },
+    "SrcPackages": {
+        "acl": {
+            "name": "acl",
+            "version": "2.3.1-1",
+            "arch": "",
+            "binaryNames": [
+                "libacl1:amd64"
+            ]
+        },
+        "apt": {
+            "name": "apt",
+            "version": "2.4.14",
+            "arch": "",
+            "binaryNames": [
+                "libapt-pkg6.0:amd64"
+            ]
+        },
+        "attr": {
+            "name": "attr",
+            "version": "1:2.5.1-1build1",
+            "arch": "",
+            "binaryNames": [
+                "libattr1:amd64"
+            ]
+        },
+        "audit": {
+            "name": "audit",
+            "version": "1:3.0.7-1build1",
+            "arch": "",
+            "binaryNames": [
+                "libaudit-common",
+                "libaudit1:amd64"
+            ]
+        },
+        "bzip2": {
+            "name": "bzip2",
+            "version": "1.0.8-5build1",
+            "arch": "",
+            "binaryNames": [
+                "libbz2-1.0:amd64"
+            ]
+        },
+        "cdebconf": {
+            "name": "cdebconf",
+            "version": "0.261ubuntu1",
+            "arch": "",
+            "binaryNames": [
+                "libdebconfclient0:amd64"
+            ]
+        },
+        "db5.3": {
+            "name": "db5.3",
+            "version": "5.3.28+dfsg1-0.8ubuntu3",
+            "arch": "",
+            "binaryNames": [
+                "libdb5.3:amd64"
+            ]
+        },
+        "e2fsprogs": {
+            "name": "e2fsprogs",
+            "version": "1.46.5-2ubuntu1.2",
+            "arch": "",
+            "binaryNames": [
+                "libcom-err2:amd64",
+                "libext2fs2:amd64",
+                "libss2:amd64",
+                "logsave"
+            ]
+        },
+        "gcc-12": {
+            "name": "gcc-12",
+            "version": "12.3.0-1ubuntu1~22.04.2",
+            "arch": "",
+            "binaryNames": [
+                "gcc-12-base:amd64",
+                "libgcc-s1:amd64",
+                "libstdc++6:amd64"
+            ]
+        },
+        "glibc": {
+            "name": "glibc",
+            "version": "2.35-0ubuntu3.13",
+            "arch": "",
+            "binaryNames": [
+                "libc-bin",
+                "libc6:amd64"
+            ]
+        },
+        "gmp": {
+            "name": "gmp",
+            "version": "2:6.2.1+dfsg-3ubuntu1",
+            "arch": "",
+            "binaryNames": [
+                "libgmp10:amd64"
+            ]
+        },
+        "gnupg2": {
+            "name": "gnupg2",
+            "version": "2.2.27-3ubuntu2.5",
+            "arch": "",
+            "binaryNames": [
+                "gpgv"
+            ]
+        },
+        "gnutls28": {
+            "name": "gnutls28",
+            "version": "3.7.3-4ubuntu1.7",
+            "arch": "",
+            "binaryNames": [
+                "libgnutls30:amd64"
+            ]
+        },
+        "keyutils": {
+            "name": "keyutils",
+            "version": "1.6.1-2ubuntu3",
+            "arch": "",
+            "binaryNames": [
+                "libkeyutils1:amd64"
+            ]
+        },
+        "krb5": {
+            "name": "krb5",
+            "version": "1.19.2-2ubuntu0.7",
+            "arch": "",
+            "binaryNames": [
+                "libgssapi-krb5-2:amd64",
+                "libk5crypto3:amd64",
+                "libkrb5-3:amd64",
+                "libkrb5support0:amd64"
+            ]
+        },
+        "libcap-ng": {
+            "name": "libcap-ng",
+            "version": "0.7.9-2.2build3",
+            "arch": "",
+            "binaryNames": [
+                "libcap-ng0:amd64"
+            ]
+        },
+        "libffi": {
+            "name": "libffi",
+            "version": "3.4.2-4",
+            "arch": "",
+            "binaryNames": [
+                "libffi8:amd64"
+            ]
+        },
+        "libgpg-error": {
+            "name": "libgpg-error",
+            "version": "1.43-3",
+            "arch": "",
+            "binaryNames": [
+                "libgpg-error0:amd64"
+            ]
+        },
+        "libidn2": {
+            "name": "libidn2",
+            "version": "2.3.2-2build1",
+            "arch": "",
+            "binaryNames": [
+                "libidn2-0:amd64"
+            ]
+        },
+        "libnsl": {
+            "name": "libnsl",
+            "version": "1.3.0-2build2",
+            "arch": "",
+            "binaryNames": [
+                "libnsl2:amd64"
+            ]
+        },
+        "libseccomp": {
+            "name": "libseccomp",
+            "version": "2.5.3-2ubuntu3~22.04.1",
+            "arch": "",
+            "binaryNames": [
+                "libseccomp2:amd64"
+            ]
+        },
+        "libselinux": {
+            "name": "libselinux",
+            "version": "3.3-1build2",
+            "arch": "",
+            "binaryNames": [
+                "libselinux1:amd64"
+            ]
+        },
+        "libsemanage": {
+            "name": "libsemanage",
+            "version": "3.3-1build2",
+            "arch": "",
+            "binaryNames": [
+                "libsemanage-common",
+                "libsemanage2:amd64"
+            ]
+        },
+        "libsepol": {
+            "name": "libsepol",
+            "version": "3.3-1build1",
+            "arch": "",
+            "binaryNames": [
+                "libsepol2:amd64"
+            ]
+        },
+        "libtirpc": {
+            "name": "libtirpc",
+            "version": "1.3.2-2ubuntu0.1",
+            "arch": "",
+            "binaryNames": [
+                "libtirpc-common",
+                "libtirpc3:amd64"
+            ]
+        },
+        "libunistring": {
+            "name": "libunistring",
+            "version": "1.0-1",
+            "arch": "",
+            "binaryNames": [
+                "libunistring2:amd64"
+            ]
+        },
+        "libxcrypt": {
+            "name": "libxcrypt",
+            "version": "1:4.4.27-1",
+            "arch": "",
+            "binaryNames": [
+                "libcrypt1:amd64"
+            ]
+        },
+        "libzstd": {
+            "name": "libzstd",
+            "version": "1.4.8+dfsg-3build1",
+            "arch": "",
+            "binaryNames": [
+                "libzstd1:amd64"
+            ]
+        },
+        "lsb": {
+            "name": "lsb",
+            "version": "11.1.0ubuntu4",
+            "arch": "",
+            "binaryNames": [
+                "lsb-base"
+            ]
+        },
+        "lz4": {
+            "name": "lz4",
+            "version": "1.9.3-2build2",
+            "arch": "",
+            "binaryNames": [
+                "liblz4-1:amd64"
+            ]
+        },
+        "ncurses": {
+            "name": "ncurses",
+            "version": "6.3-2ubuntu0.1",
+            "arch": "",
+            "binaryNames": [
+                "libncurses6:amd64",
+                "libncursesw6:amd64",
+                "libtinfo6:amd64",
+                "ncurses-base",
+                "ncurses-bin"
+            ]
+        },
+        "nettle": {
+            "name": "nettle",
+            "version": "3.7.3-1build2",
+            "arch": "",
+            "binaryNames": [
+                "libhogweed6:amd64",
+                "libnettle8:amd64"
+            ]
+        },
+        "openssl": {
+            "name": "openssl",
+            "version": "3.0.2-0ubuntu1.21",
+            "arch": "",
+            "binaryNames": [
+                "libssl3:amd64"
+            ]
+        },
+        "p11-kit": {
+            "name": "p11-kit",
+            "version": "0.24.0-6build1",
+            "arch": "",
+            "binaryNames": [
+                "libp11-kit0:amd64"
+            ]
+        },
+        "pam": {
+            "name": "pam",
+            "version": "1.4.0-11ubuntu2.6",
+            "arch": "",
+            "binaryNames": [
+                "libpam-modules:amd64",
+                "libpam-modules-bin",
+                "libpam-runtime",
+                "libpam0g:amd64"
+            ]
+        },
+        "pcre2": {
+            "name": "pcre2",
+            "version": "10.39-3ubuntu0.1",
+            "arch": "",
+            "binaryNames": [
+                "libpcre2-8-0:amd64"
+            ]
+        },
+        "pcre3": {
+            "name": "pcre3",
+            "version": "2:8.39-13ubuntu0.22.04.1",
+            "arch": "",
+            "binaryNames": [
+                "libpcre3:amd64"
+            ]
+        },
+        "perl": {
+            "name": "perl",
+            "version": "5.34.0-3ubuntu1.5",
+            "arch": "",
+            "binaryNames": [
+                "perl-base"
+            ]
+        },
+        "procps": {
+            "name": "procps",
+            "version": "2:3.3.17-6ubuntu2.1",
+            "arch": "",
+            "binaryNames": [
+                "libprocps8:amd64"
+            ]
+        },
+        "shadow": {
+            "name": "shadow",
+            "version": "1:4.8.1-2ubuntu2.2",
+            "arch": "",
+            "binaryNames": [
+                "login",
+                "passwd"
+            ]
+        },
+        "systemd": {
+            "name": "systemd",
+            "version": "249.11-0ubuntu3.17",
+            "arch": "",
+            "binaryNames": [
+                "libsystemd0:amd64",
+                "libudev1:amd64"
+            ]
+        },
+        "sysvinit": {
+            "name": "sysvinit",
+            "version": "3.01-1ubuntu1",
+            "arch": "",
+            "binaryNames": [
+                "sysvinit-utils"
+            ]
+        },
+        "util-linux": {
+            "name": "util-linux",
+            "version": "2.37.2-4ubuntu3.4",
+            "arch": "",
+            "binaryNames": [
+                "libblkid1:amd64",
+                "libmount1:amd64",
+                "libsmartcols1:amd64",
+                "libuuid1:amd64",
+                "mount"
+            ]
+        },
+        "util-linux (2.37.2-4ubuntu3.4)": {
+            "name": "util-linux (2.37.2-4ubuntu3.4)",
+            "version": "2.37.2-4ubuntu3.4",
+            "arch": "",
+            "binaryNames": [
+                "bsdutils"
+            ]
+        },
+        "xxhash": {
+            "name": "xxhash",
+            "version": "0.8.1-1",
+            "arch": "",
+            "binaryNames": [
+                "libxxhash0:amd64"
+            ]
+        },
+        "xz-utils": {
+            "name": "xz-utils",
+            "version": "5.2.5-2ubuntu1",
+            "arch": "",
+            "binaryNames": [
+                "liblzma5:amd64"
+            ]
+        },
+        "zlib": {
+            "name": "zlib",
+            "version": "1:1.2.11.dfsg-2ubuntu9.2",
+            "arch": "",
+            "binaryNames": [
+                "zlib1g:amd64"
+            ]
+        }
+    },
+    "cweDict": {
+        "1188": {
+            "en": {
+                "cweID": "1188",
+                "name": "Insecure Default Initialization of Resource",
+                "description": "The software initializes or sets a resource with a default that is intended to be changed by the administrator, but the default is not secure.",
+                "extendedDescription": ""
+            },
+            "owaspTopTens": {},
+            "cweTopTwentyfives": {},
+            "sansTopTwentyfives": {}
+        },
+        "121": {
+            "en": {
+                "cweID": "121",
+                "name": "Stack-based Buffer Overflow",
+                "description": "A stack-based buffer overflow condition is a condition where the buffer being overwritten is allocated on the stack (i.e., is a local variable or, rarely, a parameter to a function).",
+                "extendedDescription": ""
+            },
+            "owaspTopTens": {},
+            "cweTopTwentyfives": {
+                "2025": "14"
+            },
+            "sansTopTwentyfives": {}
+        },
+        "125": {
+            "en": {
+                "cweID": "125",
+                "name": "Out-of-bounds Read",
+                "description": "The software reads data past the end, or before the beginning, of the intended buffer.",
+                "extendedDescription": "Typically, this can allow attackers to read sensitive information from other memory locations or cause a crash. A crash can occur when the code reads a variable amount of data and assumes that a sentinel exists to stop the read operation, such as a NUL in a string. The expected sentinel might not be located in the out-of-bounds memory, causing excessive data to be read, leading to a segmentation fault or a buffer overflow. The software may modify an index or perform pointer arithmetic that references a memory location that is outside of the boundaries of the buffer. A subsequent read operation then produces undefined or unexpected results."
+            },
+            "owaspTopTens": {},
+            "cweTopTwentyfives": {
+                "2019": "5",
+                "2020": "4",
+                "2021": "3",
+                "2022": "5",
+                "2023": "7",
+                "2024": "6",
+                "2025": "8"
+            },
+            "sansTopTwentyfives": {
+                "latest": "5"
+            }
+        },
+        "190": {
+            "en": {
+                "cweID": "190",
+                "name": "Integer Overflow or Wraparound",
+                "description": "The software performs a calculation that can produce an integer overflow or wraparound, when the logic assumes that the resulting value will always be larger than the original value. This can introduce other weaknesses when the calculation is used for resource management or execution control.",
+                "extendedDescription": "An integer overflow or wraparound occurs when an integer value is incremented to a value that is too large to store in the associated representation. When this occurs, the value may wrap to become a very small or negative number. While this may be intended behavior in circumstances that rely on wrapping, it can have security consequences if the wrap is unexpected. This is especially the case if the integer overflow can be triggered using user-supplied inputs. This becomes security-critical when the result is used to control looping, make a security decision, or determine the offset or size in behaviors such as memory allocation, copying, concatenation, etc."
+            },
+            "owaspTopTens": {},
+            "cweTopTwentyfives": {
+                "2019": "8",
+                "2020": "11",
+                "2021": "12",
+                "2022": "13",
+                "2023": "14",
+                "2024": "23"
+            },
+            "sansTopTwentyfives": {
+                "2010": "17",
+                "2011": "24",
+                "latest": "8"
+            }
+        },
+        "22": {
+            "en": {
+                "cweID": "22",
+                "name": "Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')",
+                "description": "The software uses external input to construct a pathname that is intended to identify a file or directory that is located underneath a restricted parent directory, but the software does not properly neutralize special elements within the pathname that can cause the pathname to resolve to a location that is outside of the restricted directory.",
+                "extendedDescription": ""
+            },
+            "owaspTopTens": {
+                "2017": "5",
+                "2021": "1"
+            },
+            "cweTopTwentyfives": {
+                "2019": "10",
+                "2020": "12",
+                "2021": "8",
+                "2022": "8",
+                "2023": "8",
+                "2024": "5",
+                "2025": "6"
+            },
+            "sansTopTwentyfives": {
+                "2010": "7",
+                "2011": "13",
+                "latest": "10"
+            }
+        },
+        "300": {
+            "en": {
+                "cweID": "300",
+                "name": "Channel Accessible by Non-Endpoint",
+                "description": "The product does not adequately verify the identity of actors at both ends of a communication channel, or does not adequately ensure the integrity of the channel, in a way that allows the channel to be accessed or influenced by an actor that is not an endpoint.",
+                "extendedDescription": "In order to establish secure communication between two parties, it is often important to adequately verify the identity of entities at each end of the communication channel. Inadequate or inconsistent verification may result in insufficient or incorrect identification of either communicating entity. This can have negative consequences such as misplaced trust in the entity at the other end of the channel. An attacker can leverage this by interposing between the communicating entities and masquerading as the original entity. In the absence of sufficient verification of identity, such an attacker can eavesdrop and potentially modify the communication between the original entities."
+            },
+            "owaspTopTens": {
+                "2021": "7"
+            },
+            "cweTopTwentyfives": {},
+            "sansTopTwentyfives": {}
+        },
+        "347": {
+            "en": {
+                "cweID": "347",
+                "name": "Improper Verification of Cryptographic Signature",
+                "description": "The software does not verify, or incorrectly verifies, the cryptographic signature for data.",
+                "extendedDescription": ""
+            },
+            "owaspTopTens": {
+                "2021": "2"
+            },
+            "cweTopTwentyfives": {},
+            "sansTopTwentyfives": {}
+        },
+        "400": {
+            "en": {
+                "cweID": "400",
+                "name": "Uncontrolled Resource Consumption",
+                "description": "The software does not properly control the allocation and maintenance of a limited resource, thereby enabling an actor to influence the amount of resources consumed, eventually leading to the exhaustion of available resources.",
+                "extendedDescription": ""
+            },
+            "owaspTopTens": {},
+            "cweTopTwentyfives": {
+                "2019": "20",
+                "2020": "23",
+                "2022": "23",
+                "2024": "24"
+            },
+            "sansTopTwentyfives": {
+                "latest": "20"
+            }
+        },
+        "407": {
+            "en": {
+                "cweID": "407",
+                "name": "Inefficient Algorithmic Complexity",
+                "description": "An algorithm in a product has an inefficient worst-case computational complexity that may be detrimental to system performance and can be triggered by an attacker, typically using crafted manipulations that ensure that the worst case is being reached.",
+                "extendedDescription": ""
+            },
+            "owaspTopTens": {},
+            "cweTopTwentyfives": {},
+            "sansTopTwentyfives": {}
+        },
+        "674": {
+            "en": {
+                "cweID": "674",
+                "name": "Uncontrolled Recursion",
+                "description": "The product does not properly control the amount of recursion which takes place, consuming excessive resources, such as allocated memory or the program stack.",
+                "extendedDescription": ""
+            },
+            "owaspTopTens": {},
+            "cweTopTwentyfives": {},
+            "sansTopTwentyfives": {}
+        },
+        "74": {
+            "en": {
+                "cweID": "74",
+                "name": "Improper Neutralization of Special Elements in Output Used by a Downstream Component ('Injection')",
+                "description": "The software constructs all or part of a command, data structure, or record using externally-influenced input from an upstream component, but it does not neutralize or incorrectly neutralizes special elements that could modify how it is parsed or interpreted when it is sent to a downstream component.",
+                "extendedDescription": "Software has certain assumptions about what constitutes data and control respectively. It is the lack of verification of these assumptions for user-controlled input that leads to injection problems. Injection problems encompass a wide variety of issues -- all mitigated in very different ways and usually attempted in order to alter the control flow of the process. For this reason, the most effective way to discuss these weaknesses is to note the distinct features which classify them as injection weaknesses. The most important issue to note is that all injection problems share one thing in common -- i.e., they allow for the injection of control plane data into the user-controlled data plane. This means that the execution of the process may be altered by sending code in through legitimate data channels, using no other mechanism. While buffer overflows, and many other flaws, involve the use of some further issue to gain execution, injection problems need only for the data to be parsed. The most classic instantiations of this category of weakness are SQL injection and format string vulnerabilities."
+            },
+            "owaspTopTens": {
+                "2021": "3"
+            },
+            "cweTopTwentyfives": {},
+            "sansTopTwentyfives": {}
+        },
+        "787": {
+            "en": {
+                "cweID": "787",
+                "name": "Out-of-bounds Write",
+                "description": "The software writes data past the end, or before the beginning, of the intended buffer.",
+                "extendedDescription": "Typically, this can result in corruption of data, a crash, or code execution. The software may modify an index or perform pointer arithmetic that references a memory location that is outside of the boundaries of the buffer. A subsequent write operation then produces undefined or unexpected results."
+            },
+            "owaspTopTens": {},
+            "cweTopTwentyfives": {
+                "2019": "12",
+                "2020": "2",
+                "2021": "1",
+                "2022": "1",
+                "2023": "1",
+                "2024": "2",
+                "2025": "5"
+            },
+            "sansTopTwentyfives": {
+                "latest": "12"
+            }
+        }
+    },
+    "config": {
+        "scan": {
+            "logJSON": false
+        },
+        "report": {
+            "logJSON": false
+        }
+    }
+}

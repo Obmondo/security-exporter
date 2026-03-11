@@ -1,0 +1,118 @@
+version: 2
+
+changelog:
+  use: gitea
+  sort: asc
+  format: "[{{ .SHA }}](https://gitea.obmondo.com/EnableIT/security-exporter/commit/{{ .SHA }}) {{ .Message }}{{ with .AuthorUsername }} (@{{ . }}){{ end }}"
+  abbrev: 7
+  filters:
+    exclude:
+      - init
+      - Merge pull request
+      - Merge remote-tracking branch
+      - Merge branch
+  groups:
+    - title: "\U0001F4AB Features"
+      regexp: '^.*?feat(\([[:word:]]+\))??!?:.+'
+      order: 0
+    - title: "\U0001F41B Bug fixes"
+      regexp: '^.*?fix(\([[:word:]]+\))??!?:.+'
+      order: 1
+    - title: "\U0001F974 Others"
+      order: 999
+
+archives:
+  - formats: [tar.gz]
+    name_template: >-
+      {{- .ProjectName }}_
+      {{- .Tag }}_
+      {{- .Os }}_
+      {{- .Arch }}
+    builds_info:
+      group: root
+      owner: root
+      mode: 0755
+      mtime: "{{ .CommitDate }}"
+
+before:
+  hooks:
+    - go mod tidy
+
+builds:
+  - id: obmondo-security-exporter
+    main: ./cmd/
+    binary: obmondo-security-exporter
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+    goarch:
+      - amd64
+      - arm64
+    flags:
+      - -v
+    ldflags:
+      - -X main.Version={{ .Tag }}
+      - -s -w
+
+nfpms:
+  - id: obmondo-security-exporter-deb
+    package_name: obmondo-security-exporter
+    ids:
+      - obmondo-security-exporter
+    file_name_template: >-
+      {{- .PackageName }}_
+      {{- .Version }}_
+      {{- .Arch }}
+      {{- .ConventionalExtension }}
+    vendor: Obmondo
+    homepage: https://gitea.obmondo.com/EnableIT/security-exporter
+    maintainer: Obmondo <ops@obmondo.com>
+    description: |-
+      Obmondo Security Exporter.
+      Prometheus exporter for vulnerability scanning via Vuls.
+    license: MIT
+    formats:
+      - deb
+    bindir: /opt/obmondo/bin
+    contents:
+      - src: config/config.yaml
+        dst: /etc/obmondo/security-exporter/config.yaml
+        type: config
+    mtime: "{{ .CommitDate }}"
+
+  - id: obmondo-security-exporter-rpm
+    package_name: obmondo-security-exporter
+    ids:
+      - obmondo-security-exporter
+    file_name_template: >-
+      {{- .PackageName }}-
+      {{- .Version }}-
+      {{- .Release }}.
+      {{- if eq .Arch "amd64" }}x86_64{{ else if eq .Arch "arm64" }}aarch64{{ else }}{{ .Arch }}{{ end }}
+      {{- .ConventionalExtension }}
+    vendor: Obmondo
+    homepage: https://gitea.obmondo.com/EnableIT/security-exporter
+    maintainer: Obmondo <ops@obmondo.com>
+    description: |-
+      Obmondo Security Exporter.
+      Prometheus exporter for vulnerability scanning via Vuls.
+    license: MIT
+    release: "1"
+    formats:
+      - rpm
+    bindir: /opt/obmondo/bin
+    contents:
+      - src: config/config.yaml
+        dst: /etc/obmondo/security-exporter/config.yaml
+        type: config
+    mtime: "{{ .CommitDate }}"
+
+release:
+  ids:
+    - default
+
+gitea_urls:
+  api: https://gitea.obmondo.com/api/v1
+  download: https://gitea.obmondo.com
+  skip_tls_verify: false

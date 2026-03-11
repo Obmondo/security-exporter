@@ -43,8 +43,13 @@ func main() {
 		os.Exit(1)
 	}
 
+	const (
+		scanTimeout    = 5 * time.Minute
+		shutdownTimeout = 10 * time.Second
+	)
+
 	scanTask := func() {
-		ctx, cancel := context.WithTimeout(context.Background(), 5*time.Minute)
+		ctx, cancel := context.WithTimeout(context.Background(), scanTimeout)
 		defer cancel()
 
 		slog.Info("starting vulnerability scan")
@@ -65,7 +70,7 @@ func main() {
 	}
 
 	_, err = scheduler.NewJob(
-		gocron.CronJob(cfg.CronExpression, false),
+		gocron.DurationJob(cfg.PushInterval.Duration),
 		gocron.NewTask(scanTask),
 		gocron.WithSingletonMode(gocron.LimitModeReschedule),
 		gocron.WithStartAt(gocron.WithStartImmediately()),
@@ -76,7 +81,7 @@ func main() {
 	}
 
 	scheduler.Start()
-	slog.Info("scheduler started", "cron", cfg.CronExpression)
+	slog.Info("scheduler started", "interval", cfg.PushInterval.Duration)
 
 	mux := http.NewServeMux()
 	mux.Handle("/metrics", promhttp.Handler())
@@ -103,7 +108,7 @@ func main() {
 		slog.Error("scheduler shutdown error", "error", err)
 	}
 
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), shutdownTimeout)
 	defer cancel()
 	if err := server.Shutdown(ctx); err != nil {
 		slog.Error("HTTP server shutdown error", "error", err)

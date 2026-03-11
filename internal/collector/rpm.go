@@ -10,7 +10,7 @@ type rpmCollector struct {
 	release string
 }
 
-func (r *rpmCollector) Packages(ctx context.Context) (string, error) {
+func (*rpmCollector) Packages(ctx context.Context) (string, error) {
 	cmd := exec.CommandContext(ctx, "rpm", "-qa", "--queryformat", "%{NAME}\t%{EPOCHNUM}:%{VERSION}-%{RELEASE}\n")
 	out, err := cmd.Output()
 	if err != nil {

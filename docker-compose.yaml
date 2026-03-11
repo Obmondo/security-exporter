@@ -1,0 +1,67 @@
+services:
+  vuls-server:
+    image: vuls/vuls:latest
+    container_name: vuls-server
+    command: server -listen 0.0.0.0:5515 -to-localfile
+    restart: on-failure
+    depends_on:
+      vuls-db:
+        condition: service_started
+      vuls-oval-db:
+        condition: service_started
+    ports:
+      - "5515:5515"
+    volumes:
+      - vuls-results:/vuls
+      - ./config.toml:/vuls/config.toml:ro
+    networks:
+      - vuls-net
+
+  vuls-db:
+    image: vuls/go-cve-dictionary:latest
+    container_name: vuls-db
+    entrypoint: ["sh", "-c"]
+    command:
+      - |
+        go-cve-dictionary fetch nvd --dbpath /vuls/cve.sqlite3 &&
+        go-cve-dictionary server --bind 0.0.0.0 --port 1323 --dbpath /vuls/cve.sqlite3
+    volumes:
+      - vuls-data:/vuls
+    networks:
+      - vuls-net
+
+  vuls-oval-db:
+    image: vuls/goval-dictionary:latest
+    container_name: vuls-oval-db
+    entrypoint: ["sh", "-c"]
+    command:
+      - |
+        goval-dictionary fetch debian 12 &&
+        goval-dictionary fetch ubuntu 22.04 24.04 &&
+        goval-dictionary server --bind 0.0.0.0 --port 1324
+    volumes:
+      - vuls-data:/vuls
+    networks:
+      - vuls-net
+
+  security-exporter:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: security-exporter
+    depends_on:
+      - vuls-server
+    ports:
+      - "63396:63396"
+    volumes:
+      - ./config/config.dev.yaml:/etc/obmondo/security-exporter/config.yaml:ro
+    networks:
+      - vuls-net
+
+volumes:
+  vuls-results:
+  vuls-data:
+
+networks:
+  vuls-net:
+    driver: bridge

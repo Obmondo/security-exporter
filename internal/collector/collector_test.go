@@ -6,64 +6,155 @@ import (
 	"testing"
 )
 
-func TestParseOSRelease_Debian(t *testing.T) {
-	content := `ID=debian
-VERSION_ID="12"
-`
-	path := writeTempFile(t, content)
-	family, release, err := parseOSRelease(path)
-	if err != nil {
-		t.Fatal(err)
+const (
+	familyDebian = "debian"
+	familyUbuntu = "ubuntu"
+)
+
+func TestParseOSRelease(t *testing.T) {
+	tests := []struct {
+		name           string
+		content        string
+		expectedFamily string
+		expectedRelease string
+	}{
+		{
+			name:            "Debian",
+			content:         "ID=debian\nVERSION_ID=\"12\"\n",
+			expectedFamily:  familyDebian,
+			expectedRelease: "12",
+		},
+		{
+			name:            "Ubuntu",
+			content:         "ID=ubuntu\nVERSION_ID=\"22.04\"\n",
+			expectedFamily:  familyUbuntu,
+			expectedRelease: "22.04",
+		},
+		{
+			name:            "Rocky",
+			content:         "ID=\"rocky\"\nVERSION_ID=\"9.3\"\n",
+			expectedFamily:  "rocky",
+			expectedRelease: "9.3",
+		},
+		{
+			name:            "RHEL",
+			content:         "ID=\"rhel\"\nVERSION_ID=\"9.2\"\nPRETTY_NAME=\"Red Hat Enterprise Linux 9.2 (Plow)\"\n",
+			expectedFamily:  "rhel",
+			expectedRelease: "9.2",
+		},
+		{
+			name:            "AlmaLinux",
+			content:         "ID=\"almalinux\"\nVERSION_ID=\"9.3\"\n",
+			expectedFamily:  "almalinux",
+			expectedRelease: "9.3",
+		},
+		{
+			name:            "Fedora",
+			content:         "ID=fedora\nVERSION_ID=39\n",
+			expectedFamily:  "fedora",
+			expectedRelease: "39",
+		},
+		{
+			name:            "CentOS",
+			content:         "ID=\"centos\"\nVERSION_ID=\"7\"\n",
+			expectedFamily:  "centos",
+			expectedRelease: "7",
+		},
+		{
+			name:            "MissingVersionID",
+			content:         "ID=debian\n",
+			expectedFamily:  familyDebian,
+			expectedRelease: "",
+		},
+		{
+			name: "ExtraFields",
+			content: "NAME=\"Debian GNU/Linux\"\nID=debian\nVERSION_ID=\"12\"\n" +
+				"PRETTY_NAME=\"Debian GNU/Linux 12 (bookworm)\"\nHOME_URL=\"https://www.debian.org/\"\n",
+			expectedFamily:  familyDebian,
+			expectedRelease: "12",
+		},
 	}
-	if family != "debian" {
-		t.Errorf("expected family debian, got %s", family)
-	}
-	if release != "12" {
-		t.Errorf("expected release 12, got %s", release)
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			path := writeTempFile(t, tt.content)
+			family, release, err := parseOSRelease(path)
+			if err != nil {
+				t.Fatal(err)
+			}
+			if family != tt.expectedFamily {
+				t.Errorf("expected family %s, got %s", tt.expectedFamily, family)
+			}
+			if release != tt.expectedRelease {
+				t.Errorf("expected release %s, got %s", tt.expectedRelease, release)
+			}
+		})
 	}
 }
 
-func TestParseOSRelease_Ubuntu(t *testing.T) {
-	content := `ID=ubuntu
-VERSION_ID="22.04"
-`
-	path := writeTempFile(t, content)
-	family, release, err := parseOSRelease(path)
-	if err != nil {
-		t.Fatal(err)
+func TestParseOSRelease_Errors(t *testing.T) {
+	tests := []struct {
+		name    string
+		path    string
+		content string
+		useFile bool
+	}{
+		{
+			name: "MissingID",
+			content: "VERSION_ID=\"12\"\n",
+			useFile: true,
+		},
+		{
+			name:    "FileNotFound",
+			path:    "/nonexistent/os-release",
+			useFile: false,
+		},
+		{
+			name:    "EmptyFile",
+			content: "",
+			useFile: true,
+		},
 	}
-	if family != "ubuntu" {
-		t.Errorf("expected family ubuntu, got %s", family)
-	}
-	if release != "22.04" {
-		t.Errorf("expected release 22.04, got %s", release)
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			path := tt.path
+			if tt.useFile {
+				path = writeTempFile(t, tt.content)
+			}
+			_, _, err := parseOSRelease(path)
+			if err == nil {
+				t.Fatal("expected error")
+			}
+		})
 	}
 }
 
-func TestParseOSRelease_Rocky(t *testing.T) {
-	content := `ID="rocky"
-VERSION_ID="9.3"
-`
-	path := writeTempFile(t, content)
-	family, release, err := parseOSRelease(path)
-	if err != nil {
-		t.Fatal(err)
-	}
-	if family != "rocky" {
-		t.Errorf("expected family rocky, got %s", family)
-	}
-	if release != "9.3" {
-		t.Errorf("expected release 9.3, got %s", release)
+func TestDpkgCollector_OSFamily(t *testing.T) {
+	c := &dpkgCollector{family: familyDebian, release: "12"}
+	if c.OSFamily() != familyDebian {
+		t.Errorf("expected %s, got %s", familyDebian, c.OSFamily())
 	}
 }
 
-func TestParseOSRelease_MissingID(t *testing.T) {
-	content := `VERSION_ID="12"
-`
-	path := writeTempFile(t, content)
-	_, _, err := parseOSRelease(path)
-	if err == nil {
-		t.Fatal("expected error for missing ID")
+func TestDpkgCollector_Release(t *testing.T) {
+	c := &dpkgCollector{family: familyDebian, release: "12"}
+	if c.Release() != "12" {
+		t.Errorf("expected 12, got %s", c.Release())
+	}
+}
+
+func TestRpmCollector_OSFamily(t *testing.T) {
+	c := &rpmCollector{family: "redhat", release: "9"}
+	if c.OSFamily() != "redhat" {
+		t.Errorf("expected redhat, got %s", c.OSFamily())
+	}
+}
+
+func TestRpmCollector_Release(t *testing.T) {
+	c := &rpmCollector{family: "redhat", release: "9"}
+	if c.Release() != "9" {
+		t.Errorf("expected 9, got %s", c.Release())
 	}
 }
 

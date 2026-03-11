@@ -1,0 +1,5 @@
+vuls_server:
+  url: "http://vuls-server:5515"
+  timeout: 60s
+listen_address: "0.0.0.0:63396"
+push_interval: 5m

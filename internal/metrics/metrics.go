@@ -2,6 +2,7 @@ package metrics
 
 import (
 	"fmt"
+	"log/slog"
 	"strings"
 
 	"github.com/prometheus/client_golang/prometheus"
@@ -54,6 +55,8 @@ func Update(result *scanner.ScanResult) {
 	} else {
 		kernelUpdateAvailable.Set(0)
 	}
+
+	slog.Info("updating metrics", "packages_with_updates", updateCount, "cves", len(result.ScannedCves))
 
 	for _, vuln := range result.ScannedCves {
 		score := bestCVSS3Score(vuln)

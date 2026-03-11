@@ -2,6 +2,7 @@ package config
 
 import (
 	"fmt"
+	"log/slog"
 	"os"
 	"time"
 
@@ -9,9 +10,9 @@ import (
 )
 
 type Config struct {
-	VulsServer     VulsServer `yaml:"vuls_server"`
-	ListenAddress  string     `yaml:"listen_address"`
-	CronExpression string     `yaml:"cron_expression"`
+	VulsServer    VulsServer `yaml:"vuls_server"`
+	ListenAddress string     `yaml:"listen_address"`
+	PushInterval  Duration   `yaml:"push_interval"`
 }
 
 type VulsServer struct {
@@ -49,5 +50,6 @@ func Load(path string) (*Config, error) {
 	if err := yaml.Unmarshal(data, &cfg); err != nil {
 		return nil, fmt.Errorf("parsing config: %w", err)
 	}
+	slog.Info("loaded config", "path", path)
 	return &cfg, nil
 }

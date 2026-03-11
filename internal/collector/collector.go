@@ -3,6 +3,7 @@ package collector
 import (
 	"context"
 	"fmt"
+	"log/slog"
 	"os"
 	"strings"
 )
@@ -18,6 +19,8 @@ func New() (Collector, error) {
 	if err != nil {
 		return nil, fmt.Errorf("detecting OS: %w", err)
 	}
+
+	slog.Info("detected OS", "family", family, "release", release)
 
 	switch family {
 	case "debian", "ubuntu":
@@ -37,8 +40,9 @@ func parseOSRelease(path string) (family, release string, err error) {
 
 	fields := map[string]string{}
 	for _, line := range strings.Split(string(data), "\n") {
-		parts := strings.SplitN(line, "=", 2)
-		if len(parts) == 2 {
+		const kvParts = 2
+		parts := strings.SplitN(line, "=", kvParts)
+		if len(parts) == kvParts {
 			fields[parts[0]] = strings.Trim(parts[1], "\"")
 		}
 	}
