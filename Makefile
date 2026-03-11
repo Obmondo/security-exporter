@@ -1,6 +1,10 @@
+NAME=obmondo-security-exporter
+
 build:
-	go build -v -o main cmd/main.go
+	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -ldflags="-extldflags=-static -s -w" -o dist/$(NAME) ./cmd/
+
 test:
 	go test ./...
-test-v:
-	go test -v ./...
+
+clean:
+	rm -rf dist/

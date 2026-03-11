@@ -1,17 +1,49 @@
-# Repo Info
+# Security Exporter
 
-- repo for exporter that exposes security information about installed packages and CVE relevant info
+[![Test](https://github.com/Obmondo/security-exporter/actions/workflows/test.yaml/badge.svg)](https://github.com/Obmondo/security-exporter/actions/workflows/test.yaml)
+[![Lint](https://github.com/Obmondo/security-exporter/actions/workflows/lint.yaml/badge.svg)](https://github.com/Obmondo/security-exporter/actions/workflows/lint.yaml)
+[![Go Report Card](https://goreportcard.com/badge/github.com/Obmondo/security-exporter)](https://goreportcard.com/report/github.com/Obmondo/security-exporter)
 
+Prometheus exporter that collects installed packages, sends them to a Vuls server for vulnerability scanning, and exposes CVE metrics.
 
-### Enviroment variables list 
+## Configuration
 
+See `config/config.yaml` for an example configuration file.
+
+```yaml
+vuls_server:
+  url: "https://vuls.obmondo.com"
+  timeout: 30s
+  cert_file: "/etc/puppetlabs/puppet/ssl/certs/<certname>.pem"
+  key_file: "/etc/puppetlabs/puppet/ssl/private_keys/<certname>.pem"
+  ca_file: "/etc/puppetlabs/puppet/ssl/certs/ca.pem"
+listen_address: "127.254.254.254:63396"
+cron_expression: "0 */12 * * *"
 ```
-LOGGING_LEVEL - supports debug, info, warn, error ENUMS for logging level(Note this cannot be configuared via YAML file)
-CVE_API_TIMEOUT - sets timeout for request to 3rd party api 
-CVE_API_REQUEST_INTERVAL - sets time interval between each request  to avoid getting rate limited
-CVE_API_URL - sets 3rd party API url which will have and endpoint that will give us cve-number info
-CVE_API_ENDPOINT - sets 3rd party endpoint on which request will be sent to get info
-CRON_EXPRESSION - this will basically set how many times this program will check for security updates and give CVE-number for them
+
+## Usage
+
+```sh
+obmondo-security-exporter -config /etc/obmondo/security-exporter/config.yaml
 ```
 
-- if you don't like using Enviroment variables you can use YAML config, please check [this link](./config/config.test.yaml)
+## Metrics
+
+| Metric | Type | Labels | Description |
+|--------|------|--------|-------------|
+| `total_number_of_packages_with_update` | Gauge | — | Total packages with available updates |
+| `general_cve_details` | GaugeVec | application, cve_id, score | CVE details for non-kernel packages |
+| `kernel_cve_details` | GaugeVec | application, cve_id, score | CVE details for kernel packages |
+| `kernel_update_available` | Gauge | — | Whether a kernel update is available (1/0) |
+
+## Build
+
+```sh
+make build
+```
+
+## Test
+
+```sh
+make test
+```

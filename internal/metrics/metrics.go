@@ -1,26 +1,89 @@
 package metrics
 
 import (
-	"gitea.obmondo.com/EnableIT/security-exporter/internal/model"
+	"fmt"
+	"strings"
+
 	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/promauto"
+
+	"security-exporter/internal/scanner"
 )
 
-var cveDetails = prometheus.NewGaugeVec(
-	prometheus.GaugeOpts{
-		Name: "cve_details",
-		Help: "shows cve score found in availabe security update of linux node",
-	},
-	[]string{"application", "cve_id", "severity", "score"},
+var (
+	totalPackagesWithUpdate = promauto.NewGauge(prometheus.GaugeOpts{
+		Name: "total_number_of_packages_with_update",
+		Help: "Total number of packages that have updates available.",
+	})
+
+	generalCVEDetails = promauto.NewGaugeVec(prometheus.GaugeOpts{
+		Name: "general_cve_details",
+		Help: "CVE details for non-kernel packages.",
+	}, []string{"application", "cve_id", "score"})
+
+	kernelCVEDetails = promauto.NewGaugeVec(prometheus.GaugeOpts{
+		Name: "kernel_cve_details",
+		Help: "CVE details for kernel packages.",
+	}, []string{"application", "cve_id", "score"})
+
+	kernelUpdateAvailable = promauto.NewGauge(prometheus.GaugeOpts{
+		Name: "kernel_update_available",
+		Help: "Whether a kernel update is available (1 = yes, 0 = no).",
+	})
 )
 
-func RegisterMetrics() {
-	prometheus.MustRegister(cveDetails)
-}
+func Update(result *scanner.ScanResult) {
+	generalCVEDetails.Reset()
+	kernelCVEDetails.Reset()
 
-func SetCVELabelsValue(appCVEs []model.AppCVE) {
-	for _, appCVE := range appCVEs {
-		for i := range appCVE.CVEID {
-			cveDetails.WithLabelValues(appCVE.Name, appCVE.CVEID[i], appCVE.CVESeverity[i], appCVE.CVEScore[i])
+	updateCount := 0
+	kernelUpdate := false
+
+	for _, pkg := range result.Packages {
+		if pkg.NewVersion != "" {
+			updateCount++
+			if isKernelPackage(pkg.Name) {
+				kernelUpdate = true
+			}
 		}
 	}
+	totalPackagesWithUpdate.Set(float64(updateCount))
+
+	if kernelUpdate {
+		kernelUpdateAvailable.Set(1)
+	} else {
+		kernelUpdateAvailable.Set(0)
+	}
+
+	for _, vuln := range result.ScannedCves {
+		score := bestCVSS3Score(vuln)
+		scoreStr := fmt.Sprintf("%.1f", score)
+
+		for _, pkg := range vuln.AffectedPackages {
+			gauge := generalCVEDetails
+			if isKernelPackage(pkg.Name) {
+				gauge = kernelCVEDetails
+			}
+			gauge.WithLabelValues(pkg.Name, vuln.CveID, scoreStr).Set(score)
+		}
+	}
+}
+
+func isKernelPackage(name string) bool {
+	return strings.HasPrefix(name, "linux-image") ||
+		strings.HasPrefix(name, "linux-headers") ||
+		name == "kernel" ||
+		strings.HasPrefix(name, "kernel-")
+}
+
+func bestCVSS3Score(v scanner.VulnInfo) float64 {
+	var best float64
+	for _, contents := range v.CveContents {
+		for _, c := range contents {
+			if c.Cvss3Score > best {
+				best = c.Cvss3Score
+			}
+		}
+	}
+	return best
 }

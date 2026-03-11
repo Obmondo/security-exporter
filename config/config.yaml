@@ -1,0 +1,8 @@
+vuls_server:
+  url: "https://vuls.obmondo.com"
+  timeout: 30s
+  cert_file: "/etc/puppetlabs/puppet/ssl/certs/<certname>.pem"
+  key_file: "/etc/puppetlabs/puppet/ssl/private_keys/<certname>.pem"
+  ca_file: "/etc/puppetlabs/puppet/ssl/certs/ca.pem"
+listen_address: "127.254.254.254:63396"
+cron_expression: "0 */12 * * *"
