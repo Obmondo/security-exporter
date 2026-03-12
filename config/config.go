@@ -12,7 +12,7 @@ import (
 type Config struct {
 	VulsServer    VulsServer `yaml:"vuls_server"`
 	ListenAddress string     `yaml:"listen_address"`
-	PushInterval  Duration   `yaml:"push_interval"`
+	ScanInterval  Duration   `yaml:"scan_interval"`
 }
 
 type VulsServer struct {

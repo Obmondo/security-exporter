@@ -73,7 +73,7 @@ func runServe(_ *cobra.Command, _ []string) error {
 	}
 
 	_, err = scheduler.NewJob(
-		gocron.DurationJob(cfg.PushInterval.Duration),
+		gocron.DurationJob(cfg.ScanInterval.Duration),
 		gocron.NewTask(scanTask),
 		gocron.WithSingletonMode(gocron.LimitModeReschedule),
 		gocron.WithStartAt(gocron.WithStartImmediately()),
@@ -83,7 +83,7 @@ func runServe(_ *cobra.Command, _ []string) error {
 	}
 
 	scheduler.Start()
-	slog.Info("scheduler started", "interval", cfg.PushInterval.Duration)
+	slog.Info("scheduler started", "interval", cfg.ScanInterval.Duration)
 
 	mux := http.NewServeMux()
 	mux.Handle("/metrics", promhttp.Handler())

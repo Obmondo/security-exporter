@@ -18,7 +18,7 @@ vuls_server:
   key_file: "/etc/puppetlabs/puppet/ssl/private_keys/<certname>.pem"
   ca_file: "/etc/puppetlabs/puppet/ssl/certs/ca.pem"
 listen_address: "127.254.254.254:63396"
-push_interval: 12h
+scan_interval: 12h
 ```
 
 | Field | Description |
@@ -29,7 +29,7 @@ push_interval: 12h
 | `vuls_server.key_file` | Client key for mTLS (optional) |
 | `vuls_server.ca_file` | CA certificate for mTLS (optional) |
 | `listen_address` | Address to serve Prometheus metrics on |
-| `push_interval` | How often to scan and push results (Go duration, e.g. `12h`, `30m`) |
+| `scan_interval` | How often to scan and push results (Go duration, e.g. `12h`, `30m`) |
 
 ## Usage
 

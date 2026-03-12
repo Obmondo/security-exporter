@@ -18,7 +18,7 @@ vuls_server:
   key_file: "/etc/ssl/key.pem"
   ca_file: "/etc/ssl/ca.pem"
 listen_address: "127.0.0.1:9090"
-push_interval: 6h
+scan_interval: 6h
 `
 	path := writeTempConfig(t, content)
 
@@ -45,8 +45,8 @@ push_interval: 6h
 	if cfg.ListenAddress != "127.0.0.1:9090" {
 		t.Errorf("expected listen_address 127.0.0.1:9090, got %s", cfg.ListenAddress)
 	}
-	if cfg.PushInterval.Duration != 6*time.Hour {
-		t.Errorf("expected push_interval 6h, got %s", cfg.PushInterval.Duration)
+	if cfg.ScanInterval.Duration != 6*time.Hour {
+		t.Errorf("expected scan_interval 6h, got %s", cfg.ScanInterval.Duration)
 	}
 }
 
@@ -72,7 +72,7 @@ vuls_server:
   url: "https://example.com"
   timeout: "not-a-duration"
 listen_address: "127.0.0.1:9090"
-push_interval: 1h
+scan_interval: 1h
 `
 	path := writeTempConfig(t, content)
 
@@ -87,7 +87,7 @@ func TestLoad_Defaults(t *testing.T) {
 vuls_server:
   url: "https://example.com"
 listen_address: "127.0.0.1:9090"
-push_interval: 1h
+scan_interval: 1h
 `
 	path := writeTempConfig(t, content)
 
@@ -104,18 +104,18 @@ push_interval: 1h
 	}
 }
 
-func TestLoad_InvalidPushInterval(t *testing.T) {
+func TestLoad_InvalidScanInterval(t *testing.T) {
 	content := `
 vuls_server:
   url: "https://example.com"
 listen_address: "127.0.0.1:9090"
-push_interval: "bogus"
+scan_interval: "bogus"
 `
 	path := writeTempConfig(t, content)
 
 	_, err := Load(path)
 	if err == nil {
-		t.Fatal("expected error for invalid push_interval")
+		t.Fatal("expected error for invalid scan_interval")
 	}
 }
 
