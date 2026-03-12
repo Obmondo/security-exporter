@@ -22,6 +22,7 @@ jobs:
           cache-dependency-path: go.sum
 
       - name: Run golangci-lint
-        uses: https://gitea.obmondo.com/Obmondo/golangci-lint-action@v6
+        uses: https://gitea.obmondo.com/Obmondo/golangci-lint-action@v9
         with:
-          version: v1.64
+          version: v2.10.1
+
