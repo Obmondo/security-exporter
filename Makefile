@@ -1,9 +1,10 @@
 NAME = obmondo-security-exporter
+VERSION ?= $(shell git describe --tags --always --dirty 2>/dev/null || echo dev)
 
 .PHONY: build test vet lint clean docker-build docker-up docker-down docker-logs
 
 build:
-	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -ldflags="-extldflags=-static -s -w" -o dist/$(NAME) ./cmd/
+	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -ldflags="-extldflags=-static -s -w -X main.Version=$(VERSION)" -o dist/$(NAME) ./cmd/
 
 test:
 	go test ./...

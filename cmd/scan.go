@@ -7,6 +7,7 @@ import (
 	"log/slog"
 	"os"
 	"sort"
+	"strings"
 	"text/tabwriter"
 	"time"
 
@@ -23,13 +24,14 @@ func scanCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "scan",
 		Short: "Run a single scan and print results to stdout",
-		Long: `Run a one-shot vulnerability scan against the Vuls server.
+		Long: `Run a one-shot vulnerability scan and print results to stdout.
 
-Collects installed packages, sends them for scanning, and prints the
-results to stdout. Useful for local testing and debugging.
+Without --server, runs in local-only mode: collects installed packages
+and displays them without contacting a Vuls server.
 
-The --server flag allows running a scan without a config file:
-  obmondo-security-exporter scan --server http://localhost:5515`,
+With --server, sends packages to the Vuls server for CVE scanning
+(requires --cert-file and --key-file for mTLS):
+  obmondo-security-exporter scan --server https://vuls.obmondo.com --cert-file tls.crt --key-file tls.key`,
 		RunE: runScan,
 	}
 
@@ -56,37 +58,104 @@ func runScan(cmd *cobra.Command, _ []string) error {
 		return err
 	}
 
+	ctx, cancel := context.WithTimeout(context.Background(), scanTimeout)
+	defer cancel()
+
+	var result *scanner.ScanResult
+
+	if vulsServer.URL == "" {
+		slog.Info("running in local-only mode (no server URL configured)")
+		result, err = localScan(ctx, coll)
+		if err != nil {
+			return err
+		}
+
+		return printResult(cmd, result)
+	}
+
 	sc, err := scanner.New(vulsServer)
 	if err != nil {
 		return err
 	}
 
-	ctx, cancel := context.WithTimeout(context.Background(), scanTimeout)
-	defer cancel()
-
 	slog.Info("starting vulnerability scan")
-	result, err := sc.Scan(ctx, coll)
+	result, err = sc.Scan(ctx, coll)
 	if err != nil {
 		return err
 	}
 
+	return printResult(cmd, result)
+}
+
+func printResult(cmd *cobra.Command, result *scanner.ScanResult) error {
 	jsonOutput, _ := cmd.Flags().GetBool("json")
 	if jsonOutput {
 		return printJSON(result)
 	}
-
 	return printTable(result)
 }
 
-// vulsServerFromFlags returns a VulsServer built from --server flags if set,
-// otherwise falls back to loading the config file.
+// localScan collects packages and builds a ScanResult without contacting a server.
+func localScan(ctx context.Context, coll collector.Collector) (*scanner.ScanResult, error) {
+	hostname, err := os.Hostname()
+	if err != nil {
+		return nil, fmt.Errorf("getting hostname: %w", err)
+	}
+
+	pkgs, err := coll.Packages(ctx)
+	if err != nil {
+		return nil, fmt.Errorf("collecting packages: %w", err)
+	}
+
+	return &scanner.ScanResult{
+		ServerName:  hostname,
+		Family:      coll.OSFamily(),
+		Release:     coll.Release(),
+		Packages:    parsePackages(pkgs),
+		ScannedCves: map[string]scanner.VulnInfo{},
+	}, nil
+}
+
+// parsePackages splits tab-separated "name\tversion" lines into a PackageInfo map.
+func parsePackages(raw string) map[string]scanner.PackageInfo {
+	pkgs := make(map[string]scanner.PackageInfo)
+	for _, line := range strings.Split(raw, "\n") {
+		line = strings.TrimSpace(line)
+		if line == "" {
+			continue
+		}
+		const expectedFields = 2
+		parts := strings.SplitN(line, "\t", expectedFields)
+		name := parts[0]
+		version := ""
+		if len(parts) == expectedFields {
+			version = parts[1]
+		}
+		pkgs[name] = scanner.PackageInfo{
+			Name:    name,
+			Version: version,
+		}
+	}
+	return pkgs
+}
+
+// vulsServerFromFlags builds a VulsServer from flags/env vars. When --server
+// is not set and no config file is available, returns an empty VulsServer
+// (triggering local-only mode).
 func vulsServerFromFlags(cmd *cobra.Command) (config.VulsServer, error) {
 	server, _ := cmd.Flags().GetString("server")
+	timeout, _ := cmd.Flags().GetDuration("timeout")
+	certFile := flagOrEnv(cmd, "cert-file", "VULS_CERT_FILE")
+	keyFile := flagOrEnv(cmd, "key-file", "VULS_KEY_FILE")
+	caFile := flagOrEnv(cmd, "ca-file", "VULS_CA_FILE")
+
+	// If --server is explicitly provided, use flag-based config.
 	if server != "" {
-		timeout, _ := cmd.Flags().GetDuration("timeout")
-		certFile, _ := cmd.Flags().GetString("cert-file")
-		keyFile, _ := cmd.Flags().GetString("key-file")
-		caFile, _ := cmd.Flags().GetString("ca-file")
+		if certFile == "" || keyFile == "" {
+			return config.VulsServer{}, fmt.Errorf(
+				"TLS certificates are required to connect to the vuls server. " +
+					"Provide --cert-file and --key-file (or VULS_CERT_FILE / VULS_KEY_FILE)")
+		}
 		return config.VulsServer{
 			URL:      server,
 			Timeout:  config.Duration{Duration: timeout},
@@ -96,11 +165,29 @@ func vulsServerFromFlags(cmd *cobra.Command) (config.VulsServer, error) {
 		}, nil
 	}
 
-	cfg, err := config.Load(configPath)
-	if err != nil {
-		return config.VulsServer{}, err
+	// Try loading from config file; if it fails, fall back to local-only mode.
+	if configPath != "" {
+		cfg, err := config.Load(configPath)
+		if err == nil && cfg.VulsServer.URL != "" {
+			return cfg.VulsServer, nil
+		}
 	}
-	return cfg.VulsServer, nil
+
+	// Warn if TLS certs are provided but no server URL.
+	if certFile != "" || keyFile != "" {
+		slog.Warn("TLS certificates provided but no server URL specified, running in local-only mode")
+	}
+
+	return config.VulsServer{}, nil
+}
+
+// flagOrEnv returns the flag value if non-empty, otherwise the environment variable.
+func flagOrEnv(cmd *cobra.Command, flagName, envName string) string {
+	val, _ := cmd.Flags().GetString(flagName)
+	if val != "" {
+		return val
+	}
+	return os.Getenv(envName)
 }
 
 func printJSON(result *scanner.ScanResult) error {
@@ -120,7 +207,11 @@ func printTable(result *scanner.ScanResult) error {
 	}
 
 	if len(result.ScannedCves) == 0 {
-		_, err := fmt.Fprintln(out, "No vulnerabilities found.")
+		msg := "No vulnerabilities found."
+		if countUpdates(result) == 0 && len(result.Packages) > 0 {
+			msg = "No vulnerabilities scanned (local-only mode, no server contacted)."
+		}
+		_, err := fmt.Fprintln(out, msg)
 		return err
 	}
 

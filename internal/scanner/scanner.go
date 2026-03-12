@@ -112,11 +112,12 @@ func (s *Scanner) Scan(ctx context.Context, c collector.Collector) (*ScanResult,
 	}
 	defer resp.Body.Close()
 
-	slog.Info("scan response received", "status", resp.StatusCode)
-
 	if resp.StatusCode != http.StatusOK {
+		slog.Error("scan request rejected", "status", resp.StatusCode)
 		return nil, fmt.Errorf("scan request failed with status %d", resp.StatusCode)
 	}
+
+	slog.Info("scan completed successfully", "status", resp.StatusCode)
 
 	var result ScanResult
 	if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
