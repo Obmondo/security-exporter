@@ -13,9 +13,9 @@ const (
 
 func TestParseOSRelease(t *testing.T) {
 	tests := []struct {
-		name           string
-		content        string
-		expectedFamily string
+		name            string
+		content         string
+		expectedFamily  string
 		expectedRelease string
 	}{
 		{
@@ -100,7 +100,7 @@ func TestParseOSRelease_Errors(t *testing.T) {
 		useFile bool
 	}{
 		{
-			name: "MissingID",
+			name:    "MissingID",
 			content: "VERSION_ID=\"12\"\n",
 			useFile: true,
 		},
