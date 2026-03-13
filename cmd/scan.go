@@ -100,15 +100,14 @@ func printResult(cmd *cobra.Command, result *scanner.ScanResult) error {
 	if jsonOutput {
 		return printJSON(result)
 	}
-	if err := printTable(result); err != nil {
+	if err := printSummary(result); err != nil {
 		return err
 	}
 	debug, _ := cmd.Flags().GetBool("debug")
 	if debug {
-		fmt.Fprintln(os.Stdout)
 		return printDebugTable(result)
 	}
-	return nil
+	return printTable(result)
 }
 
 // localScan collects packages and builds a ScanResult without contacting a server.
@@ -208,8 +207,7 @@ func printJSON(result *scanner.ScanResult) error {
 	return enc.Encode(result)
 }
 
-func printTable(result *scanner.ScanResult) error {
-	const tabPadding = 2
+func printSummary(result *scanner.ScanResult) error {
 	out := os.Stdout
 
 	if _, err := fmt.Fprintf(out, "Host:    %s\nOS:      %s %s\nCVEs:    %d (%d affected packages)\nPackages with updates: %d / %d\n\n",
@@ -225,6 +223,17 @@ func printTable(result *scanner.ScanResult) error {
 		}
 		_, err := fmt.Fprintln(out, msg)
 		return err
+	}
+
+	return nil
+}
+
+func printTable(result *scanner.ScanResult) error {
+	const tabPadding = 2
+	out := os.Stdout
+
+	if len(result.ScannedCves) == 0 {
+		return nil
 	}
 
 	w := tabwriter.NewWriter(out, 0, 0, tabPadding, ' ', 0)
