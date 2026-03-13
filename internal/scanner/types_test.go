@@ -77,7 +77,7 @@ func TestParseSrcPackages_StripsArch(t *testing.T) {
 }
 
 func TestParseSrcPackages_FiltersNonInstalled(t *testing.T) {
-	raw := "bash\t5.2\tbash\tii \n" +
+	raw := "bash\t5.2.0\tbash\tii \n" +
 		"removed-pkg\t1.0\tremoved-bin\trc \n" +
 		"halfinstall\t2.0\thalf-bin\tiH \n" +
 		"openssl\t3.0\topenssl\tii \n"
@@ -101,18 +101,18 @@ func TestParseSrcPackages_FiltersNonInstalled(t *testing.T) {
 }
 
 func TestParsePackages(t *testing.T) {
-	raw := "bash\tii \t5.2\nopenssl\tii \t3.0.13-1\n"
+	raw := "bash\tii \t5.2.0-1\nopenssl\tii \t3.0.13-1\n"
 	got := ParsePackages(raw)
 	if len(got) != 2 {
 		t.Fatalf("expected 2 packages, got %d", len(got))
 	}
-	if got["bash"].Version != "5.2" {
-		t.Errorf("expected bash version 5.2, got %s", got["bash"].Version)
+	if got["bash"].Version != "5.2.0-1" {
+		t.Errorf("expected bash version 5.2.0-1, got %s", got["bash"].Version)
 	}
 }
 
 func TestParsePackages_FiltersNonInstalled(t *testing.T) {
-	raw := "bash\tii \t5.2\n" +
+	raw := "bash\tii \t5.2.15\n" +
 		"removed-pkg\trc \t1.0\n" +
 		"halfinstall\tiH \t2.0\n" +
 		"unknown\tun \t\n" +

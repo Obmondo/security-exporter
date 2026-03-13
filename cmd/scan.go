@@ -271,24 +271,22 @@ func printTable(result *scanner.ScanResult) error {
 	return w.Flush()
 }
 
-func printDebugTable(result *scanner.ScanResult) error {
-	const tabPadding = 2
-	out := os.Stdout
+type cveEntry struct {
+	cveID    string
+	severity string
+	fixedIn  string
+	fixState string
+	rank     float64
+}
 
-	if len(result.ScannedCves) == 0 {
-		return nil
-	}
+type pkgGroup struct {
+	name    string
+	maxRank float64
+}
 
-	// Build map: package name → list of CVE details.
-	type cveEntry struct {
-		cveID    string
-		severity string
-		fixedIn  string
-		fixState string
-		rank     float64
-	}
+// buildPkgCves groups CVE details by affected package name.
+func buildPkgCves(result *scanner.ScanResult) map[string][]cveEntry {
 	pkgCves := make(map[string][]cveEntry)
-
 	for _, v := range result.ScannedCves {
 		sev := bestSeverity(v)
 		rank := severityRank(v)
@@ -310,12 +308,11 @@ func printDebugTable(result *scanner.ScanResult) error {
 			})
 		}
 	}
+	return pkgCves
+}
 
-	// Sort packages by highest severity CVE (descending).
-	type pkgGroup struct {
-		name    string
-		maxRank float64
-	}
+// sortedPkgGroups returns packages sorted by their highest severity CVE descending.
+func sortedPkgGroups(pkgCves map[string][]cveEntry) []pkgGroup {
 	groups := make([]pkgGroup, 0, len(pkgCves))
 	for name, cves := range pkgCves {
 		var maxRank float64
@@ -329,6 +326,19 @@ func printDebugTable(result *scanner.ScanResult) error {
 	sort.Slice(groups, func(i, j int) bool {
 		return groups[i].maxRank > groups[j].maxRank
 	})
+	return groups
+}
+
+func printDebugTable(result *scanner.ScanResult) error {
+	const tabPadding = 2
+	out := os.Stdout
+
+	if len(result.ScannedCves) == 0 {
+		return nil
+	}
+
+	pkgCves := buildPkgCves(result)
+	groups := sortedPkgGroups(pkgCves)
 
 	w := tabwriter.NewWriter(out, 0, 0, tabPadding, ' ', 0)
 	if _, err := fmt.Fprintln(w, "PACKAGE\tINSTALLED\tAVAILABLE\tCVE\tSEVERITY\tFIX VERSION\tFIX STATE"); err != nil {
@@ -337,7 +347,6 @@ func printDebugTable(result *scanner.ScanResult) error {
 
 	for _, g := range groups {
 		cves := pkgCves[g.name]
-		// Sort CVEs within a package by severity descending.
 		sort.Slice(cves, func(i, j int) bool {
 			return cves[i].rank > cves[j].rank
 		})
@@ -358,7 +367,6 @@ func printDebugTable(result *scanner.ScanResult) error {
 			instCol := installed
 			availCol := available
 			if i > 0 {
-				// Only show package/version info on the first row.
 				pkgCol = ""
 				instCol = ""
 				availCol = ""
@@ -458,18 +466,27 @@ func bestSeverity(v scanner.VulnInfo) string {
 	return "-"
 }
 
+// Severity scores used when only a text label (no CVSS score) is available.
+const (
+	severityCritical   = 9.0
+	severityHigh       = 7.0
+	severityMedium     = 4.0
+	severityLow        = 1.0
+	severityNegligible = 0.1
+)
+
 func textSeverityToScore(sev string) float64 {
 	switch strings.ToLower(sev) {
 	case "critical":
-		return 9.0
+		return severityCritical
 	case "high":
-		return 7.0
+		return severityHigh
 	case "medium":
-		return 4.0
+		return severityMedium
 	case "low":
-		return 1.0
+		return severityLow
 	case "negligible":
-		return 0.1
+		return severityNegligible
 	default:
 		return 0
 	}

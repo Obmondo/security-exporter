@@ -1,4 +1,4 @@
-package scanner
+package scanner //nolint:revive // name is intentional, not the stdlib scanner
 
 import (
 	"bytes"
@@ -108,25 +108,7 @@ func (s *Scanner) Scan(ctx context.Context, c collector.Collector) (*ScanResult,
 	}
 
 	if srcRaw != "" {
-		srcPkgs := ParseSrcPackages(srcRaw)
-		// Filter SrcPackages to only include binary names that exist in
-		// Packages. The vuls2 server looks up each binary name in the
-		// Packages map and errors with "name is empty" if not found.
-		for srcName, sp := range srcPkgs {
-			var filtered []string
-			for _, bn := range sp.BinaryNames {
-				if _, ok := packages[bn]; ok {
-					filtered = append(filtered, bn)
-				}
-			}
-			if len(filtered) == 0 {
-				delete(srcPkgs, srcName)
-			} else {
-				sp.BinaryNames = filtered
-				srcPkgs[srcName] = sp
-			}
-		}
-		req.SrcPackages = srcPkgs
+		req.SrcPackages = filterSrcPackages(ParseSrcPackages(srcRaw), packages)
 	}
 
 	body, err := json.Marshal(req)
@@ -176,4 +158,25 @@ func (s *Scanner) Scan(ctx context.Context, c collector.Collector) (*ScanResult,
 	}
 
 	return &results[0], nil
+}
+
+// filterSrcPackages removes binary names that don't exist in packages and
+// drops source packages with no remaining binaries. The vuls2 server looks
+// up each binary name in the Packages map and errors if not found.
+func filterSrcPackages(srcPkgs SrcPackages, packages Packages) SrcPackages {
+	for srcName, sp := range srcPkgs {
+		var filtered []string
+		for _, bn := range sp.BinaryNames {
+			if _, ok := packages[bn]; ok {
+				filtered = append(filtered, bn)
+			}
+		}
+		if len(filtered) == 0 {
+			delete(srcPkgs, srcName)
+		} else {
+			sp.BinaryNames = filtered
+			srcPkgs[srcName] = sp
+		}
+	}
+	return srcPkgs
 }
