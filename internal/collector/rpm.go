@@ -36,9 +36,11 @@ func (r *rpmCollector) Release() string  { return r.release }
 // parseRpmOutput parses the 6-field rpm -qa output and produces tab-separated
 // strings matching the ParsePackages and ParseSrcPackages contracts.
 func parseRpmOutput(raw string) (pkgs, srcPkgs string, err error) {
-	var pkgLines, srcLines []string
+	lines := strings.Split(raw, "\n")
+	pkgLines := make([]string, 0, len(lines))
+	srcLines := make([]string, 0, len(lines))
 
-	for _, line := range strings.Split(raw, "\n") {
+	for _, line := range lines {
 		line = strings.TrimSpace(line)
 		if line == "" {
 			continue
