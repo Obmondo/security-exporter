@@ -15,7 +15,7 @@ import (
 
 	"security-exporter/config"
 	"security-exporter/internal/collector"
-	"security-exporter/internal/metrics"
+	"security-exporter/internal/prommetrics"
 	"security-exporter/internal/pkgscanner"
 )
 
@@ -63,7 +63,7 @@ func runServe(_ *cobra.Command, _ []string) error {
 			return
 		}
 
-		metrics.Update(result)
+		prommetrics.Update(result)
 		slog.Info("scan completed", "cves", len(result.ScannedCves))
 	}
 
