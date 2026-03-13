@@ -63,12 +63,12 @@ func TestScan_EmptyCves(t *testing.T) {
 		Family:      "debian",
 		Release:     "12",
 		ScannedCves: map[string]VulnInfo{},
-		Packages:    map[string]PackageInfo{},
+		Packages:    Packages{},
 	}
 
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(mockResult)
+		json.NewEncoder(w).Encode([]ScanResult{mockResult})
 	}))
 	defer server.Close()
 
@@ -112,7 +112,7 @@ func TestScan_MultiplePackagesAndCves(t *testing.T) {
 				},
 			},
 		},
-		Packages: map[string]PackageInfo{
+		Packages: Packages{
 			"openssl": {Name: "openssl", Version: "3.0.7-1", NewVersion: "3.0.8-1"},
 			"kernel":  {Name: "kernel", Version: "5.14.0-1", NewVersion: ""},
 			"bash":    {Name: "bash", Version: "5.2.15-1", NewVersion: ""},
@@ -121,7 +121,7 @@ func TestScan_MultiplePackagesAndCves(t *testing.T) {
 
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(mockResult)
+		json.NewEncoder(w).Encode([]ScanResult{mockResult})
 	}))
 	defer server.Close()
 

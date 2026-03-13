@@ -7,7 +7,6 @@ import (
 	"log/slog"
 	"os"
 	"sort"
-	"strings"
 	"text/tabwriter"
 	"time"
 
@@ -18,7 +17,7 @@ import (
 	"security-exporter/internal/scanner"
 )
 
-const defaultServerTimeout = 30 * time.Second
+const defaultServerTimeout = 5 * time.Minute
 
 func scanCmd() *cobra.Command {
 	cmd := &cobra.Command{
@@ -84,7 +83,14 @@ func runScan(cmd *cobra.Command, _ []string) error {
 		return err
 	}
 
-	return printResult(cmd, result)
+	slog.Info("scan complete",
+		"server", vulsServer.URL,
+		"cves", len(result.ScannedCves),
+		"packages", len(result.Packages),
+		"updates", countUpdates(result),
+	)
+
+	return nil
 }
 
 func printResult(cmd *cobra.Command, result *scanner.ScanResult) error {
@@ -111,32 +117,9 @@ func localScan(ctx context.Context, coll collector.Collector) (*scanner.ScanResu
 		ServerName:  hostname,
 		Family:      coll.OSFamily(),
 		Release:     coll.Release(),
-		Packages:    parsePackages(pkgs),
+		Packages:    scanner.ParsePackages(pkgs),
 		ScannedCves: map[string]scanner.VulnInfo{},
 	}, nil
-}
-
-// parsePackages splits tab-separated "name\tversion" lines into a PackageInfo map.
-func parsePackages(raw string) map[string]scanner.PackageInfo {
-	pkgs := make(map[string]scanner.PackageInfo)
-	for _, line := range strings.Split(raw, "\n") {
-		line = strings.TrimSpace(line)
-		if line == "" {
-			continue
-		}
-		const expectedFields = 2
-		parts := strings.SplitN(line, "\t", expectedFields)
-		name := parts[0]
-		version := ""
-		if len(parts) == expectedFields {
-			version = parts[1]
-		}
-		pkgs[name] = scanner.PackageInfo{
-			Name:    name,
-			Version: version,
-		}
-	}
-	return pkgs
 }
 
 // vulsServerFromFlags builds a VulsServer from flags/env vars. When --server

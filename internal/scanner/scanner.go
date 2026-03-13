@@ -7,6 +7,7 @@ import (
 	"crypto/x509"
 	"encoding/json"
 	"fmt"
+	"io"
 	"log/slog"
 	"net/http"
 	"os"
@@ -35,7 +36,7 @@ func New(cfg config.VulsServer) (*Scanner, error) {
 		transport.TLSClientConfig = tlsConfig
 	}
 
-	const defaultTimeout = 30 * time.Second
+	const defaultTimeout = 5 * time.Minute
 	timeout := defaultTimeout
 	if cfg.Timeout.Duration > 0 {
 		timeout = cfg.Timeout.Duration
@@ -90,7 +91,7 @@ func (s *Scanner) Scan(ctx context.Context, c collector.Collector) (*ScanResult,
 		Family:     c.OSFamily(),
 		Release:    c.Release(),
 		ServerName: hostname,
-		Packages:   pkgs,
+		Packages:   ParsePackages(pkgs),
 	}
 
 	body, err := json.Marshal(req)
@@ -104,7 +105,7 @@ func (s *Scanner) Scan(ctx context.Context, c collector.Collector) (*ScanResult,
 	}
 	httpReq.Header.Set("Content-Type", "application/json")
 
-	slog.Info("sending scan request", "url", s.serverURL+"/vuls", "packages", len(req.Packages))
+	slog.Info("sending scan request", "url", s.serverURL+"/vuls", "package_count", len(req.Packages))
 
 	resp, err := s.client.Do(httpReq)
 	if err != nil {
@@ -113,16 +114,20 @@ func (s *Scanner) Scan(ctx context.Context, c collector.Collector) (*ScanResult,
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		slog.Error("scan request rejected", "status", resp.StatusCode)
+		respBody, _ := io.ReadAll(resp.Body)
+		slog.Error("scan request rejected", "status", resp.StatusCode, "body", string(respBody))
 		return nil, fmt.Errorf("scan request failed with status %d", resp.StatusCode)
 	}
 
 	slog.Info("scan completed successfully", "status", resp.StatusCode)
 
-	var result ScanResult
-	if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
+	var results []ScanResult
+	if err := json.NewDecoder(resp.Body).Decode(&results); err != nil {
 		return nil, fmt.Errorf("decoding scan result: %w", err)
 	}
+	if len(results) == 0 {
+		return nil, fmt.Errorf("vuls server returned empty results array")
+	}
 
-	return &result, nil
+	return &results[0], nil
 }

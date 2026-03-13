@@ -10,7 +10,7 @@ import (
 
 func TestUpdate_NoCves(t *testing.T) {
 	result := &scanner.ScanResult{
-		Packages: map[string]scanner.PackageInfo{
+		Packages: scanner.Packages{
 			"bash": {Name: "bash", Version: "5.2.21-1", NewVersion: ""},
 		},
 		ScannedCves: map[string]scanner.VulnInfo{},
@@ -28,7 +28,7 @@ func TestUpdate_NoCves(t *testing.T) {
 
 func TestUpdate_KernelOnly(t *testing.T) {
 	result := &scanner.ScanResult{
-		Packages: map[string]scanner.PackageInfo{
+		Packages: scanner.Packages{
 			"linux-image-6.1": {Name: "linux-image-6.1", Version: "6.1.90-1", NewVersion: "6.1.99-1"},
 		},
 		ScannedCves: map[string]scanner.VulnInfo{
@@ -56,7 +56,7 @@ func TestUpdate_KernelOnly(t *testing.T) {
 
 func TestUpdate_MultipleCveSources(t *testing.T) {
 	result := &scanner.ScanResult{
-		Packages: map[string]scanner.PackageInfo{
+		Packages: scanner.Packages{
 			"openssl": {Name: "openssl", Version: "3.0.13-1", NewVersion: "3.0.14-1"},
 		},
 		ScannedCves: map[string]scanner.VulnInfo{
@@ -88,7 +88,7 @@ func TestUpdate_MultipleCveSources(t *testing.T) {
 
 func TestUpdate_RPMKernelPackage(t *testing.T) {
 	result := &scanner.ScanResult{
-		Packages: map[string]scanner.PackageInfo{
+		Packages: scanner.Packages{
 			"kernel-core": {Name: "kernel-core", Version: "5.14.0-1", NewVersion: "5.14.0-2"},
 		},
 		ScannedCves: map[string]scanner.VulnInfo{
@@ -113,7 +113,7 @@ func TestUpdate_RPMKernelPackage(t *testing.T) {
 
 func TestUpdate_EmptyResult(t *testing.T) {
 	result := &scanner.ScanResult{
-		Packages:    map[string]scanner.PackageInfo{},
+		Packages:    scanner.Packages{},
 		ScannedCves: map[string]scanner.VulnInfo{},
 	}
 

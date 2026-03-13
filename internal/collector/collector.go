@@ -24,7 +24,7 @@ func New() (Collector, error) {
 
 	switch family {
 	case "debian", "ubuntu":
-		return &dpkgCollector{family: "debian", release: release}, nil
+		return &dpkgCollector{family: family, release: release}, nil
 	case "rhel", "centos", "rocky", "ol", "almalinux", "fedora":
 		return &rpmCollector{family: "redhat", release: release}, nil
 	default:

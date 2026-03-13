@@ -59,12 +59,15 @@ func TestScan(t *testing.T) {
 		if req.Family != "debian" {
 			t.Errorf("expected family debian, got %s", req.Family)
 		}
-		if req.Packages != "openssl\t3.0.13-1\n" {
-			t.Errorf("unexpected packages: %s", req.Packages)
+		if len(req.Packages) != 1 {
+			t.Errorf("expected 1 package, got %d", len(req.Packages))
+		}
+		if pkg, ok := req.Packages["openssl"]; !ok || pkg.Version != "3.0.13-1" {
+			t.Errorf("unexpected packages: %v", req.Packages)
 		}
 
 		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(mockResult)
+		json.NewEncoder(w).Encode([]ScanResult{mockResult})
 	}))
 	defer server.Close()
 
@@ -99,7 +102,7 @@ func TestScan_ContentTypeHeader(t *testing.T) {
 			t.Errorf("expected Content-Type application/json, got %s", ct)
 		}
 		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(ScanResult{})
+		json.NewEncoder(w).Encode([]ScanResult{{}})
 	}))
 	defer server.Close()
 
@@ -122,7 +125,7 @@ func TestScan_RequestBody(t *testing.T) {
 		body, _ := io.ReadAll(r.Body)
 		json.Unmarshal(body, &received)
 		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(ScanResult{})
+		json.NewEncoder(w).Encode([]ScanResult{{}})
 	}))
 	defer server.Close()
 
@@ -143,8 +146,11 @@ func TestScan_RequestBody(t *testing.T) {
 	if received.Release != "9" {
 		t.Errorf("expected release 9, got %s", received.Release)
 	}
-	if received.Packages != "bash\t5.2\n" {
-		t.Errorf("expected packages 'bash\\t5.2\\n', got %q", received.Packages)
+	if len(received.Packages) != 1 {
+		t.Errorf("expected 1 package, got %d", len(received.Packages))
+	}
+	if pkg, ok := received.Packages["bash"]; !ok || pkg.Version != "5.2" {
+		t.Errorf("unexpected packages: %v", received.Packages)
 	}
 	if received.ServerName == "" {
 		t.Error("expected non-empty ServerName (hostname)")
@@ -200,7 +206,7 @@ func TestNew_DefaultTimeout(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	const defaultTimeout = 30 * time.Second
+	const defaultTimeout = 5 * time.Minute
 	if sc.client.Timeout != defaultTimeout {
 		t.Errorf("expected default timeout %s, got %s", defaultTimeout, sc.client.Timeout)
 	}
