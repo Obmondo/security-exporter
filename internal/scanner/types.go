@@ -67,8 +67,9 @@ type AffectedPackage struct {
 	FixState    string `json:"fixState"`
 }
 
-// ParseSrcPackages parses tab-separated "src-name\tsrc-version\tbinary-name" lines
+// ParseSrcPackages parses tab-separated "src-name\tsrc-version\tbinary-name\tstatus" lines
 // into a SrcPackages map, grouping binary names under each source package.
+// Only entries with status starting with "ii" (fully installed) are included.
 func ParseSrcPackages(raw string) SrcPackages {
 	pkgs := make(SrcPackages)
 	for _, line := range strings.Split(raw, "\n") {
@@ -76,7 +77,7 @@ func ParseSrcPackages(raw string) SrcPackages {
 		if line == "" {
 			continue
 		}
-		const expectedFields = 3
+		const expectedFields = 4
 		parts := strings.SplitN(line, "\t", expectedFields)
 		if len(parts) < expectedFields {
 			continue
@@ -84,8 +85,12 @@ func ParseSrcPackages(raw string) SrcPackages {
 		srcName := parts[0]
 		srcVersion := parts[1]
 		binName := parts[2]
+		status := parts[3]
+		if !strings.HasPrefix(status, "ii") {
+			continue
+		}
 		// Strip architecture qualifier (e.g., "bind9-libs:amd64" → "bind9-libs")
-		// to match Packages keys which use ${Package} (no arch qualifier).
+		// to match Packages keys which use ${binary:Package} (no arch qualifier).
 		if idx := strings.Index(binName, ":"); idx >= 0 {
 			binName = binName[:idx]
 		}
@@ -105,7 +110,8 @@ func ParseSrcPackages(raw string) SrcPackages {
 	return pkgs
 }
 
-// ParsePackages splits tab-separated "name\tversion" lines into a Packages map.
+// ParsePackages splits tab-separated "name\tstatus\tversion" lines into a Packages map.
+// Only packages with status starting with "ii" (fully installed) are included.
 func ParsePackages(raw string) Packages {
 	pkgs := make(Packages)
 	for _, line := range strings.Split(raw, "\n") {
@@ -113,12 +119,16 @@ func ParsePackages(raw string) Packages {
 		if line == "" {
 			continue
 		}
-		const expectedFields = 2
+		const expectedFields = 3
 		parts := strings.SplitN(line, "\t", expectedFields)
+		if len(parts) < expectedFields {
+			continue
+		}
 		name := parts[0]
-		version := ""
-		if len(parts) == expectedFields {
-			version = parts[1]
+		status := parts[1]
+		version := parts[2]
+		if !strings.HasPrefix(status, "ii") {
+			continue
 		}
 		pkgs[name] = Package{
 			Name:    name,

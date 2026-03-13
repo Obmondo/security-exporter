@@ -13,7 +13,7 @@ type dpkgCollector struct {
 }
 
 func (*dpkgCollector) Packages(ctx context.Context) (string, error) {
-	cmd := exec.CommandContext(ctx, "dpkg-query", "-W", "-f", "${Package}\t${Version}\n")
+	cmd := exec.CommandContext(ctx, "dpkg-query", "-W", "-f", "${binary:Package}\t${db:Status-Abbrev}\t${Version}\n")
 	out, err := cmd.Output()
 	if err != nil {
 		return "", err
@@ -22,7 +22,7 @@ func (*dpkgCollector) Packages(ctx context.Context) (string, error) {
 }
 
 func (*dpkgCollector) SrcPackages(ctx context.Context) (string, error) {
-	cmd := exec.CommandContext(ctx, "dpkg-query", "-W", "-f", "${source:Package}\t${source:Version}\t${binary:Package}\n")
+	cmd := exec.CommandContext(ctx, "dpkg-query", "-W", "-f", "${source:Package}\t${source:Version}\t${binary:Package}\t${db:Status-Abbrev}\n")
 	out, err := cmd.Output()
 	if err != nil {
 		return "", err

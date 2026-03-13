@@ -87,7 +87,7 @@ func TestScan(t *testing.T) {
 	coll := &mockCollector{
 		family:  "debian",
 		release: "12",
-		pkgs:    "openssl\t3.0.13-1\n",
+		pkgs:    "openssl\tii \t3.0.13-1\n",
 	}
 
 	result, err := sc.Scan(context.Background(), coll)
@@ -119,7 +119,7 @@ func TestScan_ContentTypeHeader(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	coll := &mockCollector{family: "debian", release: "12", pkgs: "test\t1.0\n"}
+	coll := &mockCollector{family: "debian", release: "12", pkgs: "test\tii \t1.0\n"}
 	_, err = sc.Scan(context.Background(), coll)
 	if err != nil {
 		t.Fatal(err)
@@ -142,7 +142,7 @@ func TestScan_RequestBody(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	coll := &mockCollector{family: "redhat", release: "9", pkgs: "bash\t5.2\n"}
+	coll := &mockCollector{family: "redhat", release: "9", pkgs: "bash\tii \t5.2\n"}
 	_, err = sc.Scan(context.Background(), coll)
 	if err != nil {
 		t.Fatal(err)
@@ -184,8 +184,8 @@ func TestScan_SendsSrcPackages(t *testing.T) {
 	coll := &mockCollector{
 		family:  "ubuntu",
 		release: "24.04",
-		pkgs:    "bash\t5.2\nlibssl3\t3.0.13\n",
-		srcPkgs: "bash\t5.2\tbash\nopenssl\t3.0.13\tlibssl3\n",
+		pkgs:    "bash\tii \t5.2\nlibssl3\tii \t3.0.13\n",
+		srcPkgs: "bash\t5.2\tbash\tii \nopenssl\t3.0.13\tlibssl3\tii \n",
 		updates: map[string]string{"bash": "5.3"},
 	}
 
@@ -245,7 +245,7 @@ func TestScan_MergesBackNewVersion(t *testing.T) {
 	coll := &mockCollector{
 		family:  "ubuntu",
 		release: "22.04",
-		pkgs:    "bash\t5.1\nopenssl\t3.0.2\n",
+		pkgs:    "bash\tii \t5.1\nopenssl\tii \t3.0.2\n",
 		updates: map[string]string{"bash": "5.2", "openssl": "3.0.14"},
 	}
 
