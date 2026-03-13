@@ -60,6 +60,8 @@ type CveContent struct {
 type AffectedPackage struct {
 	Name        string `json:"name"`
 	NotFixedYet bool   `json:"notFixedYet"`
+	FixedIn     string `json:"fixedIn"`
+	FixState    string `json:"fixState"`
 }
 
 // ParseSrcPackages parses tab-separated "src-name\tsrc-version\tbinary-name" lines

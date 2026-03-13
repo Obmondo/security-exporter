@@ -211,6 +211,72 @@ func TestScan_SendsSrcPackages(t *testing.T) {
 	}
 }
 
+func TestScan_MergesBackNewVersion(t *testing.T) {
+	// Server response has empty newVersion (as real vuls server does).
+	mockResult := ScanResult{
+		ServerName: "test-host",
+		Family:     "ubuntu",
+		Release:    "22.04",
+		Packages: Packages{
+			"bash":    {Name: "bash", Version: "5.1"},
+			"openssl": {Name: "openssl", Version: "3.0.2"},
+		},
+		ScannedCves: map[string]VulnInfo{
+			"CVE-2024-5678": {
+				CveID: "CVE-2024-5678",
+				AffectedPackages: []AffectedPackage{
+					{Name: "bash", NotFixedYet: false, FixedIn: "5.2"},
+				},
+			},
+		},
+	}
+
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode([]ScanResult{mockResult})
+	}))
+	defer server.Close()
+
+	sc, err := New(config.VulsServer{URL: server.URL})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	coll := &mockCollector{
+		family:  "ubuntu",
+		release: "22.04",
+		pkgs:    "bash\t5.1\nopenssl\t3.0.2\n",
+		updates: map[string]string{"bash": "5.2", "openssl": "3.0.14"},
+	}
+
+	result, err := sc.Scan(context.Background(), coll)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	// Verify newVersion was merged back from local updates
+	if pkg, ok := result.Packages["bash"]; !ok {
+		t.Error("expected bash in result packages")
+	} else if pkg.NewVersion != "5.2" {
+		t.Errorf("expected bash newVersion 5.2, got %q", pkg.NewVersion)
+	}
+
+	if pkg, ok := result.Packages["openssl"]; !ok {
+		t.Error("expected openssl in result packages")
+	} else if pkg.NewVersion != "3.0.14" {
+		t.Errorf("expected openssl newVersion 3.0.14, got %q", pkg.NewVersion)
+	}
+
+	// Verify fixedIn was deserialized
+	cve := result.ScannedCves["CVE-2024-5678"]
+	if len(cve.AffectedPackages) != 1 {
+		t.Fatalf("expected 1 affected package, got %d", len(cve.AffectedPackages))
+	}
+	if cve.AffectedPackages[0].FixedIn != "5.2" {
+		t.Errorf("expected fixedIn 5.2, got %q", cve.AffectedPackages[0].FixedIn)
+	}
+}
+
 func TestScan_CollectorError(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
 		t.Fatal("server should not be called when collector fails")

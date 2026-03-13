@@ -222,7 +222,7 @@ func printTable(result *scanner.ScanResult) error {
 	}
 
 	w := tabwriter.NewWriter(out, 0, 0, tabPadding, ' ', 0)
-	if _, err := fmt.Fprintln(w, "CVE ID\tSCORE\tPACKAGE\tFIXED"); err != nil {
+	if _, err := fmt.Fprintln(w, "CVE ID\tSCORE\tPACKAGE\tFIXED\tFIX VERSION"); err != nil {
 		return err
 	}
 
@@ -234,7 +234,11 @@ func printTable(result *scanner.ScanResult) error {
 			if pkg.NotFixedYet {
 				fixed = "no"
 			}
-			if _, err := fmt.Fprintf(w, "%s\t%.1f\t%s\t%s\n", v.CveID, score, pkg.Name, fixed); err != nil {
+			fixVer := pkg.FixedIn
+			if fixVer == "" {
+				fixVer = "-"
+			}
+			if _, err := fmt.Fprintf(w, "%s\t%.1f\t%s\t%s\t%s\n", v.CveID, score, pkg.Name, fixed, fixVer); err != nil {
 				return err
 			}
 		}

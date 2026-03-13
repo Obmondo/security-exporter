@@ -150,5 +150,16 @@ func (s *Scanner) Scan(ctx context.Context, c collector.Collector) (*ScanResult,
 		return nil, fmt.Errorf("vuls server returned empty results array")
 	}
 
+	// Merge back locally-collected newVersion into server response.
+	// The server returns its own Packages map where newVersion is always empty.
+	for name, reqPkg := range packages {
+		if reqPkg.NewVersion != "" {
+			if resPkg, ok := results[0].Packages[name]; ok {
+				resPkg.NewVersion = reqPkg.NewVersion
+				results[0].Packages[name] = resPkg
+			}
+		}
+	}
+
 	return &results[0], nil
 }
