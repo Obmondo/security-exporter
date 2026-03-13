@@ -19,5 +19,13 @@ func (*rpmCollector) Packages(ctx context.Context) (string, error) {
 	return string(out), nil
 }
 
+func (*rpmCollector) SrcPackages(_ context.Context) (string, error) {
+	return "", nil
+}
+
+func (*rpmCollector) AvailableUpdates(_ context.Context) (map[string]string, error) {
+	return nil, nil
+}
+
 func (r *rpmCollector) OSFamily() string { return r.family }
 func (r *rpmCollector) Release() string  { return r.release }

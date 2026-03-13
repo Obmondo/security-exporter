@@ -10,6 +10,8 @@ import (
 
 type Collector interface {
 	Packages(ctx context.Context) (string, error)
+	SrcPackages(ctx context.Context) (string, error)
+	AvailableUpdates(ctx context.Context) (map[string]string, error)
 	OSFamily() string
 	Release() string
 }

@@ -87,11 +87,32 @@ func (s *Scanner) Scan(ctx context.Context, c collector.Collector) (*ScanResult,
 		return nil, fmt.Errorf("collecting packages: %w", err)
 	}
 
+	packages := ParsePackages(pkgs)
+
+	updates, err := c.AvailableUpdates(ctx)
+	if err != nil {
+		slog.Warn("failed to collect available updates", "error", err)
+	}
+	for name, newVer := range updates {
+		if pkg, ok := packages[name]; ok {
+			pkg.NewVersion = newVer
+			packages[name] = pkg
+		}
+	}
+
 	req := ScanRequest{
 		Family:     c.OSFamily(),
 		Release:    c.Release(),
 		ServerName: hostname,
-		Packages:   ParsePackages(pkgs),
+		Packages:   packages,
+	}
+
+	srcRaw, err := c.SrcPackages(ctx)
+	if err != nil {
+		slog.Warn("failed to collect source packages", "error", err)
+	}
+	if srcRaw != "" {
+		req.SrcPackages = ParseSrcPackages(srcRaw)
 	}
 
 	body, err := json.Marshal(req)

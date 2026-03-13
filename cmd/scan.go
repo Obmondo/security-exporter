@@ -113,13 +113,36 @@ func localScan(ctx context.Context, coll collector.Collector) (*scanner.ScanResu
 		return nil, fmt.Errorf("collecting packages: %w", err)
 	}
 
-	return &scanner.ScanResult{
+	packages := scanner.ParsePackages(pkgs)
+
+	updates, err := coll.AvailableUpdates(ctx)
+	if err != nil {
+		slog.Warn("failed to collect available updates", "error", err)
+	}
+	for name, newVer := range updates {
+		if pkg, ok := packages[name]; ok {
+			pkg.NewVersion = newVer
+			packages[name] = pkg
+		}
+	}
+
+	result := &scanner.ScanResult{
 		ServerName:  hostname,
 		Family:      coll.OSFamily(),
 		Release:     coll.Release(),
-		Packages:    scanner.ParsePackages(pkgs),
+		Packages:    packages,
 		ScannedCves: map[string]scanner.VulnInfo{},
-	}, nil
+	}
+
+	srcRaw, err := coll.SrcPackages(ctx)
+	if err != nil {
+		slog.Warn("failed to collect source packages", "error", err)
+	}
+	if srcRaw != "" {
+		result.SrcPackages = scanner.ParseSrcPackages(srcRaw)
+	}
+
+	return result, nil
 }
 
 // vulsServerFromFlags builds a VulsServer from flags/env vars. When --server

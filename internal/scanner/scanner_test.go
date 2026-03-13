@@ -13,10 +13,12 @@ import (
 )
 
 type mockCollector struct {
-	family  string
-	release string
-	pkgs    string
-	err     error
+	family     string
+	release    string
+	pkgs       string
+	srcPkgs    string
+	updates    map[string]string
+	err        error
 }
 
 func (m *mockCollector) Packages(_ context.Context) (string, error) {
@@ -24,6 +26,12 @@ func (m *mockCollector) Packages(_ context.Context) (string, error) {
 		return "", m.err
 	}
 	return m.pkgs, nil
+}
+func (m *mockCollector) SrcPackages(_ context.Context) (string, error) {
+	return m.srcPkgs, nil
+}
+func (m *mockCollector) AvailableUpdates(_ context.Context) (map[string]string, error) {
+	return m.updates, nil
 }
 func (m *mockCollector) OSFamily() string { return m.family }
 func (m *mockCollector) Release() string  { return m.release }
@@ -154,6 +162,52 @@ func TestScan_RequestBody(t *testing.T) {
 	}
 	if received.ServerName == "" {
 		t.Error("expected non-empty ServerName (hostname)")
+	}
+}
+
+func TestScan_SendsSrcPackages(t *testing.T) {
+	var received ScanRequest
+
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		body, _ := io.ReadAll(r.Body)
+		json.Unmarshal(body, &received)
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode([]ScanResult{{}})
+	}))
+	defer server.Close()
+
+	sc, err := New(config.VulsServer{URL: server.URL})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	coll := &mockCollector{
+		family:  "ubuntu",
+		release: "24.04",
+		pkgs:    "bash\t5.2\nlibssl3\t3.0.13\n",
+		srcPkgs: "bash\t5.2\tbash\nopenssl\t3.0.13\tlibssl3\n",
+		updates: map[string]string{"bash": "5.3"},
+	}
+
+	_, err = sc.Scan(context.Background(), coll)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if len(received.SrcPackages) != 2 {
+		t.Errorf("expected 2 source packages, got %d", len(received.SrcPackages))
+	}
+	if sp, ok := received.SrcPackages["openssl"]; !ok {
+		t.Error("expected openssl in srcPackages")
+	} else if len(sp.BinaryNames) != 1 || sp.BinaryNames[0] != "libssl3" {
+		t.Errorf("unexpected openssl binaries: %v", sp.BinaryNames)
+	}
+
+	// Verify newVersion was merged
+	if pkg, ok := received.Packages["bash"]; !ok {
+		t.Error("expected bash in packages")
+	} else if pkg.NewVersion != "5.3" {
+		t.Errorf("expected bash newVersion 5.3, got %s", pkg.NewVersion)
 	}
 }
 
