@@ -127,7 +127,7 @@ func ParsePackages(raw string) Packages {
 		name := parts[0]
 		status := parts[1]
 		version := parts[2]
-		if !strings.HasPrefix(status, "ii") {
+		if name == "" || !strings.HasPrefix(status, "ii") {
 			continue
 		}
 		pkgs[name] = Package{

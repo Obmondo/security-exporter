@@ -112,7 +112,25 @@ func (s *Scanner) Scan(ctx context.Context, c collector.Collector) (*ScanResult,
 		slog.Warn("failed to collect source packages", "error", err)
 	}
 	if srcRaw != "" {
-		req.SrcPackages = ParseSrcPackages(srcRaw)
+		srcPkgs := ParseSrcPackages(srcRaw)
+		// Filter SrcPackages to only include binary names that exist in
+		// Packages. The vuls2 server looks up each binary name in the
+		// Packages map and errors with "name is empty" if not found.
+		for srcName, sp := range srcPkgs {
+			var filtered []string
+			for _, bn := range sp.BinaryNames {
+				if _, ok := packages[bn]; ok {
+					filtered = append(filtered, bn)
+				}
+			}
+			if len(filtered) == 0 {
+				delete(srcPkgs, srcName)
+			} else {
+				sp.BinaryNames = filtered
+				srcPkgs[srcName] = sp
+			}
+		}
+		req.SrcPackages = srcPkgs
 	}
 
 	body, err := json.Marshal(req)
