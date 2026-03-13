@@ -41,6 +41,7 @@ With --server, sends packages to the Vuls server for CVE scanning
 	cmd.Flags().String("cert-file", "", "TLS client certificate file")
 	cmd.Flags().String("key-file", "", "TLS client key file")
 	cmd.Flags().String("ca-file", "", "TLS CA certificate file")
+	cmd.Flags().Bool("debug", false, "show detailed package-centric vulnerability table")
 
 	return cmd
 }
@@ -91,13 +92,17 @@ func runScan(cmd *cobra.Command, _ []string) error {
 		"updates", countUpdates(result),
 	)
 
-	return nil
+	return printResult(cmd, result)
 }
 
 func printResult(cmd *cobra.Command, result *scanner.ScanResult) error {
 	jsonOutput, _ := cmd.Flags().GetBool("json")
 	if jsonOutput {
 		return printJSON(result)
+	}
+	debug, _ := cmd.Flags().GetBool("debug")
+	if debug {
+		return printDebugTable(result)
 	}
 	return printTable(result)
 }
@@ -240,6 +245,115 @@ func printTable(result *scanner.ScanResult) error {
 				fixVer = "-"
 			}
 			if _, err := fmt.Fprintf(w, "%s\t%s\t%s\t%s\t%s\n", v.CveID, severity, pkg.Name, fixed, fixVer); err != nil {
+				return err
+			}
+		}
+	}
+
+	return w.Flush()
+}
+
+func printDebugTable(result *scanner.ScanResult) error {
+	const tabPadding = 2
+	out := os.Stdout
+
+	if _, err := fmt.Fprintf(out, "Host:    %s\nOS:      %s %s\nCVEs:    %d\nPackages with updates: %d / %d\n\n",
+		result.ServerName, result.Family, result.Release,
+		len(result.ScannedCves), countUpdates(result), len(result.Packages)); err != nil {
+		return err
+	}
+
+	if len(result.ScannedCves) == 0 {
+		_, err := fmt.Fprintln(out, "No vulnerabilities found.")
+		return err
+	}
+
+	// Build map: package name → list of CVE details.
+	type cveEntry struct {
+		cveID    string
+		severity string
+		fixedIn  string
+		fixState string
+		rank     float64
+	}
+	pkgCves := make(map[string][]cveEntry)
+
+	for _, v := range result.ScannedCves {
+		sev := bestSeverity(v)
+		rank := severityRank(v)
+		for _, pkg := range v.AffectedPackages {
+			fixIn := pkg.FixedIn
+			if fixIn == "" {
+				fixIn = "-"
+			}
+			fs := pkg.FixState
+			if fs == "" {
+				fs = "-"
+			}
+			pkgCves[pkg.Name] = append(pkgCves[pkg.Name], cveEntry{
+				cveID:    v.CveID,
+				severity: sev,
+				fixedIn:  fixIn,
+				fixState: fs,
+				rank:     rank,
+			})
+		}
+	}
+
+	// Sort packages by highest severity CVE (descending).
+	type pkgGroup struct {
+		name    string
+		maxRank float64
+	}
+	groups := make([]pkgGroup, 0, len(pkgCves))
+	for name, cves := range pkgCves {
+		var maxRank float64
+		for _, c := range cves {
+			if c.rank > maxRank {
+				maxRank = c.rank
+			}
+		}
+		groups = append(groups, pkgGroup{name: name, maxRank: maxRank})
+	}
+	sort.Slice(groups, func(i, j int) bool {
+		return groups[i].maxRank > groups[j].maxRank
+	})
+
+	w := tabwriter.NewWriter(out, 0, 0, tabPadding, ' ', 0)
+	if _, err := fmt.Fprintln(w, "PACKAGE\tINSTALLED\tAVAILABLE\tCVE\tSEVERITY\tFIX VERSION\tFIX STATE"); err != nil {
+		return err
+	}
+
+	for _, g := range groups {
+		cves := pkgCves[g.name]
+		// Sort CVEs within a package by severity descending.
+		sort.Slice(cves, func(i, j int) bool {
+			return cves[i].rank > cves[j].rank
+		})
+
+		installed := "-"
+		available := "-"
+		if pkg, ok := result.Packages[g.name]; ok {
+			if pkg.Version != "" {
+				installed = pkg.Version
+			}
+			if pkg.NewVersion != "" {
+				available = pkg.NewVersion
+			}
+		}
+
+		for i, c := range cves {
+			pkgCol := g.name
+			instCol := installed
+			availCol := available
+			if i > 0 {
+				// Only show package/version info on the first row.
+				pkgCol = ""
+				instCol = ""
+				availCol = ""
+			}
+			if _, err := fmt.Fprintf(w, "%s\t%s\t%s\t%s\t%s\t%s\t%s\n",
+				pkgCol, instCol, availCol, c.cveID, c.severity, c.fixedIn, c.fixState); err != nil {
 				return err
 			}
 		}
