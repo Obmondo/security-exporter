@@ -44,8 +44,9 @@ func parseRpmOutput(raw string) (pkgs, srcPkgs string, err error) {
 			continue
 		}
 		fields := strings.Fields(line)
-		if len(fields) != 6 {
-			return "", "", fmt.Errorf("unexpected rpm output line (got %d fields, want 6): %q", len(fields), line)
+		const rpmFieldCount = 6 // NAME EPOCHNUM VERSION RELEASE ARCH SOURCERPM
+		if len(fields) != rpmFieldCount {
+			return "", "", fmt.Errorf("unexpected rpm output line (got %d fields, want %d): %q", len(fields), rpmFieldCount, line)
 		}
 		name := fields[0]
 		epoch := fields[1]
