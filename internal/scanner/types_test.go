@@ -1,6 +1,7 @@
 package scanner
 
 import (
+	"strings"
 	"testing"
 )
 
@@ -54,6 +55,23 @@ func TestParseSrcPackages_MalformedLines(t *testing.T) {
 	}
 	if _, ok := got["good"]; !ok {
 		t.Error("expected 'good' source package")
+	}
+}
+
+func TestParseSrcPackages_StripsArch(t *testing.T) {
+	raw := "openssl\t3.0.13\tlibssl3:amd64\nopenssl\t3.0.13\topenssl\n"
+	got := ParseSrcPackages(raw)
+	sp, ok := got["openssl"]
+	if !ok {
+		t.Fatal("expected openssl source package")
+	}
+	if len(sp.BinaryNames) != 2 {
+		t.Fatalf("expected 2 binaries for openssl, got %d", len(sp.BinaryNames))
+	}
+	for _, bn := range sp.BinaryNames {
+		if strings.Contains(bn, ":") {
+			t.Errorf("binary name should not contain arch qualifier: %s", bn)
+		}
 	}
 }
 

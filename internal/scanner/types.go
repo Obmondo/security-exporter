@@ -79,7 +79,12 @@ func ParseSrcPackages(raw string) SrcPackages {
 		srcName := parts[0]
 		srcVersion := parts[1]
 		binName := parts[2]
-		if srcName == "" {
+		// Strip architecture qualifier (e.g., "bind9-libs:amd64" → "bind9-libs")
+		// to match Packages keys which use ${Package} (no arch qualifier).
+		if idx := strings.Index(binName, ":"); idx >= 0 {
+			binName = binName[:idx]
+		}
+		if srcName == "" || binName == "" {
 			continue
 		}
 		sp, ok := pkgs[srcName]
