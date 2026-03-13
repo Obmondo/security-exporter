@@ -7,6 +7,7 @@ import (
 	"log/slog"
 	"os"
 	"sort"
+	"strings"
 	"text/tabwriter"
 	"time"
 
@@ -222,13 +223,13 @@ func printTable(result *scanner.ScanResult) error {
 	}
 
 	w := tabwriter.NewWriter(out, 0, 0, tabPadding, ' ', 0)
-	if _, err := fmt.Fprintln(w, "CVE ID\tSCORE\tPACKAGE\tFIXED\tFIX VERSION"); err != nil {
+	if _, err := fmt.Fprintln(w, "CVE ID\tSEVERITY\tPACKAGE\tFIXED\tFIX VERSION"); err != nil {
 		return err
 	}
 
 	vulns := sortedVulns(result)
 	for _, v := range vulns {
-		score := bestScore(v)
+		severity := bestSeverity(v)
 		for _, pkg := range v.AffectedPackages {
 			fixed := "yes"
 			if pkg.NotFixedYet {
@@ -238,7 +239,7 @@ func printTable(result *scanner.ScanResult) error {
 			if fixVer == "" {
 				fixVer = "-"
 			}
-			if _, err := fmt.Fprintf(w, "%s\t%.1f\t%s\t%s\t%s\n", v.CveID, score, pkg.Name, fixed, fixVer); err != nil {
+			if _, err := fmt.Fprintf(w, "%s\t%s\t%s\t%s\t%s\n", v.CveID, severity, pkg.Name, fixed, fixVer); err != nil {
 				return err
 			}
 		}
@@ -263,19 +264,80 @@ func sortedVulns(result *scanner.ScanResult) []scanner.VulnInfo {
 		vulns = append(vulns, v)
 	}
 	sort.Slice(vulns, func(i, j int) bool {
-		return bestScore(vulns[i]) > bestScore(vulns[j])
+		return severityRank(vulns[i]) > severityRank(vulns[j])
 	})
 	return vulns
 }
 
-func bestScore(v scanner.VulnInfo) float64 {
-	var best float64
+// severityRank returns a numeric rank for sorting: CVSS3 score if available,
+// otherwise maps text severity to a representative score.
+func severityRank(v scanner.VulnInfo) float64 {
+	var bestScore float64
+	var bestText string
 	for _, contents := range v.CveContents {
 		for _, c := range contents {
-			if c.Cvss3Score > best {
-				best = c.Cvss3Score
+			if c.Cvss3Score > bestScore {
+				bestScore = c.Cvss3Score
+			}
+			if c.Cvss3Severity != "" {
+				bestText = c.Cvss3Severity
+			}
+			if bestText == "" && c.Cvss2Severity != "" {
+				bestText = c.Cvss2Severity
 			}
 		}
 	}
-	return best
+	if bestScore > 0 {
+		return bestScore
+	}
+	return textSeverityToScore(bestText)
+}
+
+// bestSeverity returns "SCORE (SEVERITY)" when score is available,
+// otherwise just the text severity, e.g. "3.3 (LOW)" or "low".
+func bestSeverity(v scanner.VulnInfo) string {
+	var bestScore float64
+	var bestText string
+	for _, contents := range v.CveContents {
+		for _, c := range contents {
+			if c.Cvss3Score > bestScore {
+				bestScore = c.Cvss3Score
+				bestText = c.Cvss3Severity
+			}
+			if bestScore == 0 {
+				if c.Cvss3Severity != "" {
+					bestText = c.Cvss3Severity
+				} else if c.Cvss2Severity != "" {
+					bestText = c.Cvss2Severity
+				}
+			}
+		}
+	}
+	if bestScore > 0 {
+		if bestText != "" {
+			return fmt.Sprintf("%.1f (%s)", bestScore, strings.ToUpper(bestText))
+		}
+		return fmt.Sprintf("%.1f", bestScore)
+	}
+	if bestText != "" {
+		return strings.ToLower(bestText)
+	}
+	return "-"
+}
+
+func textSeverityToScore(sev string) float64 {
+	switch strings.ToLower(sev) {
+	case "critical":
+		return 9.0
+	case "high":
+		return 7.0
+	case "medium":
+		return 4.0
+	case "low":
+		return 1.0
+	case "negligible":
+		return 0.1
+	default:
+		return 0
+	}
 }

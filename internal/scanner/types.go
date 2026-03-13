@@ -53,8 +53,11 @@ type VulnInfo struct {
 }
 
 type CveContent struct {
-	CveID      string  `json:"cveID"`
-	Cvss3Score float64 `json:"cvss3Score"`
+	CveID        string  `json:"cveID"`
+	Cvss2Score   float64 `json:"cvss2Score"`
+	Cvss2Severity string `json:"cvss2Severity"`
+	Cvss3Score   float64 `json:"cvss3Score"`
+	Cvss3Severity string `json:"cvss3Severity"`
 }
 
 type AffectedPackage struct {
