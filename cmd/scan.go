@@ -208,9 +208,9 @@ func printTable(result *scanner.ScanResult) error {
 	const tabPadding = 2
 	out := os.Stdout
 
-	if _, err := fmt.Fprintf(out, "Host:    %s\nOS:      %s %s\nCVEs:    %d\nPackages with updates: %d / %d\n\n",
+	if _, err := fmt.Fprintf(out, "Host:    %s\nOS:      %s %s\nCVEs:    %d (%d affected packages)\nPackages with updates: %d / %d\n\n",
 		result.ServerName, result.Family, result.Release,
-		len(result.ScannedCves), countUpdates(result), len(result.Packages)); err != nil {
+		len(result.ScannedCves), countAffected(result), countUpdates(result), len(result.Packages)); err != nil {
 		return err
 	}
 
@@ -224,14 +224,19 @@ func printTable(result *scanner.ScanResult) error {
 	}
 
 	w := tabwriter.NewWriter(out, 0, 0, tabPadding, ' ', 0)
-	if _, err := fmt.Fprintln(w, "CVE ID\tSEVERITY\tPACKAGE\tFIXED\tFIX VERSION"); err != nil {
+	if _, err := fmt.Fprintln(w, "CVE ID\tSEVERITY\tAFFECTED\tPACKAGE\tFIXED\tFIX VERSION"); err != nil {
 		return err
 	}
 
 	vulns := sortedVulns(result)
 	for _, v := range vulns {
 		severity := bestSeverity(v)
-		for _, pkg := range v.AffectedPackages {
+		affectedCount := len(v.AffectedPackages)
+		affected := fmt.Sprintf("%d pkgs", affectedCount)
+		if affectedCount == 1 {
+			affected = "1 pkg"
+		}
+		for i, pkg := range v.AffectedPackages {
 			fixed := "yes"
 			if pkg.NotFixedYet {
 				fixed = "no"
@@ -240,7 +245,11 @@ func printTable(result *scanner.ScanResult) error {
 			if fixVer == "" {
 				fixVer = "-"
 			}
-			if _, err := fmt.Fprintf(w, "%s\t%s\t%s\t%s\t%s\n", v.CveID, severity, pkg.Name, fixed, fixVer); err != nil {
+			col1, col2, col3 := v.CveID, severity, affected
+			if i > 0 {
+				col1, col2, col3 = "", "", ""
+			}
+			if _, err := fmt.Fprintf(w, "%s\t%s\t%s\t%s\t%s\t%s\n", col1, col2, col3, pkg.Name, fixed, fixVer); err != nil {
 				return err
 			}
 		}
@@ -253,9 +262,9 @@ func printDebugTable(result *scanner.ScanResult) error {
 	const tabPadding = 2
 	out := os.Stdout
 
-	if _, err := fmt.Fprintf(out, "Host:    %s\nOS:      %s %s\nCVEs:    %d\nPackages with updates: %d / %d\n\n",
+	if _, err := fmt.Fprintf(out, "Host:    %s\nOS:      %s %s\nCVEs:    %d (%d affected packages)\nPackages with updates: %d / %d\n\n",
 		result.ServerName, result.Family, result.Release,
-		len(result.ScannedCves), countUpdates(result), len(result.Packages)); err != nil {
+		len(result.ScannedCves), countAffected(result), countUpdates(result), len(result.Packages)); err != nil {
 		return err
 	}
 
@@ -356,6 +365,14 @@ func printDebugTable(result *scanner.ScanResult) error {
 	}
 
 	return w.Flush()
+}
+
+func countAffected(result *scanner.ScanResult) int {
+	count := 0
+	for _, v := range result.ScannedCves {
+		count += len(v.AffectedPackages)
+	}
+	return count
 }
 
 func countUpdates(result *scanner.ScanResult) int {
