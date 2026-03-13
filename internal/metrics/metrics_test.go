@@ -5,32 +5,32 @@ import (
 
 	"github.com/prometheus/client_golang/prometheus/testutil"
 
-	"security-exporter/internal/scanner"
+	"security-exporter/internal/pkgscanner"
 )
 
 func TestUpdate(t *testing.T) {
-	result := &scanner.ScanResult{
-		Packages: scanner.Packages{
+	result := &pkgscanner.ScanResult{
+		Packages: pkgscanner.Packages{
 			"openssl":         {Name: "openssl", Version: "3.0.13-1", NewVersion: "3.0.14-1"},
 			"bash":            {Name: "bash", Version: "5.2.21-1", NewVersion: ""},
 			"linux-image-6.1": {Name: "linux-image-6.1", Version: "6.1.90-1", NewVersion: "6.1.99-1"},
 		},
-		ScannedCves: map[string]scanner.VulnInfo{
+		ScannedCves: map[string]pkgscanner.VulnInfo{
 			"CVE-2024-1234": {
 				CveID: "CVE-2024-1234",
-				CveContents: map[string][]scanner.CveContent{
+				CveContents: map[string][]pkgscanner.CveContent{
 					"nvd": {{CveID: "CVE-2024-1234", Cvss3Score: 7.5}},
 				},
-				AffectedPackages: []scanner.AffectedPackage{
+				AffectedPackages: []pkgscanner.AffectedPackage{
 					{Name: "openssl"},
 				},
 			},
 			"CVE-2024-5678": {
 				CveID: "CVE-2024-5678",
-				CveContents: map[string][]scanner.CveContent{
+				CveContents: map[string][]pkgscanner.CveContent{
 					"nvd": {{CveID: "CVE-2024-5678", Cvss3Score: 5.0}},
 				},
-				AffectedPackages: []scanner.AffectedPackage{
+				AffectedPackages: []pkgscanner.AffectedPackage{
 					{Name: "linux-image-6.1"},
 				},
 			},
@@ -48,17 +48,17 @@ func TestUpdate(t *testing.T) {
 }
 
 func TestUpdate_GeneralCVEGauge(t *testing.T) {
-	result := &scanner.ScanResult{
-		Packages: scanner.Packages{
+	result := &pkgscanner.ScanResult{
+		Packages: pkgscanner.Packages{
 			"openssl": {Name: "openssl", Version: "3.0.13-1", NewVersion: "3.0.14-1"},
 		},
-		ScannedCves: map[string]scanner.VulnInfo{
+		ScannedCves: map[string]pkgscanner.VulnInfo{
 			"CVE-2024-1234": {
 				CveID: "CVE-2024-1234",
-				CveContents: map[string][]scanner.CveContent{
+				CveContents: map[string][]pkgscanner.CveContent{
 					"nvd": {{CveID: "CVE-2024-1234", Cvss3Score: 7.5}},
 				},
-				AffectedPackages: []scanner.AffectedPackage{
+				AffectedPackages: []pkgscanner.AffectedPackage{
 					{Name: "openssl"},
 				},
 			},
@@ -74,17 +74,17 @@ func TestUpdate_GeneralCVEGauge(t *testing.T) {
 }
 
 func TestUpdate_KernelCVEGauge(t *testing.T) {
-	result := &scanner.ScanResult{
-		Packages: scanner.Packages{
+	result := &pkgscanner.ScanResult{
+		Packages: pkgscanner.Packages{
 			"linux-image-6.1": {Name: "linux-image-6.1", Version: "6.1.90-1", NewVersion: "6.1.99-1"},
 		},
-		ScannedCves: map[string]scanner.VulnInfo{
+		ScannedCves: map[string]pkgscanner.VulnInfo{
 			"CVE-2024-5678": {
 				CveID: "CVE-2024-5678",
-				CveContents: map[string][]scanner.CveContent{
+				CveContents: map[string][]pkgscanner.CveContent{
 					"nvd": {{CveID: "CVE-2024-5678", Cvss3Score: 5.0}},
 				},
-				AffectedPackages: []scanner.AffectedPackage{
+				AffectedPackages: []pkgscanner.AffectedPackage{
 					{Name: "linux-image-6.1"},
 				},
 			},
@@ -100,17 +100,17 @@ func TestUpdate_KernelCVEGauge(t *testing.T) {
 }
 
 func TestUpdate_ResetsBetweenCalls(t *testing.T) {
-	first := &scanner.ScanResult{
-		Packages: scanner.Packages{
+	first := &pkgscanner.ScanResult{
+		Packages: pkgscanner.Packages{
 			"openssl": {Name: "openssl", Version: "3.0.13-1", NewVersion: "3.0.14-1"},
 		},
-		ScannedCves: map[string]scanner.VulnInfo{
+		ScannedCves: map[string]pkgscanner.VulnInfo{
 			"CVE-2024-1234": {
 				CveID: "CVE-2024-1234",
-				CveContents: map[string][]scanner.CveContent{
+				CveContents: map[string][]pkgscanner.CveContent{
 					"nvd": {{CveID: "CVE-2024-1234", Cvss3Score: 7.5}},
 				},
-				AffectedPackages: []scanner.AffectedPackage{
+				AffectedPackages: []pkgscanner.AffectedPackage{
 					{Name: "openssl"},
 				},
 			},
@@ -118,9 +118,9 @@ func TestUpdate_ResetsBetweenCalls(t *testing.T) {
 	}
 	Update(first)
 
-	second := &scanner.ScanResult{
-		Packages:    scanner.Packages{},
-		ScannedCves: map[string]scanner.VulnInfo{},
+	second := &pkgscanner.ScanResult{
+		Packages:    pkgscanner.Packages{},
+		ScannedCves: map[string]pkgscanner.VulnInfo{},
 	}
 	Update(second)
 

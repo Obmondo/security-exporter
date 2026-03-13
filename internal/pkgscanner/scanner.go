@@ -1,4 +1,4 @@
-package scanner //nolint:revive // name is intentional, not the stdlib scanner
+package pkgscanner
 
 import (
 	"bytes"

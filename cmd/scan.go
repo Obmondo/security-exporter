@@ -15,7 +15,7 @@ import (
 
 	"security-exporter/config"
 	"security-exporter/internal/collector"
-	"security-exporter/internal/scanner"
+	"security-exporter/internal/pkgscanner"
 )
 
 const defaultServerTimeout = 5 * time.Minute
@@ -62,7 +62,7 @@ func runScan(cmd *cobra.Command, _ []string) error {
 	ctx, cancel := context.WithTimeout(context.Background(), scanTimeout)
 	defer cancel()
 
-	var result *scanner.ScanResult
+	var result *pkgscanner.ScanResult
 
 	if vulsServer.URL == "" {
 		slog.Info("running in local-only mode (no server URL configured)")
@@ -74,7 +74,7 @@ func runScan(cmd *cobra.Command, _ []string) error {
 		return printResult(cmd, result)
 	}
 
-	sc, err := scanner.New(vulsServer)
+	sc, err := pkgscanner.New(vulsServer)
 	if err != nil {
 		return err
 	}
@@ -95,7 +95,7 @@ func runScan(cmd *cobra.Command, _ []string) error {
 	return printResult(cmd, result)
 }
 
-func printResult(cmd *cobra.Command, result *scanner.ScanResult) error {
+func printResult(cmd *cobra.Command, result *pkgscanner.ScanResult) error {
 	jsonOutput, _ := cmd.Flags().GetBool("json")
 	if jsonOutput {
 		return printJSON(result)
@@ -111,7 +111,7 @@ func printResult(cmd *cobra.Command, result *scanner.ScanResult) error {
 }
 
 // localScan collects packages and builds a ScanResult without contacting a server.
-func localScan(ctx context.Context, coll collector.Collector) (*scanner.ScanResult, error) {
+func localScan(ctx context.Context, coll collector.Collector) (*pkgscanner.ScanResult, error) {
 	hostname, err := os.Hostname()
 	if err != nil {
 		return nil, fmt.Errorf("getting hostname: %w", err)
@@ -122,7 +122,7 @@ func localScan(ctx context.Context, coll collector.Collector) (*scanner.ScanResu
 		return nil, fmt.Errorf("collecting packages: %w", err)
 	}
 
-	packages := scanner.ParsePackages(pkgsRaw)
+	packages := pkgscanner.ParsePackages(pkgsRaw)
 
 	updates, err := coll.AvailableUpdates(ctx)
 	if err != nil {
@@ -135,16 +135,16 @@ func localScan(ctx context.Context, coll collector.Collector) (*scanner.ScanResu
 		}
 	}
 
-	result := &scanner.ScanResult{
+	result := &pkgscanner.ScanResult{
 		ServerName:  hostname,
 		Family:      coll.OSFamily(),
 		Release:     coll.Release(),
 		Packages:    packages,
-		ScannedCves: map[string]scanner.VulnInfo{},
+		ScannedCves: map[string]pkgscanner.VulnInfo{},
 	}
 
 	if srcRaw != "" {
-		result.SrcPackages = scanner.ParseSrcPackages(srcRaw)
+		result.SrcPackages = pkgscanner.ParseSrcPackages(srcRaw)
 	}
 
 	return result, nil
@@ -201,13 +201,13 @@ func flagOrEnv(cmd *cobra.Command, flagName, envName string) string {
 	return os.Getenv(envName)
 }
 
-func printJSON(result *scanner.ScanResult) error {
+func printJSON(result *pkgscanner.ScanResult) error {
 	enc := json.NewEncoder(os.Stdout)
 	enc.SetIndent("", "  ")
 	return enc.Encode(result)
 }
 
-func printSummary(result *scanner.ScanResult) error {
+func printSummary(result *pkgscanner.ScanResult) error {
 	out := os.Stdout
 
 	if _, err := fmt.Fprintf(out, "Host:    %s\nOS:      %s %s\nCVEs:    %d (%d affected packages)\nPackages with updates: %d / %d\n\n",
@@ -228,7 +228,7 @@ func printSummary(result *scanner.ScanResult) error {
 	return nil
 }
 
-func printTable(result *scanner.ScanResult) error {
+func printTable(result *pkgscanner.ScanResult) error {
 	const tabPadding = 2
 	out := os.Stdout
 
@@ -285,7 +285,7 @@ type pkgGroup struct {
 }
 
 // buildPkgCves groups CVE details by affected package name.
-func buildPkgCves(result *scanner.ScanResult) map[string][]cveEntry {
+func buildPkgCves(result *pkgscanner.ScanResult) map[string][]cveEntry {
 	pkgCves := make(map[string][]cveEntry)
 	for _, v := range result.ScannedCves {
 		sev := bestSeverity(v)
@@ -329,7 +329,7 @@ func sortedPkgGroups(pkgCves map[string][]cveEntry) []pkgGroup {
 	return groups
 }
 
-func printDebugTable(result *scanner.ScanResult) error {
+func printDebugTable(result *pkgscanner.ScanResult) error {
 	const tabPadding = 2
 	out := os.Stdout
 
@@ -381,7 +381,7 @@ func printDebugTable(result *scanner.ScanResult) error {
 	return w.Flush()
 }
 
-func countAffected(result *scanner.ScanResult) int {
+func countAffected(result *pkgscanner.ScanResult) int {
 	count := 0
 	for _, v := range result.ScannedCves {
 		count += len(v.AffectedPackages)
@@ -389,7 +389,7 @@ func countAffected(result *scanner.ScanResult) int {
 	return count
 }
 
-func countUpdates(result *scanner.ScanResult) int {
+func countUpdates(result *pkgscanner.ScanResult) int {
 	count := 0
 	for _, pkg := range result.Packages {
 		if pkg.NewVersion != "" {
@@ -399,8 +399,8 @@ func countUpdates(result *scanner.ScanResult) int {
 	return count
 }
 
-func sortedVulns(result *scanner.ScanResult) []scanner.VulnInfo {
-	vulns := make([]scanner.VulnInfo, 0, len(result.ScannedCves))
+func sortedVulns(result *pkgscanner.ScanResult) []pkgscanner.VulnInfo {
+	vulns := make([]pkgscanner.VulnInfo, 0, len(result.ScannedCves))
 	for _, v := range result.ScannedCves {
 		vulns = append(vulns, v)
 	}
@@ -412,7 +412,7 @@ func sortedVulns(result *scanner.ScanResult) []scanner.VulnInfo {
 
 // severityRank returns a numeric rank for sorting: CVSS3 score if available,
 // otherwise maps text severity to a representative score.
-func severityRank(v scanner.VulnInfo) float64 {
+func severityRank(v pkgscanner.VulnInfo) float64 {
 	var bestScore float64
 	var bestText string
 	for _, contents := range v.CveContents {
@@ -436,7 +436,7 @@ func severityRank(v scanner.VulnInfo) float64 {
 
 // bestSeverity returns "SCORE (SEVERITY)" when score is available,
 // otherwise just the text severity, e.g. "3.3 (LOW)" or "low".
-func bestSeverity(v scanner.VulnInfo) string {
+func bestSeverity(v pkgscanner.VulnInfo) string {
 	var bestScore float64
 	var bestText string
 	for _, contents := range v.CveContents {

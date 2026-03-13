@@ -5,15 +5,15 @@ import (
 
 	"github.com/prometheus/client_golang/prometheus/testutil"
 
-	"security-exporter/internal/scanner"
+	"security-exporter/internal/pkgscanner"
 )
 
 func TestUpdate_NoCves(t *testing.T) {
-	result := &scanner.ScanResult{
-		Packages: scanner.Packages{
+	result := &pkgscanner.ScanResult{
+		Packages: pkgscanner.Packages{
 			"bash": {Name: "bash", Version: "5.2.21-1", NewVersion: ""},
 		},
-		ScannedCves: map[string]scanner.VulnInfo{},
+		ScannedCves: map[string]pkgscanner.VulnInfo{},
 	}
 
 	Update(result)
@@ -27,17 +27,17 @@ func TestUpdate_NoCves(t *testing.T) {
 }
 
 func TestUpdate_KernelOnly(t *testing.T) {
-	result := &scanner.ScanResult{
-		Packages: scanner.Packages{
+	result := &pkgscanner.ScanResult{
+		Packages: pkgscanner.Packages{
 			"linux-image-6.1": {Name: "linux-image-6.1", Version: "6.1.90-1", NewVersion: "6.1.99-1"},
 		},
-		ScannedCves: map[string]scanner.VulnInfo{
+		ScannedCves: map[string]pkgscanner.VulnInfo{
 			"CVE-2024-9999": {
 				CveID: "CVE-2024-9999",
-				CveContents: map[string][]scanner.CveContent{
+				CveContents: map[string][]pkgscanner.CveContent{
 					"nvd": {{CveID: "CVE-2024-9999", Cvss3Score: 8.1}},
 				},
-				AffectedPackages: []scanner.AffectedPackage{
+				AffectedPackages: []pkgscanner.AffectedPackage{
 					{Name: "linux-image-6.1"},
 				},
 			},
@@ -55,18 +55,18 @@ func TestUpdate_KernelOnly(t *testing.T) {
 }
 
 func TestUpdate_MultipleCveSources(t *testing.T) {
-	result := &scanner.ScanResult{
-		Packages: scanner.Packages{
+	result := &pkgscanner.ScanResult{
+		Packages: pkgscanner.Packages{
 			"openssl": {Name: "openssl", Version: "3.0.13-1", NewVersion: "3.0.14-1"},
 		},
-		ScannedCves: map[string]scanner.VulnInfo{
+		ScannedCves: map[string]pkgscanner.VulnInfo{
 			"CVE-2024-1111": {
 				CveID: "CVE-2024-1111",
-				CveContents: map[string][]scanner.CveContent{
+				CveContents: map[string][]pkgscanner.CveContent{
 					"nvd":   {{CveID: "CVE-2024-1111", Cvss3Score: 6.5}},
 					"mitre": {{CveID: "CVE-2024-1111", Cvss3Score: 7.2}},
 				},
-				AffectedPackages: []scanner.AffectedPackage{
+				AffectedPackages: []pkgscanner.AffectedPackage{
 					{Name: "openssl"},
 				},
 			},
@@ -87,17 +87,17 @@ func TestUpdate_MultipleCveSources(t *testing.T) {
 }
 
 func TestUpdate_RPMKernelPackage(t *testing.T) {
-	result := &scanner.ScanResult{
-		Packages: scanner.Packages{
+	result := &pkgscanner.ScanResult{
+		Packages: pkgscanner.Packages{
 			"kernel-core": {Name: "kernel-core", Version: "5.14.0-1", NewVersion: "5.14.0-2"},
 		},
-		ScannedCves: map[string]scanner.VulnInfo{
+		ScannedCves: map[string]pkgscanner.VulnInfo{
 			"CVE-2024-7777": {
 				CveID: "CVE-2024-7777",
-				CveContents: map[string][]scanner.CveContent{
+				CveContents: map[string][]pkgscanner.CveContent{
 					"nvd": {{CveID: "CVE-2024-7777", Cvss3Score: 5.5}},
 				},
-				AffectedPackages: []scanner.AffectedPackage{
+				AffectedPackages: []pkgscanner.AffectedPackage{
 					{Name: "kernel-core"},
 				},
 			},
@@ -112,9 +112,9 @@ func TestUpdate_RPMKernelPackage(t *testing.T) {
 }
 
 func TestUpdate_EmptyResult(t *testing.T) {
-	result := &scanner.ScanResult{
-		Packages:    scanner.Packages{},
-		ScannedCves: map[string]scanner.VulnInfo{},
+	result := &pkgscanner.ScanResult{
+		Packages:    pkgscanner.Packages{},
+		ScannedCves: map[string]pkgscanner.VulnInfo{},
 	}
 
 	Update(result)
@@ -159,18 +159,18 @@ func TestIsKernelPackage(t *testing.T) {
 func TestBestCVSS3Score(t *testing.T) {
 	tests := []struct {
 		name     string
-		vuln     scanner.VulnInfo
+		vuln     pkgscanner.VulnInfo
 		expected float64
 	}{
 		{
 			name:     "empty contents",
-			vuln:     scanner.VulnInfo{},
+			vuln:     pkgscanner.VulnInfo{},
 			expected: 0,
 		},
 		{
 			name: "single source single score",
-			vuln: scanner.VulnInfo{
-				CveContents: map[string][]scanner.CveContent{
+			vuln: pkgscanner.VulnInfo{
+				CveContents: map[string][]pkgscanner.CveContent{
 					"nvd": {{Cvss3Score: 7.5}},
 				},
 			},
@@ -178,8 +178,8 @@ func TestBestCVSS3Score(t *testing.T) {
 		},
 		{
 			name: "multiple sources picks highest",
-			vuln: scanner.VulnInfo{
-				CveContents: map[string][]scanner.CveContent{
+			vuln: pkgscanner.VulnInfo{
+				CveContents: map[string][]pkgscanner.CveContent{
 					"nvd":   {{Cvss3Score: 6.5}},
 					"mitre": {{Cvss3Score: 8.1}},
 				},
@@ -188,8 +188,8 @@ func TestBestCVSS3Score(t *testing.T) {
 		},
 		{
 			name: "multiple entries in same source",
-			vuln: scanner.VulnInfo{
-				CveContents: map[string][]scanner.CveContent{
+			vuln: pkgscanner.VulnInfo{
+				CveContents: map[string][]pkgscanner.CveContent{
 					"nvd": {
 						{Cvss3Score: 3.0},
 						{Cvss3Score: 9.8},
@@ -201,8 +201,8 @@ func TestBestCVSS3Score(t *testing.T) {
 		},
 		{
 			name: "all zero scores",
-			vuln: scanner.VulnInfo{
-				CveContents: map[string][]scanner.CveContent{
+			vuln: pkgscanner.VulnInfo{
+				CveContents: map[string][]pkgscanner.CveContent{
 					"nvd": {{Cvss3Score: 0}},
 				},
 			},
@@ -210,7 +210,7 @@ func TestBestCVSS3Score(t *testing.T) {
 		},
 		{
 			name: "nil contents map",
-			vuln: scanner.VulnInfo{
+			vuln: pkgscanner.VulnInfo{
 				CveContents: nil,
 			},
 			expected: 0,

@@ -8,7 +8,7 @@ import (
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promauto"
 
-	"security-exporter/internal/scanner"
+	"security-exporter/internal/pkgscanner"
 )
 
 var (
@@ -33,7 +33,7 @@ var (
 	})
 )
 
-func Update(result *scanner.ScanResult) {
+func Update(result *pkgscanner.ScanResult) {
 	generalCVEDetails.Reset()
 	kernelCVEDetails.Reset()
 
@@ -79,7 +79,7 @@ func isKernelPackage(name string) bool {
 		strings.HasPrefix(name, "kernel-")
 }
 
-func bestCVSS3Score(v scanner.VulnInfo) float64 {
+func bestCVSS3Score(v pkgscanner.VulnInfo) float64 {
 	var best float64
 	for _, contents := range v.CveContents {
 		for _, c := range contents {

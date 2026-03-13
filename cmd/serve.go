@@ -16,7 +16,7 @@ import (
 	"security-exporter/config"
 	"security-exporter/internal/collector"
 	"security-exporter/internal/metrics"
-	"security-exporter/internal/scanner"
+	"security-exporter/internal/pkgscanner"
 )
 
 func serveCmd() *cobra.Command {
@@ -42,7 +42,7 @@ func runServe(_ *cobra.Command, _ []string) error {
 		return err
 	}
 
-	sc, err := scanner.New(cfg.VulsServer)
+	sc, err := pkgscanner.New(cfg.VulsServer)
 	if err != nil {
 		return err
 	}

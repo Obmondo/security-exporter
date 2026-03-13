@@ -1,4 +1,4 @@
-package scanner
+package pkgscanner
 
 import (
 	"context"
@@ -139,7 +139,7 @@ func TestScan_RequestBody(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	coll := &mockCollector{family: "redhat", release: "9", pkgs: "bash\tii \t5.2\n"}
+	coll := &mockCollector{family: "redhat", release: "9", pkgs: "bash\tii \t5.2.21\n"}
 	_, err = sc.Scan(context.Background(), coll)
 	if err != nil {
 		t.Fatal(err)
@@ -154,7 +154,7 @@ func TestScan_RequestBody(t *testing.T) {
 	if len(received.Packages) != 1 {
 		t.Errorf("expected 1 package, got %d", len(received.Packages))
 	}
-	if pkg, ok := received.Packages["bash"]; !ok || pkg.Version != "5.2" {
+	if pkg, ok := received.Packages["bash"]; !ok || pkg.Version != "5.2.21" {
 		t.Errorf("unexpected packages: %v", received.Packages)
 	}
 	if received.ServerName == "" {
@@ -181,8 +181,8 @@ func TestScan_SendsSrcPackages(t *testing.T) {
 	coll := &mockCollector{
 		family:  "ubuntu",
 		release: "24.04",
-		pkgs:    "bash\tii \t5.2\nlibssl3\tii \t3.0.13\n",
-		srcPkgs: "bash\t5.2\tbash\tii \nopenssl\t3.0.13\tlibssl3\tii \n",
+		pkgs:    "bash\tii \t5.2.21\nlibssl3\tii \t3.0.13\n",
+		srcPkgs: "bash\t5.2.21\tbash\tii \nopenssl\t3.0.13\tlibssl3\tii \n",
 		updates: map[string]string{"bash": "5.3"},
 	}
 
