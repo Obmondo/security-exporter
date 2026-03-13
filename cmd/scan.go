@@ -114,12 +114,12 @@ func localScan(ctx context.Context, coll collector.Collector) (*scanner.ScanResu
 		return nil, fmt.Errorf("getting hostname: %w", err)
 	}
 
-	pkgs, err := coll.Packages(ctx)
+	pkgsRaw, srcRaw, err := coll.CollectPackages(ctx)
 	if err != nil {
 		return nil, fmt.Errorf("collecting packages: %w", err)
 	}
 
-	packages := scanner.ParsePackages(pkgs)
+	packages := scanner.ParsePackages(pkgsRaw)
 
 	updates, err := coll.AvailableUpdates(ctx)
 	if err != nil {
@@ -140,10 +140,6 @@ func localScan(ctx context.Context, coll collector.Collector) (*scanner.ScanResu
 		ScannedCves: map[string]scanner.VulnInfo{},
 	}
 
-	srcRaw, err := coll.SrcPackages(ctx)
-	if err != nil {
-		slog.Warn("failed to collect source packages", "error", err)
-	}
 	if srcRaw != "" {
 		result.SrcPackages = scanner.ParseSrcPackages(srcRaw)
 	}

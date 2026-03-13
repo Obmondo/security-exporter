@@ -10,17 +10,13 @@ type rpmCollector struct {
 	release string
 }
 
-func (*rpmCollector) Packages(ctx context.Context) (string, error) {
+func (*rpmCollector) CollectPackages(ctx context.Context) (string, string, error) {
 	cmd := exec.CommandContext(ctx, "rpm", "-qa", "--queryformat", "%{NAME}\t%{EPOCHNUM}:%{VERSION}-%{RELEASE}\n")
 	out, err := cmd.Output()
 	if err != nil {
-		return "", err
+		return "", "", err
 	}
-	return string(out), nil
-}
-
-func (*rpmCollector) SrcPackages(_ context.Context) (string, error) {
-	return "", nil
+	return string(out), "", nil
 }
 
 func (*rpmCollector) AvailableUpdates(_ context.Context) (map[string]string, error) {

@@ -21,14 +21,11 @@ type mockCollector struct {
 	err        error
 }
 
-func (m *mockCollector) Packages(_ context.Context) (string, error) {
+func (m *mockCollector) CollectPackages(_ context.Context) (string, string, error) {
 	if m.err != nil {
-		return "", m.err
+		return "", "", m.err
 	}
-	return m.pkgs, nil
-}
-func (m *mockCollector) SrcPackages(_ context.Context) (string, error) {
-	return m.srcPkgs, nil
+	return m.pkgs, m.srcPkgs, nil
 }
 func (m *mockCollector) AvailableUpdates(_ context.Context) (map[string]string, error) {
 	return m.updates, nil

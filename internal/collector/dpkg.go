@@ -12,22 +12,44 @@ type dpkgCollector struct {
 	release string
 }
 
-func (*dpkgCollector) Packages(ctx context.Context) (string, error) {
-	cmd := exec.CommandContext(ctx, "dpkg-query", "-W", "-f", "${binary:Package}\t${db:Status-Abbrev}\t${Version}\n")
+func (*dpkgCollector) CollectPackages(ctx context.Context) (string, string, error) {
+	cmd := exec.CommandContext(ctx, "dpkg-query", "-W", "-f",
+		"${binary:Package}\t${db:Status-Abbrev}\t${Version}\t${source:Package}\t${source:Version}\n")
 	out, err := cmd.Output()
 	if err != nil {
-		return "", err
+		return "", "", err
 	}
-	return string(out), nil
-}
 
-func (*dpkgCollector) SrcPackages(ctx context.Context) (string, error) {
-	cmd := exec.CommandContext(ctx, "dpkg-query", "-W", "-f", "${source:Package}\t${source:Version}\t${binary:Package}\t${db:Status-Abbrev}\n")
-	out, err := cmd.Output()
-	if err != nil {
-		return "", err
+	const expectedFields = 5
+	var pkgs, srcPkgs strings.Builder
+	for _, line := range strings.Split(string(out), "\n") {
+		if line == "" {
+			continue
+		}
+		fields := strings.Split(line, "\t")
+		if len(fields) < expectedFields {
+			continue
+		}
+		binary, status, version, srcName, srcVersion := fields[0], fields[1], fields[2], fields[3], fields[4]
+		// binary\tstatus\tversion for ParsePackages
+		pkgs.WriteString(binary)
+		pkgs.WriteByte('\t')
+		pkgs.WriteString(status)
+		pkgs.WriteByte('\t')
+		pkgs.WriteString(version)
+		pkgs.WriteByte('\n')
+		// source\tsource-version\tbinary\tstatus for ParseSrcPackages
+		srcPkgs.WriteString(srcName)
+		srcPkgs.WriteByte('\t')
+		srcPkgs.WriteString(srcVersion)
+		srcPkgs.WriteByte('\t')
+		srcPkgs.WriteString(binary)
+		srcPkgs.WriteByte('\t')
+		srcPkgs.WriteString(status)
+		srcPkgs.WriteByte('\n')
 	}
-	return string(out), nil
+
+	return pkgs.String(), srcPkgs.String(), nil
 }
 
 func (*dpkgCollector) AvailableUpdates(ctx context.Context) (map[string]string, error) {

@@ -82,12 +82,12 @@ func (s *Scanner) Scan(ctx context.Context, c collector.Collector) (*ScanResult,
 		return nil, fmt.Errorf("getting hostname: %w", err)
 	}
 
-	pkgs, err := c.Packages(ctx)
+	pkgsRaw, srcRaw, err := c.CollectPackages(ctx)
 	if err != nil {
 		return nil, fmt.Errorf("collecting packages: %w", err)
 	}
 
-	packages := ParsePackages(pkgs)
+	packages := ParsePackages(pkgsRaw)
 
 	updates, err := c.AvailableUpdates(ctx)
 	if err != nil {
@@ -107,10 +107,6 @@ func (s *Scanner) Scan(ctx context.Context, c collector.Collector) (*ScanResult,
 		Packages:   packages,
 	}
 
-	srcRaw, err := c.SrcPackages(ctx)
-	if err != nil {
-		slog.Warn("failed to collect source packages", "error", err)
-	}
 	if srcRaw != "" {
 		srcPkgs := ParseSrcPackages(srcRaw)
 		// Filter SrcPackages to only include binary names that exist in
