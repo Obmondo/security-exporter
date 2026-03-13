@@ -100,11 +100,15 @@ func printResult(cmd *cobra.Command, result *scanner.ScanResult) error {
 	if jsonOutput {
 		return printJSON(result)
 	}
+	if err := printTable(result); err != nil {
+		return err
+	}
 	debug, _ := cmd.Flags().GetBool("debug")
 	if debug {
+		fmt.Fprintln(os.Stdout)
 		return printDebugTable(result)
 	}
-	return printTable(result)
+	return nil
 }
 
 // localScan collects packages and builds a ScanResult without contacting a server.
@@ -262,15 +266,8 @@ func printDebugTable(result *scanner.ScanResult) error {
 	const tabPadding = 2
 	out := os.Stdout
 
-	if _, err := fmt.Fprintf(out, "Host:    %s\nOS:      %s %s\nCVEs:    %d (%d affected packages)\nPackages with updates: %d / %d\n\n",
-		result.ServerName, result.Family, result.Release,
-		len(result.ScannedCves), countAffected(result), countUpdates(result), len(result.Packages)); err != nil {
-		return err
-	}
-
 	if len(result.ScannedCves) == 0 {
-		_, err := fmt.Fprintln(out, "No vulnerabilities found.")
-		return err
+		return nil
 	}
 
 	// Build map: package name → list of CVE details.

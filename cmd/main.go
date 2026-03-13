@@ -19,8 +19,12 @@ func main() {
 		Use:     "obmondo-security-exporter",
 		Short:   "Prometheus exporter for vulnerability scanning via Vuls",
 		Version: Version,
-		PersistentPreRun: func(_ *cobra.Command, _ []string) {
-			slog.SetDefault(slog.New(slog.NewJSONHandler(os.Stderr, nil)))
+		PersistentPreRun: func(cmd *cobra.Command, _ []string) {
+			level := slog.LevelWarn
+			if debug, _ := cmd.Flags().GetBool("debug"); debug {
+				level = slog.LevelInfo
+			}
+			slog.SetDefault(slog.New(slog.NewJSONHandler(os.Stderr, &slog.HandlerOptions{Level: level})))
 		},
 	}
 
