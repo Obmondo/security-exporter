@@ -65,6 +65,8 @@ func rpmAvailableUpdatesYum(ctx context.Context) (map[string]string, error) {
 //
 //	package.arch    version    repo
 func parseDnfCheckUpdate(raw string) map[string]string {
+	const minDnfFields = 2 // package.arch, version (repo is optional)
+
 	updates := make(map[string]string)
 	pastHeader := false
 	for _, line := range strings.Split(raw, "\n") {
@@ -77,7 +79,7 @@ func parseDnfCheckUpdate(raw string) map[string]string {
 			continue
 		}
 		fields := strings.Fields(line)
-		if len(fields) < 2 {
+		if len(fields) < minDnfFields {
 			continue
 		}
 		// package.arch → strip the .arch suffix; skip lines without a dot
