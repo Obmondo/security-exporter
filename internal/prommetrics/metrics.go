@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log/slog"
 	"strings"
+	"time"
 
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promauto"
@@ -31,7 +32,37 @@ var (
 		Name: "kernel_update_available",
 		Help: "Whether a kernel update is available (1 = yes, 0 = no).",
 	})
+
+	lastScanTimestamp = promauto.NewGauge(prometheus.GaugeOpts{
+		Name: "security_exporter_last_scan_timestamp",
+		Help: "Unix timestamp of the last successful scan.",
+	})
+
+	scanErrorsTotal = promauto.NewCounter(prometheus.CounterOpts{
+		Name: "security_exporter_scan_errors_total",
+		Help: "Total number of failed scans.",
+	})
+
+	scanDurationSeconds = promauto.NewGauge(prometheus.GaugeOpts{
+		Name: "security_exporter_scan_duration_seconds",
+		Help: "Duration of the last scan in seconds.",
+	})
 )
+
+// SetLastScanTimestamp records the current time as the last successful scan.
+func SetLastScanTimestamp() {
+	lastScanTimestamp.Set(float64(time.Now().Unix()))
+}
+
+// IncrScanErrors increments the scan error counter.
+func IncrScanErrors() {
+	scanErrorsTotal.Inc()
+}
+
+// SetScanDuration records the duration of the last scan.
+func SetScanDuration(d float64) {
+	scanDurationSeconds.Set(d)
+}
 
 func Update(result *pkgscanner.ScanResult) {
 	generalCVEDetails.Reset()

@@ -15,8 +15,8 @@ import (
 
 	"security-exporter/config"
 	"security-exporter/internal/collector"
-	"security-exporter/internal/prommetrics"
 	"security-exporter/internal/pkgscanner"
+	"security-exporter/internal/prommetrics"
 )
 
 func serveCmd() *cobra.Command {
@@ -56,15 +56,19 @@ func runServe(_ *cobra.Command, _ []string) error {
 		ctx, cancel := context.WithTimeout(context.Background(), scanTimeout)
 		defer cancel()
 
+		start := time.Now()
 		slog.Info("starting vulnerability scan")
 		result, err := sc.Scan(ctx, coll)
 		if err != nil {
+			prommetrics.IncrScanErrors()
 			slog.Error("scan failed", "error", err)
 			return
 		}
 
 		prommetrics.Update(result)
-		slog.Info("scan completed", "cves", len(result.ScannedCves))
+		prommetrics.SetScanDuration(time.Since(start).Seconds())
+		prommetrics.SetLastScanTimestamp()
+		slog.Info("scan completed", "cves", len(result.ScannedCves), "duration", time.Since(start))
 	}
 
 	scheduler, err := gocron.NewScheduler()

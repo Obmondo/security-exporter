@@ -99,6 +99,31 @@ func TestUpdate_KernelCVEGauge(t *testing.T) {
 	}
 }
 
+func TestSetLastScanTimestamp(t *testing.T) {
+	SetLastScanTimestamp()
+	v := testutil.ToFloat64(lastScanTimestamp)
+	if v == 0 {
+		t.Error("expected non-zero timestamp after SetLastScanTimestamp")
+	}
+}
+
+func TestIncrScanErrors(t *testing.T) {
+	before := testutil.ToFloat64(scanErrorsTotal)
+	IncrScanErrors()
+	after := testutil.ToFloat64(scanErrorsTotal)
+	if after != before+1 {
+		t.Errorf("expected scan errors to increment by 1, got before=%f after=%f", before, after)
+	}
+}
+
+func TestSetScanDuration(t *testing.T) {
+	SetScanDuration(3.14)
+	v := testutil.ToFloat64(scanDurationSeconds)
+	if v != 3.14 {
+		t.Errorf("expected scan duration 3.14, got %f", v)
+	}
+}
+
 func TestUpdate_ResetsBetweenCalls(t *testing.T) {
 	first := &pkgscanner.ScanResult{
 		Packages: pkgscanner.Packages{
