@@ -84,3 +84,63 @@ func TestParseRpmOutputBadLine(t *testing.T) {
 		t.Fatal("expected error for malformed line, got nil")
 	}
 }
+
+func TestParseDnfCheckUpdate(t *testing.T) {
+	input := `Last metadata expiration check: 0:45:32 ago on Mon 16 Mar 2026 10:00:00 AM UTC.
+
+bash.x86_64                          5.1.8-10.el9                   baseos
+openssl-libs.x86_64                  1:3.0.7-28.el9_4               baseos
+kernel-core.x86_64                   5.14.0-427.33.1.el9_4          baseos
+`
+
+	updates := parseDnfCheckUpdate(input)
+
+	if len(updates) != 3 {
+		t.Fatalf("expected 3 updates, got %d", len(updates))
+	}
+	if v := updates["bash"]; v != "5.1.8-10.el9" {
+		t.Errorf("bash version = %q, want %q", v, "5.1.8-10.el9")
+	}
+	if v := updates["openssl-libs"]; v != "1:3.0.7-28.el9_4" {
+		t.Errorf("openssl-libs version = %q, want %q", v, "1:3.0.7-28.el9_4")
+	}
+	if v := updates["kernel-core"]; v != "5.14.0-427.33.1.el9_4" {
+		t.Errorf("kernel-core version = %q, want %q", v, "5.14.0-427.33.1.el9_4")
+	}
+}
+
+func TestParseDnfCheckUpdateNoUpdates(t *testing.T) {
+	// Exit code 0 — empty or header-only output
+	updates := parseDnfCheckUpdate("")
+	if len(updates) != 0 {
+		t.Errorf("expected 0 updates, got %d", len(updates))
+	}
+}
+
+func TestParseDnfCheckUpdateHeaderOnly(t *testing.T) {
+	input := `Last metadata expiration check: 1:23:45 ago on Mon 16 Mar 2026 10:00:00 AM UTC.
+`
+	updates := parseDnfCheckUpdate(input)
+	if len(updates) != 0 {
+		t.Errorf("expected 0 updates from header-only output, got %d", len(updates))
+	}
+}
+
+func TestParseDnfCheckUpdateMultipleBlankLines(t *testing.T) {
+	// Some dnf versions output extra blank lines
+	input := `Updating Subscription Management repositories.
+
+Last metadata expiration check: 0:10:00 ago.
+
+
+vim-enhanced.x86_64                  2:9.0.2153-1.el9               appstream
+`
+
+	updates := parseDnfCheckUpdate(input)
+	if len(updates) != 1 {
+		t.Fatalf("expected 1 update, got %d: %v", len(updates), updates)
+	}
+	if v := updates["vim-enhanced"]; v != "2:9.0.2153-1.el9" {
+		t.Errorf("vim-enhanced version = %q, want %q", v, "2:9.0.2153-1.el9")
+	}
+}
