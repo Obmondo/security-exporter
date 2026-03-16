@@ -2,6 +2,7 @@ package collector
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"os/exec"
 	"strings"
@@ -26,8 +27,72 @@ func (*rpmCollector) CollectPackages(ctx context.Context) (string, string, error
 	return pkgs, srcPkgs, nil
 }
 
-func (*rpmCollector) AvailableUpdates(_ context.Context) (map[string]string, error) {
+func (*rpmCollector) AvailableUpdates(ctx context.Context) (map[string]string, error) {
+	out, err := exec.CommandContext(ctx, "dnf", "check-update").Output()
+	if err != nil {
+		// dnf exit code 100 means updates are available (not an error).
+		var exitErr *exec.ExitError
+		if errors.As(err, &exitErr) && exitErr.ExitCode() == 100 {
+			return parseDnfCheckUpdate(string(out)), nil
+		}
+		// dnf not found — try yum.
+		if errors.Is(err, exec.ErrNotFound) {
+			return rpmAvailableUpdatesYum(ctx)
+		}
+		return nil, fmt.Errorf("running dnf check-update: %w", err)
+	}
+	// Exit code 0 means no updates available.
 	return nil, nil
+}
+
+func rpmAvailableUpdatesYum(ctx context.Context) (map[string]string, error) {
+	out, err := exec.CommandContext(ctx, "yum", "check-update").Output()
+	if err != nil {
+		var exitErr *exec.ExitError
+		if errors.As(err, &exitErr) && exitErr.ExitCode() == 100 {
+			return parseDnfCheckUpdate(string(out)), nil
+		}
+		if errors.Is(err, exec.ErrNotFound) {
+			return nil, nil
+		}
+		return nil, fmt.Errorf("running yum check-update: %w", err)
+	}
+	return nil, nil
+}
+
+// parseDnfCheckUpdate parses the output of `dnf check-update` or `yum check-update`.
+// Output format (after a blank-line separator from header):
+//
+//	package.arch    version    repo
+func parseDnfCheckUpdate(raw string) map[string]string {
+	const minDnfFields = 2 // package.arch, version (repo is optional)
+
+	updates := make(map[string]string)
+	pastHeader := false
+	for _, line := range strings.Split(raw, "\n") {
+		line = strings.TrimSpace(line)
+		if line == "" {
+			pastHeader = true
+			continue
+		}
+		if !pastHeader {
+			continue
+		}
+		fields := strings.Fields(line)
+		if len(fields) < minDnfFields {
+			continue
+		}
+		// package.arch → strip the .arch suffix; skip lines without a dot
+		// (e.g. "Last metadata expiration check..." header text).
+		nameArch := fields[0]
+		dotIdx := strings.LastIndex(nameArch, ".")
+		if dotIdx <= 0 {
+			continue
+		}
+		name := nameArch[:dotIdx]
+		updates[name] = fields[1]
+	}
+	return updates
 }
 
 func (r *rpmCollector) OSFamily() string { return r.family }
