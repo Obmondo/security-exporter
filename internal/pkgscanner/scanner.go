@@ -66,7 +66,11 @@ func buildTLSConfig(cfg config.VulsServer) (*tls.Config, error) {
 		if err != nil {
 			return nil, fmt.Errorf("reading CA certificate: %w", err)
 		}
-		caPool := x509.NewCertPool()
+		// Start from system CAs so the custom CA is additive, not a replacement.
+		caPool, err := x509.SystemCertPool()
+		if err != nil {
+			caPool = x509.NewCertPool()
+		}
 		if !caPool.AppendCertsFromPEM(caCert) {
 			return nil, fmt.Errorf("failed to parse CA certificate")
 		}
