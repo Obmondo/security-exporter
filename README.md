@@ -12,7 +12,7 @@ See `config/config.yaml` for an example configuration file.
 
 ```yaml
 vuls_server:
-  url: "https://vuls.obmondo.com"
+  url: "https://vulsserver.example"
   timeout: 30s
   cert_file: "/etc/puppetlabs/puppet/ssl/certs/<certname>.pem"
   key_file: "/etc/puppetlabs/puppet/ssl/private_keys/<certname>.pem"

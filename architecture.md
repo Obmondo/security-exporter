@@ -7,7 +7,7 @@ scans them against the vuls2 nightly database, and serves reports via a REST API
 
 The **Security Exporter** is installed on each Linux server as a lightweight Go binary.
 It runs `dpkg-query` (Debian/Ubuntu) or `rpm -qa` (RHEL/CentOS) locally to collect the
-installed package list and sends it to the Vuls Server hosted at `vuls.obmondo.com`.
+installed package list and sends it to the Vuls Server hosted at `vulsserver.example`.
 
 The **Vuls Stack** runs inside a Kubernetes cluster. Vuls Server receives package payloads,
 matches them against the vuls2 nightly SQLite database (CVEs, advisories, detection data),
@@ -35,7 +35,7 @@ graph LR
         SE3[Security Exporter] -->|1. dpkg-query| N3[localhost]
     end
 
-    subgraph vuls.obmondo.com
+    subgraph vulsserver.example
         subgraph Kubernetes Cluster - same namespace
             VS[Vuls Server :5515]
             VDB[(vuls2 nightly db<br>SQLite ~7GB)]

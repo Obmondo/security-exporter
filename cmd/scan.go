@@ -31,7 +31,7 @@ and displays them without contacting a Vuls server.
 
 With --server, sends packages to the Vuls server for CVE scanning
 (requires --cert-file and --key-file for mTLS):
-  obmondo-security-exporter scan --server https://vuls.obmondo.com --cert-file tls.crt --key-file tls.key`,
+  obmondo-security-exporter scan --server https://vulsserver.example --cert-file tls.crt --key-file tls.key`,
 		RunE: runScan,
 	}
 
