@@ -160,7 +160,7 @@ func vulsServerFromFlags(cmd *cobra.Command) (config.VulsServer, error) {
 	keyFile := flagOrEnv(cmd, "key-file", "VULS_KEY_FILE")
 	caFile := flagOrEnv(cmd, "ca-file", "VULS_CA_FILE")
 
-	// If --server is explicitly provided, use flag-based config.
+	// If --server is explicitly provided, build config entirely from flags.
 	if server != "" {
 		if certFile == "" || keyFile == "" {
 			return config.VulsServer{}, fmt.Errorf(
@@ -176,20 +176,57 @@ func vulsServerFromFlags(cmd *cobra.Command) (config.VulsServer, error) {
 		}, nil
 	}
 
-	// Try loading from config file; if it fails, fall back to local-only mode.
-	if configPath != "" {
-		cfg, err := config.Load(configPath)
-		if err == nil && cfg.VulsServer.URL != "" {
-			return cfg.VulsServer, nil
-		}
+	// Load from config file, apply CLI flag overrides, fall back to local-only.
+	vs, ok := vulsServerFromConfig(configPath)
+	if ok {
+		applyFlagOverrides(cmd, &vs, timeout, certFile, keyFile, caFile)
+		return vs, nil
 	}
 
-	// Warn if TLS certs are provided but no server URL.
 	if certFile != "" || keyFile != "" {
 		slog.Warn("TLS certificates provided but no server URL specified, running in local-only mode")
 	}
 
 	return config.VulsServer{}, nil
+}
+
+// vulsServerFromConfig loads VulsServer from the config file. Returns false
+// if the file can't be loaded or has no URL configured.
+func vulsServerFromConfig(path string) (config.VulsServer, bool) {
+	if path == "" {
+		return config.VulsServer{}, false
+	}
+
+	cfg, err := config.Load(path)
+	if err != nil {
+		slog.Warn("failed to load config file, falling back to local-only mode", "path", path, "error", err)
+		return config.VulsServer{}, false
+	}
+
+	if cfg.VulsServer.URL == "" {
+		return config.VulsServer{}, false
+	}
+
+	return cfg.VulsServer, true
+}
+
+// applyFlagOverrides overwrites config values with any explicitly passed CLI flags.
+func applyFlagOverrides(cmd *cobra.Command, vs *config.VulsServer, timeout time.Duration, certFile, keyFile, caFile string) {
+	overrides := []struct {
+		flag  string
+		apply func()
+	}{
+		{"timeout", func() { vs.Timeout = config.Duration{Duration: timeout} }},
+		{"cert-file", func() { vs.CertFile = certFile }},
+		{"key-file", func() { vs.KeyFile = keyFile }},
+		{"ca-file", func() { vs.CAFile = caFile }},
+	}
+
+	for _, o := range overrides {
+		if cmd.Flags().Changed(o.flag) {
+			o.apply()
+		}
+	}
 }
 
 // flagOrEnv returns the flag value if non-empty, otherwise the environment variable.
