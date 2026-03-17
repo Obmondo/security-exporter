@@ -37,6 +37,39 @@ scan_interval: 12h
 obmondo-security-exporter -config /etc/obmondo/security-exporter/config.yaml
 ```
 
+### One-shot scan
+
+Run a single scan with `scan` subcommand (useful for testing):
+
+```sh
+obmondo-security-exporter scan --server https://vulsserver.example --cert-file tls.crt --key-file tls.key
+```
+
+Example output:
+
+```
+Host:    dev-ashish22
+OS:      ubuntu 22.04
+CVEs:    37 (92 affected packages)
+Packages with updates: 2 / 575
+
+PACKAGE                  INSTALLED                  AVAILABLE  CVE              SEVERITY    FIX VERSION  FIX STATE
+gpgv                     2.2.27-3ubuntu2.5          -          CVE-2025-68972   medium      -            deferred
+                                                               CVE-2022-3219    low         -            deferred
+libpam-runtime           1.4.0-11ubuntu2.6          -          CVE-2025-8941    medium      -            deferred
+binutils-x86-64-linux-gnu 2.38-4ubuntu2.12          -          CVE-2025-1180    medium      -            needed
+                                                               CVE-2019-1010204 low         -            needed
+                                                               CVE-2022-27943   low         -            needed
+                                                               CVE-2025-1152    low         -            needed
+                                                               CVE-2017-13716   low         -            deferred
+                                                               CVE-2022-48064   negligible  -            needed
+tar                      1.34+dfsg-1ubuntu0.1.22.04.2 -        CVE-2025-45582   medium      -            needed
+busybox-static           1:1.30.1-7ubuntu3.1        -          CVE-2023-42366   medium      -            needed
+                                                               CVE-2025-46394   medium      -            needed
+                                                               CVE-2024-58251   medium      -            needed
+                                                               CVE-2025-60876   medium      -            needed
+```
+
 ## Metrics
 
 | Metric | Type | Labels | Description |
