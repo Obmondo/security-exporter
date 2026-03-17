@@ -14,6 +14,8 @@ var (
 	configPath string
 )
 
+const binaryName = "obmondo-security-exporter"
+
 func main() {
 	root := &cobra.Command{
 		Use:     "obmondo-security-exporter",
@@ -25,6 +27,7 @@ func main() {
 				level = slog.LevelInfo
 			}
 			slog.SetDefault(slog.New(slog.NewJSONHandler(os.Stderr, &slog.HandlerOptions{Level: level})))
+			slog.Info("starting exporter", "binary", binaryName, "version", Version)
 		},
 	}
 
