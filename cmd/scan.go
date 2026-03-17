@@ -47,11 +47,14 @@ With --server, sends packages to the Vuls server for CVE scanning
 }
 
 func runScan(cmd *cobra.Command, _ []string) error {
-	const scanTimeout = 5 * time.Minute
-
 	vulsServer, err := vulsServerFromFlags(cmd)
 	if err != nil {
 		return err
+	}
+
+	scanTimeout := defaultServerTimeout
+	if vulsServer.Timeout.Duration > 0 {
+		scanTimeout = vulsServer.Timeout.Duration
 	}
 
 	coll, err := collector.New()
@@ -154,40 +157,64 @@ func localScan(ctx context.Context, coll collector.Collector) (*pkgscanner.ScanR
 // is not set and no config file is available, returns an empty VulsServer
 // (triggering local-only mode).
 func vulsServerFromFlags(cmd *cobra.Command) (config.VulsServer, error) {
-	server, _ := cmd.Flags().GetString("server")
-	timeout, _ := cmd.Flags().GetDuration("timeout")
-	certFile := flagOrEnv(cmd, "cert-file", "VULS_CERT_FILE")
-	keyFile := flagOrEnv(cmd, "key-file", "VULS_KEY_FILE")
-	caFile := flagOrEnv(cmd, "ca-file", "VULS_CA_FILE")
+	inputs := readFlagInputs(cmd)
 
-	// If --server is explicitly provided, build config entirely from flags.
-	if server != "" {
-		if certFile == "" || keyFile == "" {
-			return config.VulsServer{}, fmt.Errorf(
-				"TLS certificates are required to connect to the vuls server. " +
-					"Provide --cert-file and --key-file (or VULS_CERT_FILE / VULS_KEY_FILE)")
-		}
-		return config.VulsServer{
-			URL:      server,
-			Timeout:  config.Duration{Duration: timeout},
-			CertFile: certFile,
-			KeyFile:  keyFile,
-			CAFile:   caFile,
-		}, nil
+	if inputs.server != "" {
+		return buildServerFromFlags(inputs)
 	}
 
 	// Load from config file, apply CLI flag overrides, fall back to local-only.
 	vs, ok := vulsServerFromConfig(configPath)
 	if ok {
-		applyFlagOverrides(cmd, &vs, timeout, certFile, keyFile, caFile)
+		applyFlagOverrides(cmd, &vs, inputs.timeout, inputs.certFile, inputs.keyFile, inputs.caFile)
 		return vs, nil
 	}
 
-	if certFile != "" || keyFile != "" {
-		slog.Warn("TLS certificates provided but no server URL specified, running in local-only mode")
+	warnTLSWithoutServer(inputs)
+	return config.VulsServer{}, nil
+}
+
+type flagInputs struct {
+	server   string
+	timeout  time.Duration
+	certFile string
+	keyFile  string
+	caFile   string
+}
+
+func readFlagInputs(cmd *cobra.Command) flagInputs {
+	server, _ := cmd.Flags().GetString("server")
+	timeout, _ := cmd.Flags().GetDuration("timeout")
+
+	return flagInputs{
+		server:   server,
+		timeout:  timeout,
+		certFile: flagOrEnv(cmd, "cert-file", "VULS_CERT_FILE"),
+		keyFile:  flagOrEnv(cmd, "key-file", "VULS_KEY_FILE"),
+		caFile:   flagOrEnv(cmd, "ca-file", "VULS_CA_FILE"),
+	}
+}
+
+func buildServerFromFlags(inputs flagInputs) (config.VulsServer, error) {
+	if inputs.certFile == "" || inputs.keyFile == "" {
+		return config.VulsServer{}, fmt.Errorf(
+			"TLS certificates are required to connect to the vuls server. " +
+				"Provide --cert-file and --key-file (or VULS_CERT_FILE / VULS_KEY_FILE)")
 	}
 
-	return config.VulsServer{}, nil
+	return config.VulsServer{
+		URL:      inputs.server,
+		Timeout:  config.Duration{Duration: inputs.timeout},
+		CertFile: inputs.certFile,
+		KeyFile:  inputs.keyFile,
+		CAFile:   inputs.caFile,
+	}, nil
+}
+
+func warnTLSWithoutServer(inputs flagInputs) {
+	if inputs.certFile != "" || inputs.keyFile != "" {
+		slog.Warn("TLS certificates provided but no server URL specified, running in local-only mode")
+	}
 }
 
 // vulsServerFromConfig loads VulsServer from the config file. Returns false
