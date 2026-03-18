@@ -6,6 +6,7 @@ import (
 	"crypto/tls"
 	"crypto/x509"
 	"encoding/json"
+	"encoding/pem"
 	"fmt"
 	"io"
 	"log/slog"
@@ -20,6 +21,7 @@ import (
 type Scanner struct {
 	client    *http.Client
 	serverURL string
+	certname  string
 }
 
 func New(cfg config.VulsServer) (*Scanner, error) {
@@ -42,12 +44,18 @@ func New(cfg config.VulsServer) (*Scanner, error) {
 		timeout = cfg.Timeout.Duration
 	}
 
+	var certname string
+	if cfg.CertFile != "" {
+		certname = getCommonNameFromCertFile(cfg.CertFile)
+	}
+
 	return &Scanner{
 		client: &http.Client{
 			Transport: transport,
 			Timeout:   timeout,
 		},
 		serverURL: cfg.URL,
+		certname:  certname,
 	}, nil
 }
 
@@ -79,12 +87,28 @@ func buildTLSConfig(cfg config.VulsServer) (*tls.Config, error) {
 
 	return tlsConfig, nil
 }
-
-func (s *Scanner) Scan(ctx context.Context, c collector.Collector) (*ScanResult, error) {
-	hostname, err := os.Hostname()
+func getCommonNameFromCertFile(certPath string) string {
+	hostCert, err := os.ReadFile(certPath)
 	if err != nil {
-		return nil, fmt.Errorf("getting hostname: %w", err)
+		slog.Error("failed to fetch hostcert", slog.String("error", err.Error()))
+		return ""
 	}
+
+	block, _ := pem.Decode(hostCert)
+	if block == nil {
+		slog.Error("failed to decode hostcert")
+		return ""
+	}
+
+	cert, err := x509.ParseCertificate(block.Bytes)
+	if err != nil {
+		slog.Error("failed to parse hostcert", slog.String("error", err.Error()))
+		return ""
+	}
+
+	return cert.Subject.CommonName
+}
+func (s *Scanner) Scan(ctx context.Context, c collector.Collector) (*ScanResult, error) {
 
 	pkgsRaw, srcRaw, err := c.CollectPackages(ctx)
 	if err != nil {
@@ -107,7 +131,7 @@ func (s *Scanner) Scan(ctx context.Context, c collector.Collector) (*ScanResult,
 	req := ScanRequest{
 		Family:     c.OSFamily(),
 		Release:    c.Release(),
-		ServerName: hostname,
+		ServerName: s.certname,
 		Packages:   packages,
 	}
 

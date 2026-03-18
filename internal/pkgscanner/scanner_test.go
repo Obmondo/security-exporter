@@ -13,12 +13,12 @@ import (
 )
 
 type mockCollector struct {
-	family     string
-	release    string
-	pkgs       string
-	srcPkgs    string
-	updates    map[string]string
-	err        error
+	family  string
+	release string
+	pkgs    string
+	srcPkgs string
+	updates map[string]string
+	err     error
 }
 
 func (m *mockCollector) CollectPackages(_ context.Context) (string, string, error) {
@@ -134,7 +134,11 @@ func TestScan_RequestBody(t *testing.T) {
 	}))
 	defer server.Close()
 
-	sc, err := New(config.VulsServer{URL: server.URL})
+	sc, err := New(config.VulsServer{
+		URL:      server.URL,
+		CertFile: "../../mocks/server-cert.pem",
+		KeyFile:  "../../mocks/server-cert.pem",
+	})
 	if err != nil {
 		t.Fatal(err)
 	}
