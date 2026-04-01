@@ -42,14 +42,14 @@ func TestParseZypperListUpdatesHeaderOnly(t *testing.T) {
 }
 
 func TestZypperCollector_OSFamily(t *testing.T) {
-	c := &zypperCollector{family: "suse", release: "15.5"}
-	if c.OSFamily() != "suse" {
-		t.Errorf("expected suse, got %s", c.OSFamily())
+	c := &zypperCollector{family: "suse.linux.enterprise.server", release: "15.5"}
+	if c.OSFamily() != "suse.linux.enterprise.server" {
+		t.Errorf("expected suse.linux.enterprise.server, got %s", c.OSFamily())
 	}
 }
 
 func TestZypperCollector_Release(t *testing.T) {
-	c := &zypperCollector{family: "suse", release: "15.5"}
+	c := &zypperCollector{family: "suse.linux.enterprise.server", release: "15.5"}
 	if c.Release() != "15.5" {
 		t.Errorf("expected 15.5, got %s", c.Release())
 	}

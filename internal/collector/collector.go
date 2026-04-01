@@ -29,7 +29,7 @@ func New() (Collector, error) {
 	case "rhel", "centos", "rocky", "ol", "almalinux", "fedora":
 		return &rpmCollector{family: "redhat", release: release}, nil
 	case "sles", "suse":
-		return &zypperCollector{family: "suse", release: release}, nil
+		return &zypperCollector{family: "suse.linux.enterprise.server", release: release}, nil
 	default:
 		return nil, fmt.Errorf("unsupported OS family: %s", family)
 	}
