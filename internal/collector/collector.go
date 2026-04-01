@@ -28,7 +28,7 @@ func New() (Collector, error) {
 		return &dpkgCollector{family: family, release: release}, nil
 	case "rhel", "centos", "rocky", "ol", "almalinux", "fedora":
 		return &rpmCollector{family: "redhat", release: release}, nil
-	case "sles":
+	case "sles", "suse":
 		return &zypperCollector{family: "suse", release: release}, nil
 	default:
 		return nil, fmt.Errorf("unsupported OS family: %s", family)

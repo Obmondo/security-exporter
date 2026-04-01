@@ -67,6 +67,12 @@ func TestParseOSRelease(t *testing.T) {
 			expectedRelease: "15.5",
 		},
 		{
+			name:            "SUSE",
+			content:         "ID=\"suse\"\nVERSION_ID=\"15.7\"\n",
+			expectedFamily:  "suse",
+			expectedRelease: "15.7",
+		},
+		{
 			name:            "MissingVersionID",
 			content:         "ID=debian\n",
 			expectedFamily:  familyDebian,
