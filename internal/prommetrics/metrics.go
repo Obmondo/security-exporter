@@ -12,6 +12,8 @@ import (
 	"security-exporter/internal/pkgscanner"
 )
 
+const highSeverityThreshold = 7.0
+
 var (
 	totalPackagesWithUpdate = promauto.NewGauge(prometheus.GaugeOpts{
 		Name: "total_number_of_packages_with_update",
@@ -47,6 +49,16 @@ var (
 		Name: "security_exporter_scan_duration_seconds",
 		Help: "Duration of the last scan in seconds.",
 	})
+
+	scanUp = promauto.NewGauge(prometheus.GaugeOpts{
+		Name: "security_exporter_scan_up",
+		Help: "Whether the last vulnerability scan succeeded (1 = success, 0 = failure).",
+	})
+
+	packageHighSeverityCVEs = promauto.NewGaugeVec(prometheus.GaugeOpts{
+		Name: "security_exporter_package_high_severity_cves",
+		Help: "Number of CVEs with CVSS3 score greater than 7.0 per package.",
+	}, []string{"package"})
 )
 
 // SetLastScanTimestamp records the current time as the last successful scan.
@@ -62,6 +74,15 @@ func IncrScanErrors() {
 // SetScanDuration records the duration of the last scan.
 func SetScanDuration(d float64) {
 	scanDurationSeconds.Set(d)
+}
+
+// SetScanUp records whether the last scan succeeded (true) or failed (false).
+func SetScanUp(up bool) {
+	if up {
+		scanUp.Set(1)
+	} else {
+		scanUp.Set(0)
+	}
 }
 
 func Update(result *pkgscanner.ScanResult) {
@@ -89,9 +110,18 @@ func Update(result *pkgscanner.ScanResult) {
 
 	slog.Info("updating metrics", "packages_with_updates", updateCount, "cves", len(result.ScannedCves))
 
+	packageHighSeverityCVEs.Reset()
+	highCountByPkg := make(map[string]int)
+
 	for _, vuln := range result.ScannedCves {
-		score := bestCVSS3Score(vuln)
+		score := BestCVSS3Score(vuln)
 		scoreStr := fmt.Sprintf("%.1f", score)
+
+		if score > highSeverityThreshold {
+			for _, pkg := range vuln.AffectedPackages {
+				highCountByPkg[pkg.Name]++
+			}
+		}
 
 		for _, pkg := range vuln.AffectedPackages {
 			gauge := generalCVEDetails
@@ -100,6 +130,10 @@ func Update(result *pkgscanner.ScanResult) {
 			}
 			gauge.WithLabelValues(pkg.Name, vuln.CveID, scoreStr).Set(score)
 		}
+	}
+
+	for pkg, count := range highCountByPkg {
+		packageHighSeverityCVEs.WithLabelValues(pkg).Set(float64(count))
 	}
 }
 
@@ -110,7 +144,7 @@ func isKernelPackage(name string) bool {
 		strings.HasPrefix(name, "kernel-")
 }
 
-func bestCVSS3Score(v pkgscanner.VulnInfo) float64 {
+func BestCVSS3Score(v pkgscanner.VulnInfo) float64 {
 	var best float64
 	for _, contents := range v.CveContents {
 		for _, c := range contents {
