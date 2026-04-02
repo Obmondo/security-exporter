@@ -24,6 +24,10 @@ type ScanResponse struct {
 	KernelUpdateAvailable bool   `json:"kernel_update_available"`
 	PreviousTotalCVEs     int    `json:"previous_total_cves"`
 	CVEsFixed             int    `json:"cves_fixed"`
+	CriticalCVEsFixed     int    `json:"critical_cves_fixed"`
+	HighCVEsFixed         int    `json:"high_cves_fixed"`
+	MediumCVEsFixed       int    `json:"medium_cves_fixed"`
+	LowCVEsFixed          int    `json:"low_cves_fixed"`
 	Error                 string `json:"error,omitempty"`
 }
 
@@ -51,34 +55,47 @@ func newScanHandler(sc *pkgscanner.Scanner, coll collector.Collector, ss *scanSt
 		if err != nil {
 			writeJSON(w, http.StatusOK, ScanResponse{
 				Success:           false,
-				PreviousTotalCVEs: ss.previousTotalCVEs,
+				PreviousTotalCVEs: ss.previous.total,
 				Error:             err.Error(),
 			})
 			return
 		}
 
-		resp := buildScanResponse(result, ss.previousTotalCVEs)
-		ss.previousTotalCVEs = len(result.ScannedCves)
+		resp := buildScanResponse(result, ss.previous)
+		ss.previous = countSeverities(result)
 
 		writeJSON(w, http.StatusOK, resp)
 	})
 }
 
-func buildScanResponse(result *pkgscanner.ScanResult, previousTotalCVEs int) ScanResponse {
-	var critical, high, medium, low int
+func countSeverities(result *pkgscanner.ScanResult) severityCounts {
+	var sc severityCounts
+	sc.total = len(result.ScannedCves)
 	for _, vuln := range result.ScannedCves {
 		score := prommetrics.BestCVSS3Score(vuln)
 		switch {
 		case score >= cvssThresholdCritical:
-			critical++
+			sc.critical++
 		case score >= cvssThresholdHigh:
-			high++
+			sc.high++
 		case score >= cvssThresholdMedium:
-			medium++
+			sc.medium++
 		default:
-			low++
+			sc.low++
 		}
 	}
+	return sc
+}
+
+func floorZero(v int) int {
+	if v < 0 {
+		return 0
+	}
+	return v
+}
+
+func buildScanResponse(result *pkgscanner.ScanResult, prev severityCounts) ScanResponse {
+	cur := countSeverities(result)
 
 	packagesWithUpdates := 0
 	kernelUpdate := false
@@ -91,23 +108,21 @@ func buildScanResponse(result *pkgscanner.ScanResult, previousTotalCVEs int) Sca
 		}
 	}
 
-	totalCVEs := len(result.ScannedCves)
-	fixed := previousTotalCVEs - totalCVEs
-	if fixed < 0 {
-		fixed = 0
-	}
-
 	return ScanResponse{
 		Success:               true,
-		TotalCVEs:             totalCVEs,
-		CriticalCVEs:          critical,
-		HighCVEs:              high,
-		MediumCVEs:            medium,
-		LowCVEs:               low,
+		TotalCVEs:             cur.total,
+		CriticalCVEs:          cur.critical,
+		HighCVEs:              cur.high,
+		MediumCVEs:            cur.medium,
+		LowCVEs:               cur.low,
 		PackagesWithUpdates:   packagesWithUpdates,
 		KernelUpdateAvailable: kernelUpdate,
-		PreviousTotalCVEs:     previousTotalCVEs,
-		CVEsFixed:             fixed,
+		PreviousTotalCVEs:     prev.total,
+		CVEsFixed:             floorZero(prev.total - cur.total),
+		CriticalCVEsFixed:     floorZero(prev.critical - cur.critical),
+		HighCVEsFixed:         floorZero(prev.high - cur.high),
+		MediumCVEsFixed:       floorZero(prev.medium - cur.medium),
+		LowCVEsFixed:          floorZero(prev.low - cur.low),
 	}
 }
 
