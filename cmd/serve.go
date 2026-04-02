@@ -39,8 +39,16 @@ const (
 
 // scanState holds shared state between the cron job and the /scan HTTP handler.
 type scanState struct {
-	mu                sync.Mutex
-	previousTotalCVEs int
+	mu       sync.Mutex
+	previous severityCounts
+}
+
+type severityCounts struct {
+	total    int
+	critical int
+	high     int
+	medium   int
+	low      int
 }
 
 // executeScan executes a vulnerability scan, updates Prometheus metrics, and returns the result.
@@ -96,7 +104,7 @@ func runServe(_ *cobra.Command, _ []string) error {
 			return
 		}
 
-		ss.previousTotalCVEs = len(result.ScannedCves)
+		ss.previous = countSeverities(result)
 	}
 
 	scheduler, err := gocron.NewScheduler()
