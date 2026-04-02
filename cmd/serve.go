@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	"sync"
 	"syscall"
 	"time"
 
@@ -31,6 +32,40 @@ CVE metrics via a Prometheus HTTP endpoint.`,
 	}
 }
 
+const (
+	scanTimeout     = 5 * time.Minute
+	shutdownTimeout = 10 * time.Second
+)
+
+// scanState holds shared state between the cron job and the /scan HTTP handler.
+type scanState struct {
+	mu                sync.Mutex
+	previousTotalCVEs int
+}
+
+// executeScan executes a vulnerability scan, updates Prometheus metrics, and returns the result.
+// It is safe for concurrent use — callers must hold ss.mu.
+func executeScan(ctx context.Context, sc *pkgscanner.Scanner, coll collector.Collector) (*pkgscanner.ScanResult, error) {
+	start := time.Now()
+	slog.Info("starting vulnerability scan")
+
+	result, err := sc.Scan(ctx, coll)
+	if err != nil {
+		prommetrics.IncrScanErrors()
+		prommetrics.SetScanUp(false)
+		slog.Error("scan failed", "error", err)
+		return nil, err
+	}
+
+	prommetrics.SetScanUp(true)
+	prommetrics.Update(result)
+	prommetrics.SetScanDuration(time.Since(start).Seconds())
+	prommetrics.SetLastScanTimestamp()
+	slog.Info("scan completed", "cves", len(result.ScannedCves), "duration", time.Since(start))
+
+	return result, nil
+}
+
 func runServe(_ *cobra.Command, _ []string) error {
 	cfg, err := config.Load(configPath)
 	if err != nil {
@@ -47,28 +82,21 @@ func runServe(_ *cobra.Command, _ []string) error {
 		return err
 	}
 
-	const (
-		scanTimeout     = 5 * time.Minute
-		shutdownTimeout = 10 * time.Second
-	)
+	ss := &scanState{}
 
 	scanTask := func() {
+		ss.mu.Lock()
+		defer ss.mu.Unlock()
+
 		ctx, cancel := context.WithTimeout(context.Background(), scanTimeout)
 		defer cancel()
 
-		start := time.Now()
-		slog.Info("starting vulnerability scan")
-		result, err := sc.Scan(ctx, coll)
+		result, err := executeScan(ctx, sc, coll)
 		if err != nil {
-			prommetrics.IncrScanErrors()
-			slog.Error("scan failed", "error", err)
 			return
 		}
 
-		prommetrics.Update(result)
-		prommetrics.SetScanDuration(time.Since(start).Seconds())
-		prommetrics.SetLastScanTimestamp()
-		slog.Info("scan completed", "cves", len(result.ScannedCves), "duration", time.Since(start))
+		ss.previousTotalCVEs = len(result.ScannedCves)
 	}
 
 	scheduler, err := gocron.NewScheduler()
@@ -91,6 +119,7 @@ func runServe(_ *cobra.Command, _ []string) error {
 
 	mux := http.NewServeMux()
 	mux.Handle("/metrics", promhttp.Handler())
+	mux.Handle("/scan", newScanHandler(sc, coll, ss))
 
 	server := &http.Server{
 		Addr:    cfg.ListenAddress,
