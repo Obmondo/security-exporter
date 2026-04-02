@@ -70,6 +70,40 @@ busybox-static           1:1.30.1-7ubuntu3.1        -          CVE-2023-42366   
                                                                CVE-2025-60876   medium      -            needed
 ```
 
+## HTTP Endpoints
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/metrics` | GET | Prometheus metrics |
+| `/scan` | POST | Trigger an immediate vulnerability scan and return JSON results |
+
+### POST /scan
+
+Triggers an on-demand vulnerability scan, updates Prometheus metrics, and returns a JSON summary with severity breakdown and a comparison against the previous scan.
+
+```sh
+curl -X POST http://127.254.254.254:63396/scan
+```
+
+Response:
+
+```json
+{
+  "success": true,
+  "total_cves": 6,
+  "critical_cves": 0,
+  "high_cves": 0,
+  "medium_cves": 4,
+  "low_cves": 2,
+  "packages_with_updates": 1,
+  "kernel_update_available": false,
+  "previous_total_cves": 17,
+  "cves_fixed": 11
+}
+```
+
+Concurrent scans (cron + HTTP) are mutex-protected — only one scan runs at a time.
+
 ## Metrics
 
 | Metric | Type | Labels | Description |
@@ -78,6 +112,11 @@ busybox-static           1:1.30.1-7ubuntu3.1        -          CVE-2023-42366   
 | `general_cve_details` | GaugeVec | application, cve_id, score | CVE details for non-kernel packages |
 | `kernel_cve_details` | GaugeVec | application, cve_id, score | CVE details for kernel packages |
 | `kernel_update_available` | Gauge | — | Whether a kernel update is available (1/0) |
+| `security_exporter_scan_up` | Gauge | — | Whether the last scan succeeded (1) or failed (0) |
+| `security_exporter_package_high_severity_cves` | GaugeVec | package | Number of CVEs with CVSS3 > 7.0 per package |
+| `security_exporter_last_scan_timestamp` | Gauge | — | Unix timestamp of the last successful scan |
+| `security_exporter_scan_errors_total` | Counter | — | Total number of failed scans |
+| `security_exporter_scan_duration_seconds` | Gauge | — | Duration of the last scan in seconds |
 
 ## Development
 

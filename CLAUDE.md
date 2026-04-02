@@ -5,10 +5,13 @@ Prometheus exporter that collects installed packages from Linux hosts, sends the
 
 ## Structure
 - `cmd/main.go` — entrypoint: config loading, scheduler (gocron DurationJob), HTTP server, graceful shutdown
+- `cmd/serve.go` — daemon mode: cron scheduler, `/metrics` + `/scan` endpoints, `executeScan()` shared between cron and HTTP
+- `cmd/scan.go` — one-shot CLI scan subcommand
+- `cmd/scan_handler.go` — POST `/scan` HTTP handler: triggers scan, returns JSON with severity breakdown and `cves_fixed`
 - `config/` — YAML config parsing with custom `Duration` type
-- `internal/scanner/` — HTTP client to Vuls server, mTLS support, request/response types
-- `internal/collector/` — OS detection via `/etc/os-release`, package listing via `dpkg-query` (Debian/Ubuntu) or `rpm` (RHEL/CentOS/Rocky/Alma/Fedora)
-- `internal/metrics/` — Prometheus gauges: package updates, kernel updates, CVE details (general + kernel)
+- `internal/pkgscanner/` — HTTP client to Vuls server, mTLS support, request/response types
+- `internal/collector/` — OS detection via `/etc/os-release`, package listing via `dpkg-query` (Debian/Ubuntu) or `rpm` (RHEL/CentOS/Rocky/Alma/Fedora) or `zypper` (SLES/SUSE)
+- `internal/prommetrics/` — Prometheus gauges: package updates, kernel updates, CVE details, scan_up, per-package high severity CVEs
 
 ## Build & Test
 ```sh
