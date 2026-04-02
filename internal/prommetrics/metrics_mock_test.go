@@ -219,8 +219,8 @@ func TestBestCVSS3Score(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := bestCVSS3Score(tt.vuln); got != tt.expected {
-				t.Errorf("bestCVSS3Score() = %f, want %f", got, tt.expected)
+			if got := BestCVSS3Score(tt.vuln); got != tt.expected {
+				t.Errorf("BestCVSS3Score() = %f, want %f", got, tt.expected)
 			}
 		})
 	}
