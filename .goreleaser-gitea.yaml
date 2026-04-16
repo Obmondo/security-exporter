@@ -37,6 +37,7 @@ archives:
 before:
   hooks:
     - go mod tidy
+    - go generate ./internal/eol/...
 
 builds:
   - id: obmondo-security-exporter
