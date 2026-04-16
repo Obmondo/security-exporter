@@ -16,26 +16,33 @@ type Collector interface {
 }
 
 func New() (Collector, error) {
-	family, release, err := parseOSRelease("/etc/os-release")
+	id, versionID, err := DetectOS()
 	if err != nil {
 		return nil, fmt.Errorf("detecting OS: %w", err)
 	}
 
-	slog.Info("detected OS", "family", family, "release", release)
+	slog.Info("detected OS", "id", id, "version", versionID)
 
-	switch family {
+	switch id {
 	case "debian", "ubuntu":
-		return &dpkgCollector{family: family, release: release}, nil
+		return &dpkgCollector{family: id, release: versionID}, nil
 	case "rhel", "centos", "rocky", "ol", "almalinux", "fedora":
-		return &rpmCollector{family: "redhat", release: release}, nil
+		return &rpmCollector{family: "redhat", release: versionID}, nil
 	case "sles", "suse":
-		return &zypperCollector{family: "suse.linux.enterprise.server", release: release}, nil
+		return &zypperCollector{family: "suse.linux.enterprise.server", release: versionID}, nil
 	default:
-		return nil, fmt.Errorf("unsupported OS family: %s", family)
+		return nil, fmt.Errorf("unsupported OS family: %s", id)
 	}
 }
 
-func parseOSRelease(path string) (family, release string, err error) {
+// DetectOS reads /etc/os-release and returns the lowercased ID and raw
+// VERSION_ID. Exported so other packages (e.g. eol metric setup) can use
+// the same source of truth without duplicating the parser.
+func DetectOS() (id, versionID string, err error) {
+	return parseOSRelease("/etc/os-release")
+}
+
+func parseOSRelease(path string) (id, versionID string, err error) {
 	data, err := os.ReadFile(path)
 	if err != nil {
 		return "", "", err
@@ -50,10 +57,10 @@ func parseOSRelease(path string) (family, release string, err error) {
 		}
 	}
 
-	family = strings.ToLower(fields["ID"])
-	release = fields["VERSION_ID"]
-	if family == "" {
+	id = strings.ToLower(fields["ID"])
+	versionID = fields["VERSION_ID"]
+	if id == "" {
 		return "", "", fmt.Errorf("ID not found in %s", path)
 	}
-	return family, release, nil
+	return id, versionID, nil
 }
