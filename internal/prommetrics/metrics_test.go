@@ -124,6 +124,32 @@ func TestSetScanDuration(t *testing.T) {
 	}
 }
 
+func TestSetOSSupportDates(t *testing.T) {
+	osSupportEndTimestamp.Reset()
+	t.Cleanup(func() { osSupportEndTimestamp.Reset() })
+
+	SetOSSupportDates("ubuntu", "24.04")
+
+	phases := []string{"support", "eol", "extended"}
+	for _, phase := range phases {
+		v := testutil.ToFloat64(osSupportEndTimestamp.WithLabelValues("ubuntu", "24.04", phase))
+		if v <= 0 {
+			t.Errorf("phase %q: expected non-zero timestamp, got %f", phase, v)
+		}
+	}
+}
+
+func TestSetOSSupportDates_UnknownDistro(t *testing.T) {
+	osSupportEndTimestamp.Reset()
+	t.Cleanup(func() { osSupportEndTimestamp.Reset() })
+
+	SetOSSupportDates("arch", "rolling")
+
+	if n := testutil.CollectAndCount(osSupportEndTimestamp); n != 0 {
+		t.Errorf("expected no samples for unknown distro, got %d", n)
+	}
+}
+
 func TestUpdate_ResetsBetweenCalls(t *testing.T) {
 	first := &pkgscanner.ScanResult{
 		Packages: pkgscanner.Packages{
