@@ -117,6 +117,21 @@ Concurrent scans (cron + HTTP) are mutex-protected — only one scan runs at a t
 | `security_exporter_last_scan_timestamp` | Gauge | — | Unix timestamp of the last successful scan |
 | `security_exporter_scan_errors_total` | Counter | — | Total number of failed scans |
 | `security_exporter_scan_duration_seconds` | Gauge | — | Duration of the last scan in seconds |
+| `security_exporter_os_support_end_timestamp` | GaugeVec | id, version, phase | Unix timestamp of each OS support-phase end date (`phase` = `support`, `eol`, `extended`). Phases absent for the detected distro are not emitted. |
+
+### OS support-phase metric
+
+`security_exporter_os_support_end_timestamp` exposes end-of-life data sourced from [endoflife.date](https://endoflife.date). The `phase` label distinguishes the three vendor support stages:
+
+- `support` — end of full support (features + free security updates)
+- `eol` — end of standard security support (main signal: vendor stops free security updates)
+- `extended` — end of paid extended support (Ubuntu Pro, RHEL ELS, SLES LTSS)
+
+Example alert: fire 30 days before free security updates stop.
+
+```promql
+(security_exporter_os_support_end_timestamp{phase="eol"} - time()) / 86400 < 30
+```
 
 ## Development
 
@@ -125,6 +140,14 @@ Concurrent scans (cron + HTTP) are mutex-protected — only one scan runs at a t
 ```sh
 make build
 ```
+
+`make build` runs `make gen-eol` first, which refreshes `internal/eol/data.json` from [endoflife.date](https://endoflife.date) and embeds it into the binary via `//go:embed`. To refresh the data without rebuilding:
+
+```sh
+make gen-eol
+```
+
+If the fetch fails (e.g. offline CI), the generator leaves the existing `data.json` untouched so builds can continue with stale data by invoking `go build ./cmd/` directly.
 
 ### Test
 
