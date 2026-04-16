@@ -9,6 +9,7 @@ import (
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promauto"
 
+	"security-exporter/internal/eol"
 	"security-exporter/internal/pkgscanner"
 )
 
@@ -59,6 +60,11 @@ var (
 		Name: "security_exporter_package_high_severity_cves",
 		Help: "Number of CVEs with CVSS3 score greater than 7.0 per package.",
 	}, []string{"package"})
+
+	osSupportEndTimestamp = promauto.NewGaugeVec(prometheus.GaugeOpts{
+		Name: "security_exporter_os_support_end_timestamp",
+		Help: "Unix timestamp of the end of an OS support phase (support=full support, eol=standard security updates, extended=paid extended support). Emitted per phase; missing phases are absent.",
+	}, []string{"id", "version", "phase"})
 )
 
 // SetLastScanTimestamp records the current time as the last successful scan.
@@ -83,6 +89,28 @@ func SetScanUp(up bool) {
 	} else {
 		scanUp.Set(0)
 	}
+}
+
+// SetOSSupportDates emits one gauge sample per known support-phase date
+// (support, eol, extended) for the given /etc/os-release ID and
+// VERSION_ID. Phases with no known date are left absent so PromQL
+// absent() queries work. Logs a warning and emits nothing when the
+// distro or cycle is not in the embedded EOL data.
+func SetOSSupportDates(id, version string) {
+	phases, ok := eol.Lookup(id, version)
+	if !ok {
+		slog.Warn("no EOL data for detected OS", "id", id, "version", version)
+		return
+	}
+	emit := func(phase string, t time.Time) {
+		if t.IsZero() {
+			return
+		}
+		osSupportEndTimestamp.WithLabelValues(id, version, phase).Set(float64(t.Unix()))
+	}
+	emit("support", phases.Support)
+	emit("eol", phases.EOL)
+	emit("extended", phases.Extended)
 }
 
 func Update(result *pkgscanner.ScanResult) {

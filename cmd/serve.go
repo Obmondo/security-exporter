@@ -85,6 +85,10 @@ func runServe(_ *cobra.Command, _ []string) error {
 		return err
 	}
 
+	if id, ver, err := collector.DetectOS(); err == nil {
+		prommetrics.SetOSSupportDates(id, ver)
+	}
+
 	sc, err := pkgscanner.New(cfg.VulsServer)
 	if err != nil {
 		return err
